@@ -17,7 +17,7 @@
     "mame:fetch": "tsx src/cli.ts mame:fetch"
   },
   "devDependencies": {
-    "@types/node": "^24.13.3",
+    "@types/node": "^26.1.1",
     "tsx": "4.23.1",
     "typescript": "6.0.3",
     "vitest": "4.1.10"
