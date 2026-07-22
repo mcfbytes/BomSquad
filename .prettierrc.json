@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/prettierrc",
+  "printWidth": 100,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "semi": true,
+  "endOfLine": "lf",
+  "overrides": [
+    {
+      "files": ["data/**/*.json", "schemas/**/*.json", "extract/**/*.json"],
+      "options": { "printWidth": 80 }
+    }
+  ]
+}

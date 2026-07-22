@@ -1,0 +1,73 @@
+name: Deploy site
+
+# Builds the Angular site ourselves and deploys the static output to Azure
+# Static Web Apps via a deployment token (AZURE_STATIC_WEB_APPS_API_TOKEN repo
+# secret) rather than Azure's auto-generated GitHub Action — see
+# scripts/provision-swa.sh and docs/azure-setup.md.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'site/**'
+      - 'dist/site-data/**'
+      - '.github/workflows/deploy-site.yml'
+  workflow_dispatch:
+  pull_request:
+    # Static Web Apps creates a preview environment per PR; we don't build one
+    # (see build_and_deploy's `if`), but we still need the "closed" event so the
+    # preview environment gets torn down when the PR closes.
+    types: [closed]
+
+permissions:
+  contents: read
+
+jobs:
+  build_and_deploy:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    name: Build and deploy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build --workspace @bomsquad/site
+
+      # AZURE_STATIC_WEB_APPS_API_TOKEN isn't available to workflow runs
+      # triggered from a fork (e.g. a fork PR later merged via a maintainer's
+      # own push) — skip rather than fail when it's unset.
+      - name: Deploy to Azure Static Web Apps
+        if: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN != '' }}
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: 'upload'
+          app_location: 'site/dist/bom-squad-site/browser'
+          output_location: ''
+          skip_app_build: true
+
+      - name: Deploy skipped
+        if: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN == '' }}
+        run: echo "::notice::AZURE_STATIC_WEB_APPS_API_TOKEN is not set — skipping deploy. See docs/azure-setup.md."
+
+  close_pull_request:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close preview environment
+    steps:
+      - name: Close pull request
+        if: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN != '' }}
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: 'close'

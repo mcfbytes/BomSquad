@@ -1,0 +1,42 @@
+{
+  "name": "bom-squad",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "An open database mapping arcade and console hardware to chip BOMs, and those chips to open-source FPGA implementations.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcfbytes/BomSquad.git"
+  },
+  "workspaces": [
+    "pipeline",
+    "site"
+  ],
+  "engines": {
+    "node": ">=24.15.0"
+  },
+  "packageManager": "npm@11.12.1",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "validate": "npm run validate --workspace pipeline",
+    "mame:fetch": "npm run mame:fetch --workspace pipeline"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "^24.13.3",
+    "angular-eslint": "^22.1.0",
+    "eslint": "10.7.0",
+    "eslint-config-prettier": "10.1.8",
+    "globals": "17.7.0",
+    "prettier": "3.9.6",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.65.0"
+  }
+}

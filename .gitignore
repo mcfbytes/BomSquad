@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build outputs — everything under dist/ is generated; only .gitkeep is tracked.
+dist/*
+!dist/.gitkeep
+
+# Download / extraction cache (large MAME artifacts)
+.cache/
+
+# Angular
+site/.angular/
+site/dist/
+
+# Tooling caches
+*.tsbuildinfo
+.eslintcache
+coverage/
+
+# Editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local env / secrets — never commit deployment tokens
+.env
+.env.*
+!.env.example

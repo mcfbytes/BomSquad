@@ -1,0 +1,123 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: Detect changed paths
+    runs-on: ubuntu-latest
+    outputs:
+      # A skipped filter step yields empty outputs, so `|| 'true'` makes a manual
+      # workflow_dispatch run everything rather than silently degrading to lint-only.
+      site: ${{ steps.filter.outputs.site || 'true' }}
+      pipeline: ${{ steps.filter.outputs.pipeline || 'true' }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: dorny/paths-filter@v4.0.2
+        id: filter
+        # paths-filter has built-in base detection for push/pull_request only.
+        if: github.event_name != 'workflow_dispatch'
+        with:
+          filters: |
+            shared: &shared
+              - 'package.json'
+              - 'package-lock.json'
+              - 'tsconfig.base.json'
+              - 'eslint.config.js'
+              - '.prettierrc.json'
+              - '.github/workflows/ci.yml'
+            site:
+              - *shared
+              - 'site/**'
+            pipeline:
+              - *shared
+              - 'pipeline/**'
+              - 'schemas/**'
+              - 'data/**'
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format
+
+  pipeline:
+    name: Pipeline
+    needs: changes
+    if: needs.changes.outputs.pipeline == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck --workspace @bomsquad/pipeline
+      - run: npm run test --workspace @bomsquad/pipeline
+      - run: npm run build --workspace @bomsquad/pipeline
+
+  site:
+    name: Site
+    needs: changes
+    if: needs.changes.outputs.site == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck --workspace @bomsquad/site
+      - run: npm run test --workspace @bomsquad/site
+      - run: npm run build --workspace @bomsquad/site
+
+  ci:
+    name: CI
+    if: always()
+    needs: [changes, lint, pipeline, site]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify required jobs succeeded
+        run: |
+          declare -A results=(
+            [changes]="${{ needs.changes.result }}"
+            [lint]="${{ needs.lint.result }}"
+            [pipeline]="${{ needs.pipeline.result }}"
+            [site]="${{ needs.site.result }}"
+          )
+          failed=0
+          for job in "${!results[@]}"; do
+            result="${results[$job]}"
+            echo "$job: $result"
+            if [[ "$result" != "success" && "$result" != "skipped" ]]; then
+              echo "::error::Job '$job' reported result '$result'"
+              failed=1
+            fi
+          done
+          if [[ "$failed" -eq 1 ]]; then
+            echo "One or more required jobs failed or were cancelled."
+            exit 1
+          fi
+          echo "All required jobs succeeded or were skipped."
