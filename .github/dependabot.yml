@@ -16,6 +16,17 @@ updates:
         update-types:
           - minor
           - patch
+    ignore:
+      # TypeScript 7 (the native compiler) is not yet usable here: @angular/compiler-cli
+      # pins `typescript >=6.0 <6.1` and typescript-eslint caps at `<6.1.0`. The repo is
+      # written to be TS7-ready (see tsconfig.base.json), so lift this the moment Angular
+      # and typescript-eslint publish support.
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major']
+      # @types/node must track the Node runtime in .nvmrc (24), not npm's `latest` tag,
+      # which points at the types for the newest Node line.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
 
   - package-ecosystem: github-actions
     directory: /

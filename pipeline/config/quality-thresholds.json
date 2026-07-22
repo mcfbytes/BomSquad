@@ -1,0 +1,45 @@
+{
+  "chip_required_metadata": ["description", "manufacturer"],
+  "completeness_fields": {
+    "chip": [
+      "datasheet_urls",
+      "description",
+      "family",
+      "manufacturer",
+      "model",
+      "package",
+      "typical_clock_hz",
+      "year_introduced"
+    ],
+    "core": ["author", "machines", "platform_families", "repo"],
+    "device_map": ["note"],
+    "implementation": [
+      "accuracy",
+      "author",
+      "last_reviewed",
+      "license",
+      "paths",
+      "resource_notes",
+      "target_platforms",
+      "verified_against_hardware"
+    ],
+    "machine": ["kind_known", "manufacturer", "platform_family", "year"],
+    "platform_family": ["description", "kind", "manufacturer"]
+  },
+  "coverage_confidence": {
+    "min_bom_rows_for_high": 3,
+    "unknown_share_max_for_medium": 0.25
+  },
+  "issue_generator": {
+    "min_instance_count": 50,
+    "min_machine_count": 5,
+    "top_n": 25
+  },
+  "mapped_instance_share": {
+    "target": 0.9,
+    "warn_below": 0.7
+  },
+  "stale_review_days": 365,
+  "version": "1.0.0",
+  "warning_cap_per_code": 500
+}
