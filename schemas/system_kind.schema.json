@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/system_kind.schema.json",
+  "title": "system_kind",
+  "description": "One row of the `system_kind` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind_id", "label"],
+  "properties": {
+    "kind_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "label": {
+      "$ref": "common.schema.json#/$defs/text"
+    }
+  }
+}

@@ -1,0 +1,256 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/rowfile.schema.json",
+  "title": "row file",
+  "description": "A curated file under data/ or a generated file under extract/. Top-level keys are table names; values are arrays of flat rows (data-model.md §4.1).",
+  "type": "object",
+  "additionalProperties": false,
+  "minProperties": 1,
+  "properties": {
+    "accuracy_level": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "accuracy_level.schema.json"
+      }
+    },
+    "chip": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "chip.schema.json"
+      }
+    },
+    "chip_datasheet": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "chip_datasheet.schema.json"
+      }
+    },
+    "chip_equivalence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "chip_equivalence.schema.json"
+      }
+    },
+    "chip_family": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "chip_family.schema.json"
+      }
+    },
+    "chip_function": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "chip_function.schema.json"
+      }
+    },
+    "chip_name": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "chip_name.schema.json"
+      }
+    },
+    "chip_role": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "chip_role.schema.json"
+      }
+    },
+    "dataset_meta": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "dataset_meta.schema.json"
+      }
+    },
+    "fpga_platform": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "fpga_platform.schema.json"
+      }
+    },
+    "hdl_language": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "hdl_language.schema.json"
+      }
+    },
+    "implementation": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "implementation.schema.json"
+      }
+    },
+    "implementation_chip": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "implementation_chip.schema.json"
+      }
+    },
+    "implementation_dependency": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "implementation_dependency.schema.json"
+      }
+    },
+    "implementation_kind": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "implementation_kind.schema.json"
+      }
+    },
+    "implementation_machine": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "implementation_machine.schema.json"
+      }
+    },
+    "implementation_path": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "implementation_path.schema.json"
+      }
+    },
+    "implementation_platform": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "implementation_platform.schema.json"
+      }
+    },
+    "implementation_system": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "implementation_system.schema.json"
+      }
+    },
+    "license": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "license.schema.json"
+      }
+    },
+    "machine": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "machine.schema.json"
+      }
+    },
+    "machine_chip": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "machine_chip.schema.json"
+      }
+    },
+    "machine_chip_correction": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "machine_chip_correction.schema.json"
+      }
+    },
+    "machine_correction": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "machine_correction.schema.json"
+      }
+    },
+    "machine_system": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "machine_system.schema.json"
+      }
+    },
+    "machine_unmapped_device": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "machine_unmapped_device.schema.json"
+      }
+    },
+    "mame_device": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "mame_device.schema.json"
+      }
+    },
+    "manufacturer": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "manufacturer.schema.json"
+      }
+    },
+    "manufacturer_alias": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "manufacturer_alias.schema.json"
+      }
+    },
+    "project": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "project.schema.json"
+      }
+    },
+    "system": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "system.schema.json"
+      }
+    },
+    "system_chip": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "system_chip.schema.json"
+      }
+    },
+    "system_driver": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "system_driver.schema.json"
+      }
+    },
+    "system_kind": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "system_kind.schema.json"
+      }
+    },
+    "system_name": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "system_name.schema.json"
+      }
+    }
+  }
+}

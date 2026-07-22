@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/project.schema.json",
+  "title": "project",
+  "description": "One row of the `project` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["project_id", "name"],
+  "properties": {
+    "project_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "url": {
+      "$ref": "common.schema.json#/$defs/url"
+    },
+    "author": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "notes": {
+      "$ref": "common.schema.json#/$defs/text"
+    }
+  }
+}

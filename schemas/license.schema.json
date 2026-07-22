@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/license.schema.json",
+  "title": "license",
+  "description": "One row of the `license` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["license_id", "name", "is_osi_approved"],
+  "properties": {
+    "license_id": {
+      "$ref": "common.schema.json#/$defs/spdxId",
+      "description": "SPDX identifier, or the literal `custom`."
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "url": {
+      "$ref": "common.schema.json#/$defs/url"
+    },
+    "is_osi_approved": {
+      "$ref": "common.schema.json#/$defs/flag"
+    }
+  }
+}

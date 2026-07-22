@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "z80",
+      "display_name": "Z80",
+      "function_id": "cpu",
+      "manufacturer_id": "zilog",
+      "description": "8-bit processor, source-compatible with the Intel 8080.",
+      "year_introduced": 1976
+    }
+  ]
+}

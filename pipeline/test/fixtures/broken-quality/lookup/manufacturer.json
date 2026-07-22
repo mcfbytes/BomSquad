@@ -1,0 +1,24 @@
+{
+  "manufacturer": [
+    {
+      "manufacturer_id": "motorola",
+      "name": "Motorola",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "sega",
+      "name": "Sega",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "yamaha",
+      "name": "Yamaha",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "zilog",
+      "name": "Zilog",
+      "country": "US"
+    }
+  ]
+}

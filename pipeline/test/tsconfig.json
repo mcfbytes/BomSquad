@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "//": "Test sources are not part of the pipeline build (pipeline/tsconfig.json emits src/ only), but they must still be type-checked and must still be reachable by typescript-eslint's project service. Same strict baseline, no emit.",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "include": ["**/*.ts"]
+}

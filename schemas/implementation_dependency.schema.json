@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/implementation_dependency.schema.json",
+  "title": "implementation_dependency",
+  "description": "One row of the `implementation_dependency` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["consumer_id", "provider_id"],
+  "properties": {
+    "consumer_id": {
+      "$ref": "common.schema.json#/$defs/slug",
+      "description": "The implementation that consumes."
+    },
+    "provider_id": {
+      "$ref": "common.schema.json#/$defs/slug",
+      "description": "The implementation consumed. Read backwards this is v1's known_consumers[]."
+    },
+    "note": {
+      "$ref": "common.schema.json#/$defs/text"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "chip": [
+    {
+      "chip_id": "ym2151",
+      "display_name": "YM2151",
+      "function_id": "sound-fm"
+    }
+  ],
+  "chip_name": [
+    {
+      "chip_id": "ym2151",
+      "name": "ym2151",
+      "kind": "alias"
+    }
+  ]
+}

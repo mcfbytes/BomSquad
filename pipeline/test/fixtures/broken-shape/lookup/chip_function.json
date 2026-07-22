@@ -1,0 +1,10 @@
+{
+  "chip_function": [
+    {
+      "function_id": "sound-fm",
+      "label": "FM synthesis",
+      "description": "Synthesis by frequency modulation between operator cells.",
+      "prospector_band": "medium"
+    }
+  ]
+}

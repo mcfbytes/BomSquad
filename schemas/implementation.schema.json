@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/implementation.schema.json",
+  "title": "implementation",
+  "description": "One row of the `implementation` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["implementation_id", "name", "kind_id"],
+  "properties": {
+    "implementation_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "kind_id": {
+      "$ref": "common.schema.json#/$defs/identifier",
+      "description": "The generic discriminator: fpga_hdl, software_emulation, original_silicon, ..."
+    },
+    "project_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "repo_url": {
+      "$ref": "common.schema.json#/$defs/url"
+    },
+    "hdl_language_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "license_id": {
+      "$ref": "common.schema.json#/$defs/spdxId",
+      "description": "Verified from the repository. Omit rather than guess."
+    },
+    "accuracy_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "verified_against_hardware": {
+      "$ref": "common.schema.json#/$defs/flag",
+      "description": "1 requires a citation in notes."
+    },
+    "resource_notes": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "last_reviewed": {
+      "$ref": "common.schema.json#/$defs/isoDate",
+      "description": "YYYY-MM-DD."
+    },
+    "notes": {
+      "$ref": "common.schema.json#/$defs/text"
+    }
+  },
+  "allOf": [
+    {
+      "description": "CHECK: verified_against_hardware = 1 requires a citation in notes.",
+      "if": {
+        "required": ["verified_against_hardware"],
+        "properties": {
+          "verified_against_hardware": {
+            "const": 1
+          }
+        }
+      },
+      "then": {
+        "required": ["notes"],
+        "properties": {
+          "notes": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        }
+      }
+    },
+    {
+      "description": "CHECK: an original_silicon row carries no repo_url, hdl_language_id, license_id or accuracy_id. The part as manufactured is not a codebase.",
+      "if": {
+        "required": ["kind_id"],
+        "properties": {
+          "kind_id": {
+            "const": "original_silicon"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "repo_url": false,
+          "hdl_language_id": false,
+          "license_id": false,
+          "accuracy_id": false
+        }
+      }
+    }
+  ]
+}

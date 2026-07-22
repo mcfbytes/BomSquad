@@ -4,6 +4,22 @@ Runbook for provisioning and operating the Azure Static Web App that hosts the
 BOM Squad site. One-time setup is **(human)** work — it needs Azure and GitHub
 credentials only the maintainer holds.
 
+## Current deployment
+
+Provisioned 2026-07-22 on the Free tier (no cost). This section records what
+actually exists; the rest of the document is the general procedure.
+
+|                |                                                                        |
+| -------------- | ---------------------------------------------------------------------- |
+| Subscription   | Personal Pay-As-You-Go                                                 |
+| Resource group | `rg-bomsquad` (`eastus2`)                                              |
+| Static Web App | `bomsquad`, SKU `Free`                                                 |
+| URL            | <https://gray-forest-0c2914a0f.7.azurestaticapps.net>                  |
+| Deploy secret  | `AZURE_STATIC_WEB_APPS_API_TOKEN` — already set on `mcfbytes/BomSquad` |
+
+Deep-link fallback is verified working: `/chip/ym2151` returns HTTP 200 with the
+app shell rather than a 404.
+
 ## Prerequisites
 
 - [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) installed and logged in: `az login`, then confirm the right subscription is selected with `az account show`.
@@ -68,7 +84,7 @@ shows secret values, only names and update times).
 ## 3. Deploy
 
 Deployment is automatic: pushing to `master` with changes under `site/**`,
-`dist/site-data/**`, or the workflow file itself triggers
+`dist/bomsquad.sqlite`, or the workflow file itself triggers
 `.github/workflows/deploy-site.yml`, which builds the Angular app and
 deploys it. You can also trigger it manually:
 

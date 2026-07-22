@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/machine_system.schema.json",
+  "title": "machine_system",
+  "description": "One row of the `machine_system` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["machine_id"],
+  "properties": {
+    "machine_id": {
+      "$ref": "common.schema.json#/$defs/mameShortname"
+    },
+    "system_id": {
+      "$ref": "common.schema.json#/$defs/slug",
+      "description": "Omit to mean deliberately no system; the row's presence is what makes it authoritative."
+    },
+    "reason": {
+      "$ref": "common.schema.json#/$defs/text",
+      "description": "Optional provenance. An assignment is not a correction, so it owes no apology."
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/chip.schema.json",
+  "title": "chip",
+  "description": "One row of the `chip` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["chip_id", "display_name", "function_id"],
+  "properties": {
+    "chip_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "display_name": {
+      "$ref": "common.schema.json#/$defs/text",
+      "description": "The single primary name. Alternates go in chip_name."
+    },
+    "function_id": {
+      "$ref": "common.schema.json#/$defs/slug",
+      "description": "Exactly one taxonomy value (taxonomy.md P2)."
+    },
+    "manufacturer_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "family_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "model": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "description": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "typical_clock_hz": {
+      "$ref": "common.schema.json#/$defs/positiveInt"
+    },
+    "package": {
+      "$ref": "common.schema.json#/$defs/text",
+      "description": "Deliberately free text, not a lookup (data-model.md §2.4)."
+    },
+    "year_introduced": {
+      "$ref": "common.schema.json#/$defs/year"
+    },
+    "notes": {
+      "$ref": "common.schema.json#/$defs/text"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/hdl_language.schema.json",
+  "title": "hdl_language",
+  "description": "One row of the `hdl_language` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["language_id", "label"],
+  "properties": {
+    "language_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "label": {
+      "$ref": "common.schema.json#/$defs/text"
+    }
+  }
+}

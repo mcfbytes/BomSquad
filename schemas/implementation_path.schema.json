@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/implementation_path.schema.json",
+  "title": "implementation_path",
+  "description": "One row of the `implementation_path` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["implementation_id", "path"],
+  "properties": {
+    "implementation_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "path": {
+      "$ref": "common.schema.json#/$defs/repoPath",
+      "description": "Repository-relative path."
+    },
+    "is_top": {
+      "$ref": "common.schema.json#/$defs/flag",
+      "description": "1 on the top-level module. At most one per implementation."
+    }
+  }
+}

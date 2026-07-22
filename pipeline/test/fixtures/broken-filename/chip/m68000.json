@@ -1,0 +1,19 @@
+{
+  "chip": [
+    {
+      "chip_id": "m68000",
+      "display_name": "MC68000",
+      "function_id": "cpu",
+      "manufacturer_id": "motorola",
+      "description": "16/32-bit CISC processor with a 24-bit address bus.",
+      "year_introduced": 1979
+    }
+  ],
+  "chip_name": [
+    {
+      "chip_id": "m68000",
+      "name": "MC68000P10",
+      "kind": "alias"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "system": [
+    {
+      "system_id": "sega-system16a",
+      "name": "Sega System 16A",
+      "kind_id": "arcade",
+      "manufacturer_id": "sega",
+      "year_introduced": 1985,
+      "description": "Sega's first System 16 arcade board revision."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "sega-system16a",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 4000000
+    },
+    {
+      "system_id": "sega-system16a",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 10000000
+    },
+    {
+      "system_id": "sega-system16a",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 4000000
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/machine_chip.schema.json",
+  "title": "machine_chip",
+  "description": "One row of the `machine_chip` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["machine_id", "mame_tag", "chip_id"],
+  "properties": {
+    "machine_id": {
+      "$ref": "common.schema.json#/$defs/mameShortname"
+    },
+    "mame_tag": {
+      "$ref": "common.schema.json#/$defs/mameTag",
+      "description": "MAME chip tag with any leading colon stripped, or the reserved `:device`."
+    },
+    "chip_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "clock_hz": {
+      "$ref": "common.schema.json#/$defs/positiveInt"
+    },
+    "quantity": {
+      "$ref": "common.schema.json#/$defs/positiveInt",
+      "description": "Identical instances under this tag. Defaults to 1."
+    }
+  }
+}

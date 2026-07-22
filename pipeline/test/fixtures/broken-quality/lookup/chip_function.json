@@ -1,0 +1,16 @@
+{
+  "chip_function": [
+    {
+      "function_id": "cpu",
+      "label": "CPU",
+      "description": "General-purpose processor executing an external instruction stream.",
+      "prospector_band": "medium"
+    },
+    {
+      "function_id": "sound-fm",
+      "label": "FM synthesis",
+      "description": "Synthesis by frequency modulation between operator cells.",
+      "prospector_band": "medium"
+    }
+  ]
+}

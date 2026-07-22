@@ -1,0 +1,9 @@
+{
+  "implementation_kind": [
+    {
+      "kind_id": "fpga_hdl",
+      "label": "FPGA HDL",
+      "description": "Synthesizable hardware description."
+    }
+  ]
+}

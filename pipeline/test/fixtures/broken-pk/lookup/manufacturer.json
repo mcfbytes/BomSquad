@@ -1,0 +1,14 @@
+{
+  "manufacturer": [
+    {
+      "manufacturer_id": "sega",
+      "name": "Sega",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "sega",
+      "name": "Sega Enterprises",
+      "country": "JP"
+    }
+  ]
+}

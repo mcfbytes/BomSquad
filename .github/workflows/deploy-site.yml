@@ -10,7 +10,7 @@ on:
     branches: [master]
     paths:
       - 'site/**'
-      - 'dist/site-data/**'
+      - 'dist/bomsquad.sqlite'
       - '.github/workflows/deploy-site.yml'
   workflow_dispatch:
   pull_request:

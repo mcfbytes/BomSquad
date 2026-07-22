@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "ym2151",
+      "display_name": "YM2151",
+      "function_id": "sound-fm",
+      "manufacturer_id": "yamaha",
+      "description": "Eight-channel four-operator FM synthesizer.",
+      "typical_clock_hz": 3579545,
+      "year_introduced": 1984
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/manufacturer_alias.schema.json",
+  "title": "manufacturer_alias",
+  "description": "One row of the `manufacturer_alias` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["alias", "manufacturer_id"],
+  "properties": {
+    "alias": {
+      "$ref": "common.schema.json#/$defs/text",
+      "description": "Verbatim string as it appears in MAME's manufacturer attribute."
+    },
+    "manufacturer_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    }
+  }
+}

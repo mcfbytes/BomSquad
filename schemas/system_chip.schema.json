@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/system_chip.schema.json",
+  "title": "system_chip",
+  "description": "One row of the `system_chip` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["system_id", "role_id", "chip_id"],
+  "properties": {
+    "system_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "role_id": {
+      "$ref": "common.schema.json#/$defs/slug",
+      "description": "Position on the board. Per-board, never the chip's taxonomy."
+    },
+    "chip_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "quantity": {
+      "$ref": "common.schema.json#/$defs/positiveInt",
+      "description": "Identical parts in this role. Defaults to 1."
+    },
+    "clock_hz": {
+      "$ref": "common.schema.json#/$defs/positiveInt",
+      "description": "As fitted on this board."
+    },
+    "note": {
+      "$ref": "common.schema.json#/$defs/text"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/chip_role.schema.json",
+  "title": "chip_role",
+  "description": "One row of the `chip_role` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["role_id", "label"],
+  "properties": {
+    "role_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "label": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "description": {
+      "$ref": "common.schema.json#/$defs/text"
+    }
+  }
+}

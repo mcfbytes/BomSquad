@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/chip_name.schema.json",
+  "title": "chip_name",
+  "description": "One row of the `chip_name` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["chip_id", "name", "kind"],
+  "properties": {
+    "chip_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["alias", "retired_id"],
+      "description": "`alias` is displayable; `retired_id` is redirect-only and must be slug-shaped."
+    }
+  },
+  "allOf": [
+    {
+      "description": "CHECK: a 'retired_id' name was once a chip_id, so it is still slug-shaped.",
+      "if": {
+        "required": ["kind"],
+        "properties": {
+          "kind": {
+            "const": "retired_id"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "name": {
+            "$ref": "common.schema.json#/$defs/slug"
+          }
+        }
+      }
+    }
+  ]
+}

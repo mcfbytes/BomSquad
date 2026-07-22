@@ -1,434 +1,735 @@
 # BOM Squad Data Quality Spec
 
-**Spec version 1.0.0 · Normative**
+**Spec version 2.0.0 · Normative**
 
-Companion to [data-model.md](data-model.md), which fixes the _envelopes_ this document fills in. Where the two disagree, data-model.md wins for structure and this document wins for quality semantics (metric definitions, gate conditions, warning codes, thresholds).
+Companion to [data-model.md](data-model.md) (spec 2.0.0), which owns the schema. Where the two disagree,
+data-model.md wins for structure and this document wins for quality semantics — metric definitions, gate
+conditions, warning codes, thresholds.
 
-This document is the sole specification T6.4 (integrity checks + quality report) implements from, and the sole source T8.4 (good-first-mapping issue generator) reads its ranking from. RFC 2119 key words apply.
+This document is the sole specification T6.4 (integrity checks + quality report) implements from, and the sole
+source T8.4 (good-first-mapping issue generator) reads its ranking from. RFC 2119 key words apply.
 
-**Every number in this document lives in [`pipeline/config/quality-thresholds.json`](../pipeline/config/quality-thresholds.json).** No threshold, cap, field list, or cadence may be written as a literal in pipeline code. §9 is the cross-reference table: every config key ↔ the section that defines it.
+**The central claim of this rewrite: most of v1's quality machinery is now free.** The database enforces it.
+`PRAGMA foreign_key_check` replaces a hand-written eleven-edge dangling-reference checker; `PRIMARY KEY`,
+`UNIQUE` and `CHECK` replace the duplicate-id, collision and enum gates. §2 is the ledger of what that deletes.
+What is left — §3 (FAIL), §4 (WARN), §5 (the headline metric), §6 (the worklist) — is stated as SQL that runs
+against Appendix A/B of data-model.md plus Appendix Q of this document. Every statement in this file has been
+executed against Node 24's `node:sqlite` (SQLite 3.51.3) with fixture data.
 
----
-
-## 1. What the quality report is
-
-`dist/quality-report.json` is the project's health dashboard. It answers three questions in one file:
-
-1. **How much of MAME's device vocabulary have we curated?** — `mapped_instance_share` (§4), the headline number.
-2. **What is degraded, and where?** — the `warnings` array (§6), one entry per defect, non-breaking.
-3. **What should a contributor do next?** — `unmapped_devices` (§7), ranked by impact, feeding auto-generated issues.
-
-It is emitted by stage "quality report" of the pipeline order in data-model.md §9 — after coverage (T6.2), before chunk emission (T6.5). It is written both to `dist/quality-report.json` and as the site-data chunk with logical name `quality-report.json`.
-
-A shipped report **contains only warnings**. Anything failure-grade (§5) exits non-zero and publishes nothing, so there is no `failures` field.
+**Every number this document references lives in
+[`pipeline/config/quality-thresholds.json`](../pipeline/config/quality-thresholds.json).** §7 is the
+cross-reference: every config key ↔ the section that uses it, both directions, no orphans.
 
 ---
 
-## 2. `dist/quality-report.json` — complete structure
+## 1. Where quality lives now
 
-Top level (envelope fixed by data-model.md §5.12; all members REQUIRED):
+| Artifact                   | Contains                                                                 | Consumer                    |
+| -------------------------- | ------------------------------------------------------------------------ | --------------------------- |
+| the build's exit code      | every FAIL condition (§3)                                                | CI                          |
+| `dist/bomsquad.sqlite`     | `v_quality_warning`, `v_quality_instance`, `v_mame_device_worklist` (§8) | the SPA, contributors, T8.4 |
+| `dist/quality-report.json` | ~20 scalars: the headline metric, entity counts, warning counts per code | CI gates, badges, the site  |
 
-| Field              | Type       | Meaning                                                                                                                                     |
-| ------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `schema_version`   | string     | Semver of this envelope. `1.0.0` for this spec. Tracks the data-model spec version.                                                         |
-| `dataset_version`  | string     | Copied verbatim from `manifest.dataset_version` (release-supplied, else `0.0.0-dev`).                                                       |
-| `mame_version`     | string     | Copied verbatim from `manifest.mame_version`, e.g. `0.288`.                                                                                 |
-| `summary`          | object     | §2.1. The one deliberately open object in the model — members MAY be added by a minor spec bump.                                            |
-| `warnings`         | Warning[]  | §2.2. Sorted by (`code`, `subject`, `message`) ascending bytewise; an absent `subject` sorts as the empty string, i.e. first. MAY be empty. |
-| `unmapped_devices` | Unmapped[] | §2.3. Sorted by `instance_count` descending, then `key` ascending. MAY be empty.                                                            |
-
-Serialization follows data-model.md §8 without exception: 2-space indent, hoisted key order (`$schema`, `id`, …, then bytewise), integers plain, ratios rounded with `Math.round(x * 10000) / 10000`, percentages with `Math.round(x * 10) / 10`, no timestamps.
-
-### 2.1 `summary`
-
-All members are REQUIRED. Integers are exact counts; ratios are 0–1 rounded to 4 decimal places; percentages are 0–100 rounded to 1 decimal place.
-
-**Instance accounting (§4)** — population is MAME device instances across filtered machines:
-
-| Member                   | Type           | Meaning                                                                                 |
-| ------------------------ | -------------- | --------------------------------------------------------------------------------------- |
-| `chip_instances_total`   | integer        | Denominator of the headline metric. `= mapped + ignored + unknown` (MUST hold exactly). |
-| `chip_instances_mapped`  | integer        | Instances whose lookup key has a device-map **map** entry resolving to a curated chip.  |
-| `chip_instances_ignored` | integer        | Instances whose lookup key has a device-map **ignore** entry.                           |
-| `chip_instances_unknown` | integer        | Instances with no device-map entry, i.e. minted as `unknown:<key>`.                     |
-| `mapped_instance_share`  | number (ratio) | `(mapped + ignored) / total`. **The headline metric.** `1` when `total` is 0.           |
-
-**Device-key accounting** — the same population collapsed to distinct lookup keys (the worklist view). Secondary by design: it treats a device used in one machine and a device used in 500 machines identically, which is why it is _not_ the headline number.
-
-| Member                     | Type           | Meaning                                                                                 |
-| -------------------------- | -------------- | --------------------------------------------------------------------------------------- |
-| `distinct_devices_total`   | integer        | Distinct lookup keys observed across filtered machines. `= mapped + ignored + unknown`. |
-| `distinct_devices_mapped`  | integer        | Distinct keys with a map entry.                                                         |
-| `distinct_devices_ignored` | integer        | Distinct keys with an ignore entry.                                                     |
-| `distinct_devices_unknown` | integer        | Distinct keys with no entry (= `unmapped_devices.length`).                              |
-| `mapped_device_share`      | number (ratio) | `(mapped + ignored) / total`. `1` when `total` is 0.                                    |
-
-**Entity counts and curation reach:**
-
-| Member                                | Type    | Meaning                                                                                    |
-| ------------------------------------- | ------- | ------------------------------------------------------------------------------------------ |
-| `chips_total`                         | integer | Curated chips (excludes stubs).                                                            |
-| `chips_stub`                          | integer | `unknown:` stub chips materialized in dist. Equals `distinct_devices_unknown`.             |
-| `cores_total`                         | integer | Normalized core records.                                                                   |
-| `cores_unmapped`                      | integer | Cores with an empty `machines` array.                                                      |
-| `families_total`                      | integer | Platform families.                                                                         |
-| `implementations_total`               | integer | Normalized implementation records.                                                         |
-| `implementations_unverified_accuracy` | integer | Implementations with no `accuracy` field.                                                  |
-| `implementations_unverified_license`  | integer | Implementations with no `license` field.                                                   |
-| `machines_total`                      | integer | Normalized machines in dist (MAME-derived + `custom:`).                                    |
-| `machines_with_core`                  | integer | Machines with a non-empty derived `cores` array.                                           |
-| `machines_zero_mapped_chips`          | integer | Machines whose post-overlay BOM contains no row with a curated (non-`unknown:`) `chip_id`. |
-
-**Coverage confidence roll-up (§8):**
-
-| Member                       | Type   | Meaning                                                                                                                                                                                                                                                                        |
-| ---------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `coverage_confidence_counts` | object | Integers keyed `high`, `medium`, `low` (all three keys always present, zero-valued if empty). Counts machines by their derived `coverage.confidence`. Machines without a `coverage` object are not counted; the three values MUST sum to the number of machines that have one. |
-
-**Completeness (§3):**
-
-| Member                 | Type   | Meaning                                                                                                                                                                       |
-| ---------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `completeness_percent` | object | Percentages (1 dp) keyed `chip`, `core`, `device_map`, `implementation`, `machine`, `platform_family` — all six keys always present. `0` when the entity population is empty. |
-
-**Warning roll-up:**
-
-| Member             | Type   | Meaning                                                                                                                                                                                                                                                                                             |
-| ------------------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `warnings_by_code` | object | Warning code → integer count of _emitted_ warnings with that code. Keys sorted; codes with zero emissions are omitted. Counts emitted entries, so a truncated code (§6.3) reports the cap, not the true total; the true total is carried by the accompanying `WARNINGS_TRUNCATED` entry's `impact`. |
-
-### 2.2 `Warning`
-
-| Field     | Type   | Req | Meaning                                                                                                                                                                                        |
-| --------- | ------ | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `code`    | string | Req | SCREAMING_SNAKE code from the registry in §6.1. Unregistered codes MUST NOT be emitted.                                                                                                        |
-| `message` | string | Req | One human-readable sentence, present tense, naming the concrete defect. MUST be deterministic — no counts that depend on iteration order, no wall-clock dates.                                 |
-| `subject` | string | Opt | The entity id (`ym2151`, `mame:outrun`, `core:mister-arcade-outrun`) or, when the defect is about a file rather than an entity, the repo-relative path. Absent only for dataset-wide warnings. |
-| `impact`  | number | Opt | Magnitude for sorting/triage in the UI. Per-code meaning is fixed in §6.1; where §6.1 gives none, the field MUST be absent (never `0` as a filler).                                            |
-
-### 2.3 `Unmapped`
-
-One entry per distinct lookup key with no device-map entry — i.e. one entry per `unknown:` stub in the dataset.
-
-| Field             | Type     | Req | Meaning                                                                                                                                                                      |
-| ----------------- | -------- | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `key`             | string   | Req | The device lookup key (data-model.md §6.2), grammar `^[a-z0-9_]{1,64}$`. The stub's id is `unknown:<key>`.                                                                   |
-| `instance_count`  | integer  | Req | ≥ 1. Total unknown instances for this key summed over all filtered machines (§4.2). **This is the impact score** (§7).                                                       |
-| `machine_count`   | integer  | Req | ≥ 1. Distinct machines containing at least one instance of this key.                                                                                                         |
-| `sample_machines` | string[] | Req | Up to 5 **machine ids** (dist-side, so `mame:outrun`, not `outrun`), sorted bytewise ascending, taken as the first 5 of the full sorted list. Deterministic by construction. |
+The database _is_ the artifact (data-model.md §4.3), so a defect list belongs in it as a **view**, not in a
+bespoke JSON document. §5 of the v1 spec shipped a 500-entry-per-code array with a truncation protocol and a
+`WARNINGS_TRUNCATED` sentinel; the same information is now `SELECT * FROM v_quality_warning`, unbounded,
+filterable, joinable to the entity it accuses, and costing zero bytes of payload beyond its own SQL text.
+`dist/quality-report.json` survives only because CI and a status badge need a handful of numbers without
+opening a database.
 
 ---
 
-## 3. Completeness dimensions per entity
+## 2. Deletion ledger — what the schema now enforces
 
-Completeness measures **curation reach**: of the fields a good record would carry, how many does the average record actually carry. It is reported, never gated — a low number is a backlog, not a defect.
+Every row below was a specified check, a warning code, or a report field in v1. None of it is implemented.
 
-### 3.1 Formula
+### 2.1 Deleted because a constraint enforces it
 
-For an entity type `E` with counted field list `F(E)` (from config key `completeness_fields.<E>`) and record population `P(E)`:
+| v1 rule                                                            | Now enforced by                                                                                                           |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| `DANGLING_REFERENCE` — the eleven-edge table (v1 §5.2), every row  | `PRAGMA foreign_key_check`. Every edge is a declared FK. **Zero lines of code.**                                          |
+| `OVERLAY_TARGET_MISSING`                                           | FK on `machine_correction.machine_id` etc. — same check, same pragma.                                                     |
+| `DUPLICATE_ID` (all entity types, incl. minted `custom:` machines) | `PRIMARY KEY` on every table.                                                                                             |
+| `BOM_KEY_COLLISION`                                                | `PRIMARY KEY (machine_id, mame_tag, chip_id)`.                                                                            |
+| `FAMILY_CONFLICT` — a machine claimed by two families              | `PRIMARY KEY (mame_sourcefile)` on `system_driver`: the determinant is the key.                                           |
+| `ROUTE_COLLISION`                                                  | Nothing to collide — namespace prefixes and derived routes are deleted (§3.2 dm).                                         |
+| `ALIAS_COLLISION` (alias = live id; alias chaining; type mismatch) | `UNIQUE(name)` on `chip_name`/`system_name` + FK to the owning table. One residue survives as a FAIL: §3.3.               |
+| `UNKNOWN_IN_CURATED` — grep gate for `"unknown:` under `data/`     | The `unknown:` namespace is deleted. Unmapped devices are `machine_unmapped_device` rows, which cannot appear in `data/`. |
+| `SCHEMA_VIOLATION` for type/range/enum/boolean domains             | `STRICT` tables + `CHECK` constraints. What remains for the T1.2 validator is JSON row shape, not values.                 |
+| "one device maps to one chip"                                      | `PRIMARY KEY (mame_device)`.                                                                                              |
+| "a device is mapped xor ignored"                                   | `CHECK ((chip_id IS NULL) <> (ignore_reason IS NULL))`.                                                                   |
+| "at most one top-level path per implementation"                    | partial `UNIQUE INDEX … WHERE is_top = 1`.                                                                                |
+| "no self-edges, no mirrored `equivalent` rows"                     | `CHECK (from_chip_id <> to_chip_id)`, `CHECK (kind <> 'equivalent' OR from < to)`.                                        |
+| `STALE_REFERENCE` (warning: a curated file used an alias)          | Promoted to free and fatal: a retired name is not a `chip_id`, so referencing it is a FK failure.                         |
+| Structural soundness of the published file                         | `PRAGMA integrity_check`.                                                                                                 |
 
-```
-present(r)          = |{ f ∈ F(E) : predicate(f, r) }|
-completeness(r)     = present(r) / |F(E)|
-completeness_pct(E) = round( 100 * ( Σ_{r ∈ P(E)} completeness(r) ) / |P(E)| , 1 dp )
-```
+### 2.2 Deleted because the thing it measured no longer exists
 
-It is the **mean of per-record ratios**, not the ratio of totals — every record weighs the same, so one lavishly documented chip cannot mask a hundred bare ones. When `|P(E)| = 0`, the value is `0`.
+| v1 machinery                                                                                                                                                     | Why it is gone                                                                                                                                                                                                                                    |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| §8 per-machine `coverage.confidence` (`high`/`medium`/`low`) and its two thresholds                                                                              | Replaced by `v_system_coverage_by_kind.unmapped_device_count` — a count of the actual doubt, not a three-valued opinion derived from it. A derived enum stored on every machine was also a stored derivation (3NF).                               |
+| `summary.coverage_confidence_counts`                                                                                                                             | Roll-up of the above.                                                                                                                                                                                                                             |
+| §3 completeness engine: `completeness_fields.<entity>` × 6 entity lists, the mean-of-per-record-ratios formula, `predicate(f, r)`, the `kind_known` pseudo-field | A JSON list of column names is a second copy of the DDL that drifts from it silently. Completeness is now `COUNT(*) FILTER (WHERE col IS NULL)` per column, written once in SQL (§8, `v_quality_completeness`), and the columns are the schema's. |
+| `completeness_fields.core`, `.platform_family`                                                                                                                   | `core` and `platform_family` are not entities any more (data-model.md §1.8/§1.9).                                                                                                                                                                 |
+| `chip_required_metadata` config list                                                                                                                             | Two columns named in one view predicate (§4). A config key that can only ever hold the same two strings is not configuration.                                                                                                                     |
+| `unmapped_devices[]` + `sample_machines[]` in the report                                                                                                         | `v_mame_device_worklist` (data-model.md Appendix B) plus §6's query. It was a repeating group in a JSON document — the exact 1NF fault this rebuild exists to remove.                                                                             |
+| `warning_cap_per_code` + `WARNINGS_TRUNCATED`                                                                                                                    | Warnings are rows in a view. There is no array to truncate and no chunk budget to protect.                                                                                                                                                        |
+| `CHUNK_OVER_BUDGET` and the re-sharding rules                                                                                                                    | There are no chunks. One database, one size budget (§3.1).                                                                                                                                                                                        |
+| `mame_version` per report entity / per machine                                                                                                                   | `dataset_meta`.                                                                                                                                                                                                                                   |
+| `distinct_devices_*` five-member block                                                                                                                           | Three numbers from `v_quality_device` (§5.4), reported but explicitly secondary.                                                                                                                                                                  |
 
-`predicate(f, r)` is "field `f` is present on `r`", where present means: the key exists, and if the value is a string it is non-empty, and if it is an array it has at least one element. `false` counts as present (an explicitly-`false` `verified_against_hardware` is an assessment, not an absence). One pseudo-field exists — `kind_known` on machines — whose predicate is "`r.kind` is not `unknown`".
+### 2.3 Retained, but relocated
 
-Completeness is computed on the **normalized (post-overlay, post-derivation) records** as they appear in dist, so overlay curation is correctly credited.
+| v1 rule                    | Now                                                                                           |
+| -------------------------- | --------------------------------------------------------------------------------------------- |
+| `SLUG_INVALID`             | data-model.md §5.4 linter gate (SQLite `GLOB` cannot express the grammar). Not restated here. |
+| JSON canonical form        | data-model.md §4.3 linter gate.                                                               |
+| Filename stem ↔ entity key | data-model.md §4.2 linter gate.                                                               |
+| `STALE_OVERLAY`            | `STALE_CORRECTION` (§3.4), one `SELECT`, no merge engine.                                     |
+| `NONDETERMINISTIC_BUILD`   | §3.2, unchanged in spirit and simpler in practice (two files to compare, not two trees).      |
 
-### 3.2 Populations and counted fields
-
-| Entity | Population | Counted fields (`|F|`) |
-|---|---|---|
-| `chip` | Curated chips only — **stubs excluded** (`stub: true`); a stub is by definition 0% complete and would only dilute the signal. Stub volume is reported separately as `chips_stub`. | `datasheet_urls`, `description`, `family`, `manufacturer`, `model`, `package`, `typical_clock_hz`, `year_introduced` (8) |
-| `implementation` | All normalized implementations. | `accuracy`, `author`, `last_reviewed`, `license`, `paths`, `resource_notes`, `target_platforms`, `verified_against_hardware` (8) |
-| `machine` | All normalized machines. | `kind_known` (pseudo-field), `manufacturer`, `platform_family`, `year` (4) |
-| `core` | All normalized cores. | `author`, `machines`, `platform_families`, `repo` (4) |
-| `platform_family` | All families. | `description`, `kind`, `manufacturer` (3) |
-| `device_map` | Every **map** entry in `mame-device-map.json` (ignore entries are excluded: their `reason` is schema-required, so they are always 100%). | `note` (1) |
-
-`device_map` completeness therefore reads as "share of mappings carrying a justification note" — the direct measure of T3.1's acceptance criterion that every non-obvious mapping be justified.
-
-Required fields are never counted (they are guaranteed present by schema validation, so they would only inflate the number by a constant).
+**Net effect:** 6 of v1's 8 failure classes and 3 of its 9 warning codes are gone outright; the eleven-row
+dangling-reference table, the overlay gate family, the completeness engine, the confidence classifier and the
+warning-truncation protocol are gone with them. What is specified below is **7 FAIL queries** (§3.1–§3.7),
+**15 WARN queries** (§4) and one metric (§5).
 
 ---
 
-## 4. The mapped-instance-share metric
+## 3. FAIL conditions
 
-The single most important curation number in the project. It answers: **of every place MAME says a chip sits on a board, what fraction have we made a curatorial decision about?** A decision is either "this is chip X" (mapped) or "this is not board silicon" (ignored). No decision is `unknown:`.
+A failure means: exit non-zero, publish nothing, leave `dist/` untouched. Failures are **not** recorded in the
+quality report — a report exists only for a build that had none.
 
-### 4.1 Population: instances, weighted by machine count
+These run **after** the load and the correction pass of data-model.md §5.1, against the finished database.
+Everything in §2.1 has already run by then, for free. Each query below MUST return **zero rows**; any row is
+the failure, and the row itself is the error message.
 
-The denominator is **device instances**, not distinct devices. An instance is one occurrence of a device _within one machine_. A device appearing in 500 machines contributes ≈500 instances; a device appearing once contributes 1. That is precisely what PLAN §3.8's "weighted by machine count" means, and it is the whole point: it makes the metric track the number of _board records_ the project can render honestly, which is what a visitor experiences, rather than the length of the device-map file, which no one experiences.
+### 3.1 `DB_OVER_BUDGET`
 
-Scope of the population:
+`dist/bomsquad.sqlite` exceeds `db_max_bytes`. Checked with `stat`, not SQL. Rationale for the value and for
+the escape hatch (a second lazily-fetched database, never a chunking format) is data-model.md §4.3; the number
+lives in the config file so CI and the doc cannot disagree.
 
-- **Only MAME-derived instances count.** The population is enumerated from the filtered raw machines in `extract/machines.raw.json` — the same filter the BOM build uses. `custom:` machines (overlay-created) contribute nothing: they have no MAME devices and no lookup keys.
-- **Enumeration happens at the device-map resolution step — before overlays.** Overlay-added BOM rows are not device instances and are excluded from the denominator; overlay-removed rows are _not_ subtracted from it. Rationale: this metric measures the health of the device map, which has exactly one home (data-model.md §5.6). If a device is not real board silicon, the correction belongs in the map as an `ignore` entry with a reason — where it fixes all 500 machines at once and moves the metric — not in one machine's overlay. Letting per-machine overlays move the headline number would reward the wrong fix.
+### 3.2 `NONDETERMINISTIC_BUILD`
 
-### 4.2 Enumeration (normative)
+CI builds twice from a clean tree and compares `sha256sum` of `dist/bomsquad.sqlite` and of every file under
+`extract/`. The build recipe that makes this valid is data-model.md §4.3.
 
-For each filtered raw machine `M`, define the **resolution target** of a lookup key `k`:
+### 3.3 `RETIRED_ID_COLLISION`
 
-```
-τ(k) = chip_id                 if the device map has a map entry for k
-     = "ignore:" + k           if the device map has an ignore entry for k
-     = "unknown:" + k          otherwise
-```
+A retired id or alias that is also a live primary key. Cross-table, so no `CHECK` can reach it, and `UNIQUE`
+cannot either — the two values live in different tables.
 
-Alias resolution (data-model.md §3.3) applies to the map's `chip_id` values before this step, as everywhere else.
-
-Then, for each distinct target `τ` occurring in `M`:
-
-```
-n_chip(τ, M) = number of M.chips[] elements whose normalize_device_key(name) has target τ
-n_ref (τ, M) = number of entries in M.device_refs[] (duplicates counted) whose key has target τ
-instances(τ, M) = max( n_chip(τ, M), n_ref(τ, M) )
-```
-
-`max` is exactly the dedup-by-subtraction of data-model.md §6.5 in closed form: step 1 emits `n_chip` rows and step 3 emits `max(0, n_ref − n_chip)` more, and `n_chip + max(0, n_ref − n_chip) = max(n_chip, n_ref)`. Applying the same rule to ignored targets — which §6.5 skips because they never become rows — keeps the denominator consistent with the numerator. Two _different_ ignored keys are different targets and are never merged.
-
-Aggregate over all filtered machines and classify by target kind:
-
-```
-chip_instances_mapped  = Σ_M Σ_{τ mapped}   instances(τ, M)
-chip_instances_ignored = Σ_M Σ_{τ ignored}  instances(τ, M)
-chip_instances_unknown = Σ_M Σ_{τ unknown}  instances(τ, M)
-chip_instances_total   = mapped + ignored + unknown
-
-mapped_instance_share  = round( (mapped + ignored) / total , 4 dp )    // 1 when total = 0
+```sql
+SELECT 'chip' AS entity, n.name AS name, n.chip_id AS claimed_by
+FROM chip_name n JOIN chip c ON c.chip_id = n.name
+UNION ALL
+SELECT 'system', n.name, n.system_id
+FROM system_name n JOIN system s ON s.system_id = n.name
+ORDER BY 1, 2;
 ```
 
-`unknown:` instances are counted in the denominator and **never** in the numerator. They are the entire backlog the metric exists to measure; excluding them would make the number self-congratulatory.
+### 3.4 `STALE_CORRECTION`
 
-Per-key rollups for §7:
+A correction whose target moved. Two of the three cases (data-model.md §5.2) are already covered by
+`foreign_key_check`; this is the third. It MUST run **before** the correction pass, against the freshly loaded
+`machine_chip`.
 
-```
-instance_count(k) = Σ_M instances("unknown:" + k, M)
-machine_count(k)  = |{ M : instances("unknown:" + k, M) ≥ 1 }|
-```
-
-### 4.3 Worked example
-
-Device map: `m68000 → m68000`, `z80 → z80`, `ym2151 → ym2151`, `screen → {ignore, reason: "MAME presentation abstraction"}`, `palette → {ignore, …}`. The key `sega_315_5197` has **no entry**.
-
-Three filtered machines:
-
-| Machine | `chips[]` (tag → name)                                                           | `device_refs[]`                                                 |
-| ------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| `alpha` | maincpu → `M68000`, audiocpu → `Z80`, ymsnd → `YM2151`, custom → `Sega 315-5197` | `m68000`, `z80`, `ym2151`, `sega_315_5197`, `screen`, `palette` |
-| `beta`  | maincpu → `M68000`, subcpu → `M68000`, audiocpu → `Z80`                          | `m68000`, `m68000`, `z80`, `screen`                             |
-| `gamma` | audiocpu → `Z80`                                                                 | `z80`, `screen`, `sega_315_5197`                                |
-
-Instance counts, `max(n_chip, n_ref)` per target:
-
-| Machine | target                  | n_chip | n_ref | instances | class   |
-| ------- | ----------------------- | ------ | ----- | --------- | ------- |
-| alpha   | `m68000`                | 1      | 1     | **1**     | mapped  |
-| alpha   | `z80`                   | 1      | 1     | **1**     | mapped  |
-| alpha   | `ym2151`                | 1      | 1     | **1**     | mapped  |
-| alpha   | `unknown:sega_315_5197` | 1      | 1     | **1**     | unknown |
-| alpha   | `ignore:screen`         | 0      | 1     | **1**     | ignored |
-| alpha   | `ignore:palette`        | 0      | 1     | **1**     | ignored |
-| beta    | `m68000`                | 2      | 2     | **2**     | mapped  |
-| beta    | `z80`                   | 1      | 1     | **1**     | mapped  |
-| beta    | `ignore:screen`         | 0      | 1     | **1**     | ignored |
-| gamma   | `z80`                   | 1      | 1     | **1**     | mapped  |
-| gamma   | `ignore:screen`         | 0      | 1     | **1**     | ignored |
-| gamma   | `unknown:sega_315_5197` | 0      | 1     | **1**     | unknown |
-
-Totals:
-
-```
-chip_instances_mapped  = 1 + 1 + 1 + 2 + 1 + 1 = 7
-chip_instances_ignored = 1 + 1 + 1 + 1         = 4
-chip_instances_unknown = 1 + 1                 = 2
-chip_instances_total   = 7 + 4 + 2             = 13
-
-mapped_instance_share  = (7 + 4) / 13 = 11 / 13 = 0.846153846…
-                       → round(·, 4 dp)         = 0.8462
+```sql
+SELECT c.machine_id, c.mame_tag, c.chip_id, c.op, c.reason
+FROM machine_chip_correction c
+WHERE (c.op IN ('remove','set')
+       AND NOT EXISTS (SELECT 1 FROM machine_chip m
+                       WHERE m.machine_id = c.machine_id AND m.mame_tag = c.mame_tag
+                         AND m.chip_id = c.chip_id))
+   OR (c.op = 'add'
+       AND EXISTS (SELECT 1 FROM machine_chip m
+                   WHERE m.machine_id = c.machine_id AND m.mame_tag = c.mame_tag
+                     AND m.chip_id = c.chip_id))
+ORDER BY c.machine_id, c.mame_tag, c.chip_id;
 ```
 
-Serialized as `0.8462` (data-model.md §8.4).
+### 3.5 `STALE_EXTRACT`
 
-Device-key view of the same data — 6 distinct keys, 3 mapped, 2 ignored, 1 unknown:
+A device recorded as unmapped that the curated dictionary now maps or ignores. `machine_unmapped_device` means
+"no `mame_device` row" (data-model.md §1.3); if that stops being true, `extract/` is older than `data/` and
+every downstream number — the headline metric included — is computed from a stale denominator. This is the one
+invariant that spans the generated and curated halves of the dataset, and no FK can express it, because it
+requires the _absence_ of a row in the referenced table.
+
+```sql
+SELECT DISTINCT d.mame_device
+FROM machine_unmapped_device d
+JOIN mame_device md ON md.mame_device = d.mame_device
+ORDER BY 1;
+```
+
+### 3.6 `DEPENDENCY_CYCLE`
+
+`implementation_dependency` is self-referencing and `CHECK (consumer_id <> provider_id)` only stops the
+one-hop case. A longer cycle makes Q3's `WITH RECURSIVE` traversal non-terminating, so this is a correctness
+gate on a shipped query, not a style rule.
+
+```sql
+WITH RECURSIVE walk(root, node, depth) AS (
+  SELECT consumer_id, provider_id, 1 FROM implementation_dependency
+  UNION ALL
+  SELECT w.root, d.provider_id, w.depth + 1
+  FROM walk w
+  JOIN implementation_dependency d ON d.consumer_id = w.node
+  WHERE w.depth < (SELECT COUNT(*) FROM implementation)
+)
+SELECT DISTINCT root AS implementation_id FROM walk WHERE node = root ORDER BY 1;
+```
+
+The `depth` bound is what makes the detector itself terminate; `COUNT(*)` over `implementation` is the longest
+possible acyclic path, so a cycle is always caught before the bound bites.
+
+### 3.7 `DATASET_META_INCOMPLETE`
+
+The four build facts the report and the views read MUST exist. Cheap, and it fails at build time instead of
+producing a report with a `null` in it.
+
+```sql
+SELECT k.key
+FROM (SELECT 'build_date' AS key UNION ALL SELECT 'dataset_version'
+      UNION ALL SELECT 'mame_version' UNION ALL SELECT 'schema_version') k
+WHERE NOT EXISTS (SELECT 1 FROM dataset_meta m WHERE m.key = k.key)
+ORDER BY 1;
+```
+
+---
+
+## 4. WARN conditions
+
+All fifteen are branches of one view, `v_quality_warning` (Appendix Q), with the uniform shape:
+
+| Column    | Meaning                                                                                                              |
+| --------- | -------------------------------------------------------------------------------------------------------------------- |
+| `code`    | SCREAMING_SNAKE code from the registry below. The registry is closed.                                                |
+| `subject` | the offending row's primary key, or `NULL` for the one dataset-wide warning.                                         |
+| `impact`  | numeric triage magnitude; per-code meaning below; `NULL` where no meaningful magnitude exists (never `0` as filler). |
+| `detail`  | one fixed sentence per code. Constant text, so the view is deterministic by construction.                            |
+
+Warnings never break a build. They are queryable in the shipped database and counted in the report.
+
+| Code                                | Fires when                                                                                                                                                                                                                                                                                                                                                                   | `impact`                       | Config                                                     |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | ---------------------------------------------------------- |
+| `MAPPED_INSTANCE_SHARE_LOW`         | `v_quality_instance.mapped_instance_share` < `mapped_instance_share.warn_below`. Exactly one row.                                                                                                                                                                                                                                                                            | the share itself               | `mapped_instance_share.warn_below`                         |
+| `UNMAPPED_DEVICE_HIGH_IMPACT`       | a worklist device meets **both** issue-generator minimums. Same predicate as §6, one canonical pair.                                                                                                                                                                                                                                                                         | `instance_count`               | `issue_generator.min_instance_count`, `.min_machine_count` |
+| `CHIP_MISSING_METADATA`             | `chip.manufacturer_id IS NULL OR chip.description IS NULL`. PLAN §3.8 names function and manufacturer; `function_id` is `NOT NULL`, so `description` takes the vacated slot as the thing that makes a chip page readable.                                                                                                                                                    | count of missing columns (1–2) | —                                                          |
+| `IMPL_UNVERIFIED_LICENSE`           | `implementation.license_id IS NULL` **and `kind_id <> 'original_silicon'`**. Omission is mandated when unverified, so this is the visible cost of honesty, not a prompt to guess.                                                                                                                                                                                            | `NULL`                         | —                                                          |
+| `IMPL_UNVERIFIED_ACCURACY`          | `implementation.accuracy_id IS NULL` **and `kind_id <> 'original_silicon'`**.                                                                                                                                                                                                                                                                                                | `NULL`                         | —                                                          |
+| `IMPL_STALE_REVIEW`                 | `last_reviewed` older than `stale_review_days` before `dataset_meta.build_date`. A row with no `last_reviewed` is incomplete, not stale, and is not warned here.                                                                                                                                                                                                             | age in whole days              | `stale_review_days`                                        |
+| `IMPL_UNTARGETED`                   | no `implementation_chip` and no `implementation_system` row. The check data-model.md §1.8 accepted as the price of two typed junctions.                                                                                                                                                                                                                                      | `NULL`                         | —                                                          |
+| `IMPL_MACHINES_WITHOUT_SYSTEM`      | `implementation_machine` rows but no `implementation_system` row. Deliberately a warning: "runs these machines" is well-formed for any implementation, and a chip-level claim to run a title is usually a mis-filed system-level core.                                                                                                                                       | machine row count              | —                                                          |
+| `SYSTEM_NO_CHIPS`                   | no row in `v_system_chip_effective` — neither curated nor observed. The system renders as an empty page and cannot appear in the Prospector.                                                                                                                                                                                                                                 | `NULL`                         | —                                                          |
+| `SYSTEM_UNMAPPED_SHARE_HIGH`        | the system's unmapped device-instance share exceeds `system_unmapped_share.warn_above`. Its coverage number describes a minority of the board.                                                                                                                                                                                                                               | the share                      | `system_unmapped_share.warn_above`                         |
+| `MACHINE_ZERO_MAPPED_CHIPS`         | `v_machine_bom` is empty for the machine — no own rows and no system to inherit from.                                                                                                                                                                                                                                                                                        | unmapped instance count        | —                                                          |
+| `EQUIVALENCE_MUTUAL_PROVIDES`       | `a provides b` and `b provides a` both exist. Mutual provision is equivalence; it should be one `equivalent` edge, which `v_chip_satisfies` already walks both ways. Emitted once, on the `from < to` direction.                                                                                                                                                             | `NULL`                         | —                                                          |
+| `CHIP_NAME_COLLISION`               | `chip.display_name` equals another chip's `chip_name.name`. `display_name` sits outside `ux_chip_name_name`, so the resolver would answer with a chip other than the one that displays the string (data-model.md §3.4).                                                                                                                                                      | `NULL`                         | —                                                          |
+| `SYSTEM_NAME_COLLISION`             | `system.name` equals another system's `system_name.name`. Same gap, same reason.                                                                                                                                                                                                                                                                                             | `NULL`                         | —                                                          |
+| `CHIP_MANUFACTURER_FAMILY_MISMATCH` | `chip.manufacturer_id` differs from its `chip_family.manufacturer_id`, both being non-NULL. A **warning, never a constraint**: second-sourced parts genuinely break `family → manufacturer` (a Sharp Z80 is a chip of the Zilog Z80 family), and nothing can tell a real second source from a data-entry slip. Confirm it in `chip.notes` and leave it (data-model.md §2.3). | `NULL`                         | —                                                          |
+
+**Determinism.** The view reads only base tables and `dataset_meta`; `detail` is constant text; no wall-clock
+value appears anywhere (`IMPL_STALE_REVIEW` ages against `build_date`). Rebuilding an old commit reproduces the
+old warnings exactly. Callers order by `(code, subject)`.
+
+---
+
+## 5. The mapped-instance-share metric
+
+The project's headline curation number (PLAN §3.8). It answers: **of every place MAME says a part sits on a
+board, what fraction have we identified?**
+
+### 5.1 The query
+
+```sql
+SELECT m.mapped_instances,
+       u.unmapped_instances,
+       m.mapped_instances + u.unmapped_instances AS total_instances,
+       CASE WHEN m.mapped_instances + u.unmapped_instances = 0 THEN 1.0
+            ELSE 1.0 * m.mapped_instances / (m.mapped_instances + u.unmapped_instances)
+       END AS mapped_instance_share
+FROM (SELECT COALESCE(SUM(quantity), 0) AS mapped_instances   FROM machine_chip) m
+CROSS JOIN
+     (SELECT COALESCE(SUM(quantity), 0) AS unmapped_instances FROM machine_unmapped_device) u;
+```
+
+That is the whole metric. It is shipped as the view `v_quality_instance` (Appendix Q).
+
+### 5.2 The denominator, precisely
+
+**Device _instances_, not distinct devices — and the machine-count weighting is structural, not a weight term.**
+
+`machine_chip` and `machine_unmapped_device` are both keyed by `machine_id`, so a device present in 500
+machines contributes 500 rows and a device present in one contributes one. `SUM(quantity)` — not `COUNT(*)` —
+then also counts the two 68000s of a dual-CPU board as two instances, because a two-68000 board really does
+need two 68000s implemented. PLAN §3.8's "weighted by machine count" is therefore satisfied by summing over the
+per-machine tables; there is no weighting factor to get wrong, and no way for the metric to drift from the data.
+
+Population scope:
+
+- **Only MAME-derived instances.** Both tables are `extract/` output, generated from the filtered machine set
+  (data-model.md §4.2). There is no other source of instances — curators cannot mint machines any more.
+- **Curated boards do not inflate it.** `system_chip` is deliberately absent from the query. A curated BOM is
+  not evidence about MAME's device vocabulary, and letting hand-authored rows raise a number that measures
+  automated mapping coverage would reward the wrong work.
+- **Corrections do move it**, because they are applied to `machine_chip` before the metric is read. This is
+  bounded and auditable — every correction row carries a mandatory `reason`, and
+  `SELECT COUNT(*) FROM machine_chip_correction WHERE op = 'add'` is the audit.
+
+### 5.3 What counts in the numerator, and how ignored devices are treated
+
+Numerator: **mapped instances only** — rows in `machine_chip`, each of which exists because a `mame_device` row
+resolved to a curated `chip`.
+
+Instances of **explicitly ignored** devices (a `mame_device` row with `ignore_reason`) appear in **neither**
+term: the extractor emits no per-machine row for them, so there is nothing in the database to count.
+
+This is a deliberate, documented departure from PLAN §3.8's phrasing "mapped **or explicitly ignored**", and it
+is behaviourally equivalent where it matters:
+
+1. **Marking a device ignored still moves the number, in the right direction and by the right amount.** Before
+   the ignore row exists, the device is unmapped and its instances sit in the denominator. Adding the ignore
+   row removes them from the denominator at the next extract, so the share rises. The incentive PLAN wanted —
+   "decide about this device" — is fully preserved. §5.5 shows the arithmetic.
+2. **It cannot overstate curation.** `mapped / (mapped + unmapped)` is always ≤
+   `(mapped + ignored) / (mapped + ignored + unmapped)`. The published number is the conservative one.
+3. **It requires no storage.** Crediting ignored instances in the numerator would mean recording, per machine,
+   the things we decided are not there — a table of absences, populated from data no view can re-derive. That
+   is exactly the kind of storage this rebuild deleted.
+
+The resulting definition also reads better: _the share of MAME-recorded board silicon that BOM Squad can name._
+
+### 5.4 The secondary, distinct-device number
+
+Reported, never headline. It treats a device used in one machine and a device used in 500 identically, which is
+precisely the blindness instance weighting exists to fix.
+
+```sql
+SELECT (SELECT COUNT(*) FROM mame_device WHERE chip_id       IS NOT NULL) AS devices_mapped,
+       (SELECT COUNT(*) FROM mame_device WHERE ignore_reason IS NOT NULL) AS devices_ignored,
+       (SELECT COUNT(DISTINCT mame_device) FROM machine_unmapped_device)  AS devices_unmapped;
+```
+
+Shipped as `v_quality_device`. Note the asymmetry that makes it secondary in a second way: the first two counts
+come from the dictionary and include devices no filtered machine uses, while the third comes from observation.
+
+### 5.5 Worked example
+
+Dictionary (`mame_device`): `m68000 → m68000`, `z80 → z80`, `ym2151 → ym2151`, `screen → ignore`,
+`palette → ignore`. `sega_315_5197` has no row.
+
+Three filtered machines, as the extractor writes them:
+
+`machine_chip` — 7 rows, `quantity = 1` each:
+
+| machine | mame_tag   | chip_id  |
+| ------- | ---------- | -------- |
+| alpha   | `audiocpu` | `z80`    |
+| alpha   | `maincpu`  | `m68000` |
+| alpha   | `ymsnd`    | `ym2151` |
+| beta    | `audiocpu` | `z80`    |
+| beta    | `maincpu`  | `m68000` |
+| beta    | `subcpu`   | `m68000` |
+| gamma   | `audiocpu` | `z80`    |
+
+`machine_unmapped_device` — 2 rows, `quantity = 1` each:
+
+| machine | mame_device     |
+| ------- | --------------- |
+| alpha   | `sega_315_5197` |
+| gamma   | `sega_315_5197` |
+
+Arithmetic:
 
 ```
-mapped_device_share = 5 / 6 = 0.8333
+mapped_instances   = 1+1+1+1+1+1+1 = 7      -- SUM(machine_chip.quantity)
+unmapped_instances = 1+1           = 2      -- SUM(machine_unmapped_device.quantity)
+total_instances    = 7 + 2         = 9
+mapped_instance_share = 7 / 9 = 0.777777… → ROUND(·, 4) = 0.7778
 ```
 
-The two numbers differ, and the difference is the point. Under key counting, mapping `sega_315_5197` and mapping a device that appears in a single obscure clone are worth the same 1/6. Under instance weighting, a device in 500 machines is worth 500× a device in one. Only the instance number tells a contributor where the leverage is.
+`beta` contributes 3 mapped instances from 2 distinct chips: instances count parts, not part numbers.
 
-Resulting `unmapped_devices` entry:
+**The same dataset before `screen` and `palette` were ignored.** With no dictionary rows for them, the
+extractor records them as unmapped — `alpha` has `screen` and `palette`, `beta` has `screen`, `gamma` has
+`screen`:
+
+```
+mapped_instances   = 7
+unmapped_instances = 2 + 4 = 6
+total_instances    = 13
+mapped_instance_share = 7 / 13 = 0.538461… → 0.5385
+```
+
+Adding two `ignore` rows — a two-line change to `data/mame_device.json` — moves the headline number from
+**0.5385 to 0.7778**. That is the incentive PLAN §3.8 asked for, achieved by shrinking the denominator rather
+than by inflating the numerator. (v1's formula would have reported `(7+4)/13 = 0.8462` for the _before_ state,
+crediting four decisions that had not yet been made.)
+
+Distinct-device view of the _after_ state: 3 mapped, 2 ignored, 2 unmapped keys observed. The two numbers
+differ, and the difference is the point — under key counting, `sega_315_5197` and a device in one obscure clone
+are worth the same; under instance weighting, leverage is visible.
+
+---
+
+## 6. Top unmapped devices by impact
+
+The contributor's to-do list, and T8.4's input. `v_mame_device_worklist` (data-model.md Appendix B) already
+aggregates it; this is the ranked, filtered read with sample machines attached.
+
+```sql
+SELECT w.mame_device,
+       w.instance_count,
+       w.machine_count,
+       (SELECT group_concat(s.machine_id, ' ')
+        FROM (SELECT machine_id FROM machine_unmapped_device x
+              WHERE x.mame_device = w.mame_device
+              ORDER BY machine_id LIMIT 5) s) AS sample_machines
+FROM v_mame_device_worklist w
+WHERE w.instance_count >= :min_instance_count
+  AND w.machine_count  >= :min_machine_count
+ORDER BY w.instance_count DESC, w.mame_device ASC
+LIMIT :top_n;
+```
+
+Parameters bind `issue_generator.min_instance_count`, `.min_machine_count`, `.top_n`. Requires SQLite ≥ 3.44
+for the ordered subquery feeding `group_concat`; the pinned browser and Node engines are 3.53 and 3.51.
+
+**Impact = `instance_count`, ties broken by `mame_device` ascending.** No composite score:
+
+- It is already machine-count-weighted by construction (§5.2).
+- A contributor can re-derive their position with `SELECT`. A score they cannot reproduce is a score they will
+  not trust.
+- Weighting by driver status or "interestingness" would encode taste into the one number contributors are
+  asked to act on. Weighting belongs in the Prospector (`v_prospector` + an `ORDER BY`), which is advisory.
+
+`sample_machines` is what makes an auto-generated issue researchable — real boards to look up, and a direct
+`/machine/<machine_id>` link. Five is a deliberate, fixed number, not a threshold: it is a sentence's worth of
+examples, and no build behaviour changes with it.
+
+Every row this query returns also carries an `UNMAPPED_DEVICE_HIGH_IMPACT` warning (§4) — one predicate, two
+consumers, guaranteed to agree.
+
+---
+
+## 7. Thresholds
+
+All values live in `pipeline/config/quality-thresholds.json`, keys sorted, one canonical place per value. They
+are **starting points chosen from first principles, not measurements** — no full dataset existed when they were
+set. T9.1 is the scheduled point at which each is re-derived; a threshold that never fires and one that fires
+on everything are equally useless.
+
+| Config key                           | Value      | Used by | Rationale                                                                                                                                                                                                                          |
+| ------------------------------------ | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `db_max_bytes`                       | `50331648` | §3.1    | 48 MiB, stated exactly in bytes so CI and doc cannot disagree about MB vs MiB. The budget and its escape hatch are argued in data-model.md §4.3; the site loads the whole file, so this is a user-visible cost, not a storage one. |
+| `issue_generator.min_instance_count` | `50`       | §4, §6  | Below ~50 instances a device is long-tail work a curator reaches by working the list; an auto-opened issue costs more attention than it saves.                                                                                     |
+| `issue_generator.min_machine_count`  | `5`        | §4, §6  | Guards against one machine with 60 instances of one custom part generating a "high impact" issue that helps exactly one board. Impact must be broad _and_ deep.                                                                    |
+| `issue_generator.top_n`              | `25`       | §6      | One screen of open issues; matches the Prospector's top-25 framing (TASKS T6.3) and keeps the "good first mapping" label from becoming noise.                                                                                      |
+| `mapped_instance_share.target`       | `0.9`      | §9      | The "healthy" band boundary for the site's health widget, so no colour threshold gets hardcoded in Angular. 90% leaves room for genuinely unidentifiable custom silicon, which will never be fully mapped.                         |
+| `mapped_instance_share.warn_below`   | `0.7`      | §4      | Matches TASKS T3.1's shipping gate (≥ 70% decided). Below this, board pages are more guess than fact and the project should say so on its own health page.                                                                         |
+| `stale_review_days`                  | `365`      | §4      | HDL repos change on a scale of years. An annual re-check catches a license change or a rewrite without generating churn.                                                                                                           |
+| `system_unmapped_share.warn_above`   | `0.25`     | §4      | Above a quarter unmapped, a coverage percentage computed on the known remainder describes a minority of the board. A round quarter, not a measurement — a prime T9.1 candidate.                                                    |
+| `version`                            | `"2.0.0"`  | §9      | Semver of this threshold set; bumped whenever a value changes, so a report traces to the policy that produced it. Not a threshold; recorded for provenance. Major bump because v1's key set was deleted, not migrated.             |
+
+Nine keys, down from twenty-three. Every key above exists in the file and every key in the file appears above.
+Adding a threshold means editing both.
+
+**Thresholds inside the database, in a typed table.** The views in §4 cannot take parameters, so the build
+copies every numeric leaf of the config into the `threshold` table — `threshold(name TEXT PRIMARY KEY, value
+REAL NOT NULL CHECK (value >= 0))`, data-model.md §1.5 — before creating the views, which read it as
+`(SELECT value FROM threshold WHERE name = '…')` with no `CAST`. `version` is not a threshold and goes to
+`dataset_meta` as `threshold_version`; `db_max_bytes` is copied for uniformity, though only CI reads it.
+
+**Both of this table's properties exist because the previous design failed open.** Thresholds used to be
+untyped `dataset_meta` rows read through a `v_threshold` view that `CAST` text to a number:
+
+- a value that stopped parsing `CAST`ed to `0.0`, so `mapped_instance_share < 0.0` became unsatisfiable and
+  `MAPPED_INSTANCE_SHARE_LOW` silently stopped firing — **reproduced**;
+- deleting the row made the comparison `NULL`, which is never true, so the gate was simply unreachable —
+  **reproduced**.
+
+A gate that disables itself when its configuration rots is worse than no gate, because nobody is watching for
+the silence. `REAL NOT NULL CHECK (value >= 0)` makes the first impossible at insert time, and the loader
+makes the second impossible at build time: it asserts that every threshold name the shipped views read is
+present and fails, naming the missing ones, otherwise. That required set is discovered from the view SQL
+rather than maintained beside it, so adding a threshold to a view adds it to the contract with no second
+edit. `v_threshold` is deleted.
+
+---
+
+## 8. `dist/quality-report.json`
+
+**Decision: a small flat summary, and nothing that is a list.** Anything with more than one row is a view in
+the database.
+
+Justification. v1's report was a bespoke document carrying two unbounded arrays, which forced a truncation
+protocol, a sentinel warning code, a per-code cap, a sort-before-truncate rule and a chunk-size gate — five
+mechanisms whose only purpose was to make a list fit in a file. The database ships anyway, is indexed, and
+answers `WHERE code = 'CHIP_MISSING_METADATA' ORDER BY impact DESC` without any of them. What genuinely needs
+to be a file is the handful of scalars CI compares and a badge renders, because opening a 40 MB database to
+read one ratio is absurd. So: the file keeps the scalars, the database keeps the rows.
+
+Structure — all members REQUIRED, keys bytewise ascending at every level:
 
 ```json
 {
-  "instance_count": 2,
-  "key": "sega_315_5197",
-  "machine_count": 2,
-  "sample_machines": ["mame:alpha", "mame:gamma"]
+  "counts": {
+    "chip": 78,
+    "implementation": 41,
+    "machine": 12043,
+    "project": 9,
+    "system": 22
+  },
+  "dataset_version": "0.0.0-dev",
+  "db_bytes": 11534336,
+  "devices": { "ignored": 2, "mapped": 3, "unmapped": 2 },
+  "instances": {
+    "mapped": 7,
+    "mapped_instance_share": 0.7778,
+    "total": 9,
+    "unmapped": 2
+  },
+  "mame_version": "0.288",
+  "schema_version": "2.0.0",
+  "threshold_version": "2.0.0",
+  "warnings_by_code": {
+    "CHIP_MISSING_METADATA": 2,
+    "IMPL_UNVERIFIED_LICENSE": 2
+  }
 }
 ```
 
-Note `beta` contributes 3 mapped instances from 3 `<chip>` elements but only 2 distinct chips — instances count physical parts, not part numbers, because a two-68000 board really does need two 68000s implemented.
+- `instances` is `v_quality_instance` with the share `ROUND(·, 4)`; `devices` is `v_quality_device`.
+- `warnings_by_code` is `SELECT code, COUNT(*) FROM v_quality_warning GROUP BY code ORDER BY code`. Codes with
+  zero rows are **omitted** — the registry in §4 is the list of possible keys, and a JSON object full of zeros
+  is noise. A consumer treats a missing key as zero.
+- `counts` is one `COUNT(*)` per top-level curated entity. Junction and child tables are not counted; they are
+  a `SELECT` away for anyone who cares.
+- `db_bytes` is the on-disk size of `dist/bomsquad.sqlite`, recorded so a size regression is visible in the
+  diff of the report and not only in a CI log.
+- No timestamps, no wall-clock values, no build-host paths. `dataset_version`, `mame_version`,
+  `schema_version` are copied verbatim from `dataset_meta`.
+- Formatting follows data-model.md §4.3: UTF-8, LF, two-space indent, one trailing newline, ratios via
+  `ROUND(x, 4)` computed in SQL so rounding is the database's, not JavaScript's.
+
+The report is validated against `schemas/quality-report.schema.json` (T1.2) before writing. A malformed health
+report is a build failure like any other.
 
 ---
 
-## 5. FAIL conditions (build-breaking)
+## 9. Implementation notes for T6.4
 
-A failure means: exit non-zero, publish nothing, leave `dist/` untouched. The failure codes are registered in data-model.md §9; this section fixes the _conditions_ T6.4 checks, in evaluation order. Every failure message MUST name the file, the field path, and the rule — the T1.6 linter contract.
-
-Failures are **not** recorded in the quality report. A report only exists for a build that had none.
-
-### 5.1 Schema and identity
-
-| Code                 | Condition                                                                                                                                                                                                                                                                                      |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `SCHEMA_VIOLATION`   | Any JSON file fails its schema from the registry (data-model.md §10), including post-overlay normalized machines and the quality report itself (self-validated before writing).                                                                                                                |
-| `SLUG_INVALID`       | An id fails its grammar (data-model.md §1.1); a filename stem does not equal the record's route slug / id; a reserved word (`mame`, `unknown`, `core`, `custom`) is used as a complete bare id; a `custom:` machine slug has no hyphen; a core id's payload does not begin with `<platform>-`. |
-| `DUPLICATE_ID`       | The same id is defined by two records of the same entity type (including two overlay `create: true` files minting the same `custom:` id).                                                                                                                                                      |
-| `ROUTE_COLLISION`    | Two live ids, or a live id and an alias key, derive the same route within one route space (data-model.md §2.4).                                                                                                                                                                                |
-| `ALIAS_COLLISION`    | An alias key equals a live id, or an alias value is itself an alias key (chaining), or the two sides are different entity types.                                                                                                                                                               |
-| `UNKNOWN_IN_CURATED` | The literal `"unknown:` appears anywhere under `data/` outside an overlay correct/remove position (data-model.md §6.3). Implemented as a grep gate so it cannot be defeated by a schema gap.                                                                                                   |
-
-### 5.2 Dangling cross-references
-
-`DANGLING_REFERENCE` fires when any edge below does not resolve, **after** single-hop alias resolution. This is the complete edge list; T6.4 MUST check every row.
-
-| #   | Edge                                    | Source field                                                                   | Must resolve to                                                                                                                                                                                                  |
-| --- | --------------------------------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | machine → chip                          | normalized `machine.chips[].chip_id`                                           | a curated chip in `data/chips/`. `unknown:` refs are exempt — they are minted by the pipeline against a stub it also materializes, so they cannot dangle.                                                        |
-| 2   | implementation → chip                   | `implementation.chip_ids[]`                                                    | a curated chip. `unknown:` values are a `UNKNOWN_IN_CURATED` failure, not a dangling one.                                                                                                                        |
-| 3   | core → machine                          | `core.machines[]`                                                              | a normalized machine id present in the built dataset (a machine excluded by the extraction filter dangles — that is the intended signal).                                                                        |
-| 4   | core → platform family                  | `core.platform_families[]` (curated values only)                               | a family key in `platform-families.json`.                                                                                                                                                                        |
-| 5   | equivalence → chip                      | `equivalences.classes[].chips[]`, `provides[].provider`, `provides[].provides` | a curated chip.                                                                                                                                                                                                  |
-| 6   | family → machine                        | `platform-families.families[].machines[]`                                      | an extracted machine id.                                                                                                                                                                                         |
-| 7   | family → driver                         | `platform-families.families[].drivers[]`                                       | at least one extracted machine whose raw `sourcefile` equals the value. A driver rule matching nothing is dead curation.                                                                                         |
-| 8   | device-map → chip                       | `devices[].chip_id` (map entries)                                              | a curated chip.                                                                                                                                                                                                  |
-| 9   | implementation-overlay → implementation | overlay `target` in `data/overlays/implementations/`                           | a curated implementation.                                                                                                                                                                                        |
-| 10  | alias → entity                          | every value in `aliases.json`                                                  | a live id of the same entity type.                                                                                                                                                                               |
-| 11  | overlay → machine                       | overlay `target` in `data/overlays/machines/` without `create: true`           | an extracted or previously-created machine. Reported as **`OVERLAY_TARGET_MISSING`**, not `DANGLING_REFERENCE` — a distinct code because the actionable fix (delete the overlay, or add `create: true`) differs. |
-
-Edge 11's sibling failures — `STALE_OVERLAY` (a correct/remove operation matched nothing, or a correct operation's values already differ) and `OVERLAY_FORBIDDEN_FIELD` (an overlay touched `id`, `source`, `platform_family`, `origin`, or a derived field) — are specified in data-model.md §7.5 and are equally build-breaking. They are listed here so the T6.4 gate inventory is complete.
-
-### 5.3 Structural integrity
-
-| Code                | Condition                                                                                                                                         |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `FAMILY_CONFLICT`   | A machine is claimed by two families (two explicit `machines[]` listings, or two driver rules from different families with no explicit override). |
-| `BOM_KEY_COLLISION` | Two rows in one normalized machine share (`role`, `chip_id`).                                                                                     |
-
-### 5.4 Output integrity
-
-| Code                     | Condition                                                                                                                                                                                                                                                                                                                                             |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `CHUNK_OVER_BUDGET`      | Any emitted chunk's gzip size exceeds 256 000 bytes. The emitter re-shards where sharding is defined (machine indexes, machine detail buckets, search chunks) and fails only when a single indivisible chunk — including this quality report — exceeds it. §6.3's warning cap exists so that this report can never be the chunk that trips this gate. |
-| `NONDETERMINISTIC_BUILD` | CI's double build produces byte-differing `extract/` or `dist/` trees.                                                                                                                                                                                                                                                                                |
+- Order: apply `schemas/schema.sql` **outside any transaction** (data-model.md §4.3) → load `extract/` and
+  `data/` → §3.4 `STALE_CORRECTION` → correction pass (data-model.md §5.1) → `foreign_key_check` +
+  `integrity_check` → load thresholds → §3.3, §3.5, §3.6, §3.7 → `VACUUM` → §3.1 size check → write the
+  report → §3.2 double-build compare (CI only). The views of Appendix Q are created by the DDL, so there is
+  no separate "create the views" step and no window in which a view could be missing.
+- Load `pipeline/config/quality-thresholds.json` once through `loadThresholds()`, which writes the typed
+  `threshold` table and fails the build when a threshold the views read is absent; after that, read thresholds
+  from the database. Any numeric literal in quality code other than `0`, `1`, the `ROUND` precision and the
+  fixed `LIMIT 5` of §6 is a bug.
+- The views of Appendix Q are created in the shipped database. Per data-model.md's change-control rule, adding
+  views is a **minor** spec bump; record it there when this lands.
+- Do not re-implement anything in §2.1. If a check feels necessary, first confirm `foreign_key_check`,
+  `integrity_check` and the DDL do not already cover it — they cover more than they look like they do.
+- `v_quality_warning`'s `impact` column mixes INTEGER, REAL and NULL. Views are not `STRICT`; consumers MUST
+  treat it as a number or null and MUST NOT sort across codes.
+- The whole of §3 is "each query returns zero rows". Implement it as one loop over a list of
+  (code, sql) pairs, printing the offending rows. That is the entire integrity checker.
 
 ---
 
-## 6. WARN conditions (recorded, non-breaking)
+## Appendix Q — quality views (normative)
 
-### 6.1 Warning code registry
+Created after the correction pass, against Appendix A + B of data-model.md. Reproduced verbatim from
+`schemas/schema.sql`, which is the shipped artifact; verified on SQLite 3.51.3, and every view returns
+correct rows against the §5.5 fixture. `v_threshold` is gone — the views read the typed `threshold` table
+directly (§7).
 
-Nine codes. This registry is closed: emitting an unregistered code is a `SCHEMA_VIOLATION` against `quality-report.schema.json`.
+```sql
+CREATE VIEW v_quality_instance AS
+SELECT m.mapped_instances,
+       u.unmapped_instances,
+       m.mapped_instances + u.unmapped_instances AS total_instances,
+       CASE WHEN m.mapped_instances + u.unmapped_instances = 0 THEN 1.0
+            ELSE 1.0 * m.mapped_instances / (m.mapped_instances + u.unmapped_instances)
+       END AS mapped_instance_share
+FROM (SELECT COALESCE(SUM(quantity), 0) AS mapped_instances   FROM machine_chip) m
+CROSS JOIN
+     (SELECT COALESCE(SUM(quantity), 0) AS unmapped_instances FROM machine_unmapped_device) u;
 
-| Code                          | Fires when                                                                                                                                                                                                                                                                                                                    | `subject`                                      | `impact`                                    | Config                                                                    |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------- |
-| `UNMAPPED_SHARE_HIGH`         | `mapped_instance_share < mapped_instance_share.warn_below`. Exactly one entry per build.                                                                                                                                                                                                                                      | absent (dataset-wide)                          | the actual `mapped_instance_share`          | `mapped_instance_share.warn_below`                                        |
-| `UNMAPPED_DEVICE_HIGH_IMPACT` | An unmapped key meets **both** `issue_generator.min_instance_count` and `issue_generator.min_machine_count`. One entry per qualifying key.                                                                                                                                                                                    | `unknown:<key>`                                | `instance_count`                            | `issue_generator.min_instance_count`, `issue_generator.min_machine_count` |
-| `MISSING_METADATA`            | A curated chip is missing any field listed in `chip_required_metadata`. One entry per chip; the message names every missing field, in sorted order. Stubs are exempt (they are counted as `chips_stub`, and warning on each would drown the array).                                                                           | chip id                                        | number of missing fields                    | `chip_required_metadata`                                                  |
-| `UNVERIFIED_LICENSE`          | An implementation has no `license` field. Omission is mandated when the license is unverified (data-model.md §5.2), so this warning is the visible cost of that honesty, not a reason to guess.                                                                                                                               | implementation id                              | absent                                      | —                                                                         |
-| `UNVERIFIED_ACCURACY`         | An implementation has no `accuracy` field.                                                                                                                                                                                                                                                                                    | implementation id                              | absent                                      | —                                                                         |
-| `ZERO_MAPPED_CHIPS`           | A machine's post-overlay BOM has no row with a curated (non-`unknown:`) `chip_id` — including an empty BOM. Such a machine renders as a page with nothing on it and is excluded from Prospector consideration.                                                                                                                | machine id                                     | total BOM row count (0 when empty)          | —                                                                         |
-| `STALE_REVIEW`                | An implementation has a `last_reviewed` older than `stale_review_days` before `manifest.build_date`. Implementations **without** `last_reviewed` are not stale — they are incomplete, and `completeness_percent.implementation` already reports that. Uses `build_date`, never wall-clock, so the report stays deterministic. | implementation id                              | age in whole days                           | `stale_review_days`                                                       |
-| `STALE_REFERENCE`             | A curated file references an id that resolved through `aliases.json` (data-model.md §3.3). One entry per referencing file per alias used.                                                                                                                                                                                     | the repo-relative path of the referencing file | absent                                      | —                                                                         |
-| `WARNINGS_TRUNCATED`          | Emitted warnings for some code were capped at `warning_cap_per_code`. One entry per truncated code.                                                                                                                                                                                                                           | absent                                         | the true pre-truncation count for that code | `warning_cap_per_code`                                                    |
+CREATE VIEW v_quality_device AS
+SELECT (SELECT COUNT(*) FROM mame_device WHERE chip_id       IS NOT NULL) AS devices_mapped,
+       (SELECT COUNT(*) FROM mame_device WHERE ignore_reason IS NOT NULL) AS devices_ignored,
+       (SELECT COUNT(DISTINCT mame_device) FROM machine_unmapped_device)  AS devices_unmapped;
 
-### 6.2 Determinism of warnings
+CREATE VIEW v_machine_instance AS
+SELECT m.machine_id,
+       COALESCE((SELECT SUM(quantity) FROM machine_chip c
+                 WHERE c.machine_id = m.machine_id), 0) AS mapped_instances,
+       COALESCE((SELECT SUM(quantity) FROM machine_unmapped_device d
+                 WHERE d.machine_id = m.machine_id), 0) AS unmapped_instances
+FROM machine m;
 
-Warning generation MUST be a pure function of the build inputs. Messages MUST NOT embed anything order-dependent, path-of-the-build-machine-dependent, or time-dependent other than values derived from `manifest.build_date`. Warnings are collected, sorted by (`code`, `subject`, `message`), then truncated (§6.3) — sort _before_ truncate, so the retained set is stable.
+CREATE VIEW v_system_instance AS
+SELECT vms.system_id,
+       SUM(mi.mapped_instances)   AS mapped_instances,
+       SUM(mi.unmapped_instances) AS unmapped_instances,
+       CASE WHEN SUM(mi.mapped_instances) + SUM(mi.unmapped_instances) = 0 THEN 0.0
+            ELSE 1.0 * SUM(mi.unmapped_instances)
+                 / (SUM(mi.mapped_instances) + SUM(mi.unmapped_instances)) END AS unmapped_share
+FROM v_machine_system vms
+JOIN v_machine_instance mi ON mi.machine_id = vms.machine_id
+WHERE vms.system_id IS NOT NULL
+GROUP BY vms.system_id;
 
-### 6.3 Volume cap
+CREATE VIEW v_quality_completeness AS
+SELECT 'chip' AS entity, 'manufacturer_id' AS column_name,
+       COUNT(*) AS rows_total, COUNT(manufacturer_id) AS rows_present FROM chip
+UNION ALL SELECT 'chip', 'description',      COUNT(*), COUNT(description)      FROM chip
+UNION ALL SELECT 'chip', 'family_id',        COUNT(*), COUNT(family_id)        FROM chip
+UNION ALL SELECT 'chip', 'model',            COUNT(*), COUNT(model)            FROM chip
+UNION ALL SELECT 'chip', 'package',          COUNT(*), COUNT(package)          FROM chip
+UNION ALL SELECT 'chip', 'typical_clock_hz', COUNT(*), COUNT(typical_clock_hz) FROM chip
+UNION ALL SELECT 'chip', 'year_introduced',  COUNT(*), COUNT(year_introduced)  FROM chip
+UNION ALL SELECT 'chip', 'datasheet',        COUNT(*),
+       (SELECT COUNT(DISTINCT chip_id) FROM chip_datasheet) FROM chip
+UNION ALL SELECT 'implementation', 'license_id',    COUNT(*), COUNT(license_id)    FROM implementation
+UNION ALL SELECT 'implementation', 'accuracy_id',   COUNT(*), COUNT(accuracy_id)   FROM implementation
+UNION ALL SELECT 'implementation', 'hdl_language_id', COUNT(*), COUNT(hdl_language_id) FROM implementation
+UNION ALL SELECT 'implementation', 'project_id',   COUNT(*), COUNT(project_id)    FROM implementation
+UNION ALL SELECT 'implementation', 'repo_url',     COUNT(*), COUNT(repo_url)      FROM implementation
+UNION ALL SELECT 'implementation', 'last_reviewed', COUNT(*), COUNT(last_reviewed) FROM implementation
+UNION ALL SELECT 'implementation', 'verified_against_hardware', COUNT(*),
+       COUNT(verified_against_hardware) FROM implementation
+UNION ALL SELECT 'system', 'manufacturer_id', COUNT(*), COUNT(manufacturer_id) FROM system
+UNION ALL SELECT 'system', 'year_introduced', COUNT(*), COUNT(year_introduced) FROM system
+UNION ALL SELECT 'system', 'description',     COUNT(*), COUNT(description)     FROM system
+UNION ALL SELECT 'mame_device', 'note',       COUNT(*), COUNT(note)            FROM mame_device;
 
-For each code, at most `warning_cap_per_code` entries are retained (the first N after sorting). When a code is truncated, exactly one `WARNINGS_TRUNCATED` entry is appended carrying the true count in `impact`, and `summary.warnings_by_code` reports the retained count.
+CREATE VIEW v_quality_warning AS
+SELECT 'MAPPED_INSTANCE_SHARE_LOW' AS code, NULL AS subject,
+       ROUND(mapped_instance_share, 4) AS impact,
+       'dataset mapped-instance share is below the warn threshold' AS detail
+FROM v_quality_instance
+WHERE mapped_instance_share <
+      (SELECT value FROM threshold WHERE name = 'mapped_instance_share.warn_below')
 
-The cap exists because this report is a site-data chunk under the 250 KB gzip budget, and early in the project's life `MISSING_METADATA` and `ZERO_MAPPED_CHIPS` will each have thousands of legitimate subjects. Truncating deterministically is better than either failing the build or shipping an unbounded file.
+UNION ALL
+SELECT 'UNMAPPED_DEVICE_HIGH_IMPACT', w.mame_device, w.instance_count,
+       'unmapped MAME device is above both issue-generator thresholds'
+FROM v_mame_device_worklist w
+WHERE w.instance_count >=
+      (SELECT value FROM threshold WHERE name = 'issue_generator.min_instance_count')
+  AND w.machine_count >=
+      (SELECT value FROM threshold WHERE name = 'issue_generator.min_machine_count')
 
----
+UNION ALL
+SELECT 'CHIP_MISSING_METADATA', c.chip_id,
+       (c.manufacturer_id IS NULL) + (c.description IS NULL),
+       'chip is missing manufacturer and/or description'
+FROM chip c
+WHERE c.manufacturer_id IS NULL OR c.description IS NULL
 
-## 7. Top unmapped devices by impact
+-- The kind filter is the D10 CHECK read as a warning: original silicon is structurally
+-- forbidden a licence and an accuracy, so warning about their absence would emit a
+-- finding no curator could ever clear.
+UNION ALL
+SELECT 'IMPL_UNVERIFIED_LICENSE', i.implementation_id, NULL,
+       'implementation has no verified license'
+FROM implementation i WHERE i.license_id IS NULL AND i.kind_id <> 'original_silicon'
 
-`unmapped_devices` is the contributor's to-do list, and its array order **is** the impact ranking. There is no separate score field.
+UNION ALL
+SELECT 'IMPL_UNVERIFIED_ACCURACY', i.implementation_id, NULL,
+       'implementation has no assessed accuracy level'
+FROM implementation i WHERE i.accuracy_id IS NULL AND i.kind_id <> 'original_silicon'
 
-**Impact = `instance_count`**, ties broken by `key` ascending. That is the sort order data-model.md §8.3 already fixes for this array, so ranking and serialization are the same operation.
+UNION ALL
+SELECT 'IMPL_STALE_REVIEW', i.implementation_id,
+       CAST(julianday((SELECT value FROM dataset_meta WHERE key = 'build_date'))
+            - julianday(i.last_reviewed) AS INTEGER),
+       'implementation last_reviewed is older than the staleness threshold'
+FROM implementation i
+WHERE i.last_reviewed IS NOT NULL
+  AND julianday((SELECT value FROM dataset_meta WHERE key = 'build_date'))
+      - julianday(i.last_reviewed)
+      > (SELECT value FROM threshold WHERE name = 'stale_review_days')
 
-Why `instance_count` alone, and not a composite score:
+UNION ALL
+SELECT 'IMPL_UNTARGETED', i.implementation_id, NULL,
+       'implementation targets neither a chip nor a system'
+FROM implementation i
+WHERE NOT EXISTS (SELECT 1 FROM implementation_chip   x WHERE x.implementation_id = i.implementation_id)
+  AND NOT EXISTS (SELECT 1 FROM implementation_system y WHERE y.implementation_id = i.implementation_id)
 
-- It is already machine-count-weighted by construction (§4.1) — a device in 500 machines outranks one in 5 without any extra term.
-- Every candidate weighting term is either unavailable at this stage or misleading. Weighting by `coin_slots`, `driver_status`, or "interestingness" would encode taste into the one number contributors are asked to trust, and would make the ranking un-reproducible by hand.
-- A contributor can verify their position in the list with arithmetic. A composite score they cannot re-derive is a score they will not trust.
-- Prospector ranking (T6.3) is where weighting belongs — it is advisory and explicitly configurable. This list is factual.
+UNION ALL
+SELECT 'IMPL_MACHINES_WITHOUT_SYSTEM', i.implementation_id,
+       (SELECT COUNT(*) FROM implementation_machine m WHERE m.implementation_id = i.implementation_id),
+       'chip-level implementation claims machines but no system'
+FROM implementation i
+WHERE EXISTS     (SELECT 1 FROM implementation_machine m WHERE m.implementation_id = i.implementation_id)
+  AND NOT EXISTS (SELECT 1 FROM implementation_system  y WHERE y.implementation_id = i.implementation_id)
 
-**Consumption by T8.4**: take the first `issue_generator.top_n` entries that satisfy both `issue_generator.min_instance_count` and `issue_generator.min_machine_count`, dedupe against open issues by `key`, and open one issue each. Every such entry also carries a matching `UNMAPPED_DEVICE_HIGH_IMPACT` warning (§6.1) — the same eligibility predicate, one canonical pair of thresholds — so the issue generator can be driven from either array and get the same answer.
+UNION ALL
+SELECT 'SYSTEM_NO_CHIPS', s.system_id, NULL,
+       'system has no curated and no observed chips'
+FROM system s
+WHERE NOT EXISTS (SELECT 1 FROM v_system_chip_effective e WHERE e.system_id = s.system_id)
 
-`sample_machines` is what makes an auto-generated issue researchable: it gives the contributor real boards to look up. It carries dist-side machine ids so the issue can link directly to `/machine/<slug>`.
+UNION ALL
+SELECT 'SYSTEM_UNMAPPED_SHARE_HIGH', si.system_id, ROUND(si.unmapped_share, 4),
+       'system unmapped device-instance share is above the warn threshold'
+FROM v_system_instance si
+WHERE si.unmapped_share >
+      (SELECT value FROM threshold WHERE name = 'system_unmapped_share.warn_above')
 
----
+UNION ALL
+SELECT 'MACHINE_ZERO_MAPPED_CHIPS', m.machine_id,
+       (SELECT COALESCE(SUM(quantity), 0) FROM machine_unmapped_device d
+        WHERE d.machine_id = m.machine_id),
+       'machine has no mapped chips in its effective BOM'
+FROM machine m
+WHERE NOT EXISTS (SELECT 1 FROM v_machine_bom b WHERE b.machine_id = m.machine_id)
 
-## 8. Per-machine coverage confidence
+UNION ALL
+SELECT 'EQUIVALENCE_MUTUAL_PROVIDES', e.from_chip_id || ' -> ' || e.to_chip_id, NULL,
+       'mutual provides edge should be a single equivalent edge'
+FROM chip_equivalence e
+WHERE e.kind = 'provides'
+  AND e.from_chip_id < e.to_chip_id
+  AND EXISTS (SELECT 1 FROM chip_equivalence r
+              WHERE r.kind = 'provides'
+                AND r.from_chip_id = e.to_chip_id
+                AND r.to_chip_id   = e.from_chip_id)
 
-`machine.coverage.confidence` (data-model.md §5.4.3) is derived per machine; the report rolls it up into `summary.coverage_confidence_counts`.
+-- chip.display_name and system.name sit outside ux_chip_name_name / ux_system_name_name,
+-- so one entity's display name may equal another's alias and the resolver would answer
+-- with the wrong row. Cross-table, so no UNIQUE index can reach it (data-quality §3.3 has
+-- the same shape); one query is the whole check.
+UNION ALL
+SELECT 'CHIP_NAME_COLLISION', c.chip_id, NULL,
+       'chip display_name is another chip''s alias or retired id'
+FROM chip c
+WHERE EXISTS (SELECT 1 FROM chip_name n WHERE n.name = c.display_name AND n.chip_id <> c.chip_id)
 
-Let `rows` = post-overlay BOM row count (summing `count`, so a `count: 2` row is 2 rows), and `unknown_rows` = the same sum restricted to rows whose `chip_id` starts with `unknown:`. Let `u = unknown_rows / rows` (define `u = 1` when `rows = 0`).
+UNION ALL
+SELECT 'SYSTEM_NAME_COLLISION', s.system_id, NULL,
+       'system name is another system''s alias or retired id'
+FROM system s
+WHERE EXISTS (SELECT 1 FROM system_name n WHERE n.name = s.name AND n.system_id <> s.system_id)
 
-Evaluated in order, first match wins:
-
-1. **`low`** — `rows < coverage_confidence.min_bom_rows_for_high`, **or** `u > coverage_confidence.unknown_share_max_for_medium`. A three-part BOM is an abstraction, not a board; a BOM that is mostly unknown silicon cannot support any coverage claim.
-2. **`medium`** — `u > 0` (any unknown row at all — this is data-model.md §5.4.3's hard requirement that confidence be ≤ medium whenever an `unknown:` row is present), **or** `mame_driver_status` is `preliminary` (MAME itself is telling us the hardware description is provisional).
-3. **`high`** — otherwise.
-
-`custom:` machines (overlay-created, fully hand-curated) are evaluated by the same rules; they have no `mame_driver_status`, so in practice they reach `high` whenever they have enough rows and no unknowns.
-
-Confidence is deliberately about the _BOM's trustworthiness_, not the coverage percentage. A machine can be 0% implemented with `high` confidence — that is exactly the Prospector's most valuable signal: we are certain about what is missing.
-
----
-
-## 9. Thresholds
-
-All values live in `pipeline/config/quality-thresholds.json`. They are **starting points chosen from first principles and small samples, not measurements** — no full dataset existed when they were set. T9.1 (end-to-end data quality audit) is the scheduled point at which each is re-derived against the real distribution; a threshold that never fires and a threshold that fires on everything are equally useless, and the audit's job is to say which is which.
-
-| Config key                                         | Value                             | Rationale                                                                                                                                                                                                                                       |
-| -------------------------------------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `chip_required_metadata`                           | `["description", "manufacturer"]` | PLAN §3.8 names function and manufacturer as key metadata; `function` is schema-required so it can never be missing, and `description` is what makes a chip page readable, so it takes the vacated slot.                                        |
-| `completeness_fields.chip`                         | 8 fields                          | §3.2 — every optional field on the curated chip record; the full set is the honest denominator for "how documented is this chip".                                                                                                               |
-| `completeness_fields.core`                         | 4 fields                          | §3.2 — the four fields that make a core record actionable (who, where, what it runs, what family).                                                                                                                                              |
-| `completeness_fields.device_map`                   | `["note"]`                        | §3.2 — the single field that distinguishes a justified mapping from an assertion.                                                                                                                                                               |
-| `completeness_fields.implementation`               | 8 fields                          | §3.2 — all optional fields; `license` and `accuracy` also drive their own warnings, so they are double-counted deliberately (they matter twice).                                                                                                |
-| `completeness_fields.machine`                      | 4 fields                          | §3.2 — machines are generated, so these four are precisely the fields curation adds on top of MAME.                                                                                                                                             |
-| `completeness_fields.platform_family`              | 3 fields                          | §3.2 — `name` is required; these three are what turns a family key into a page worth visiting.                                                                                                                                                  |
-| `coverage_confidence.min_bom_rows_for_high`        | `3`                               | Below three parts, the record is a MAME abstraction (one SoC device standing in for a board), not a bill of materials. Two is defensible for a trivially simple board; three errs toward not overclaiming.                                      |
-| `coverage_confidence.unknown_share_max_for_medium` | `0.25`                            | Above a quarter unknown, a coverage percentage computed on the known remainder describes a minority of the board and would mislead. Chosen as a round quarter, not measured — a prime T9.1 candidate.                                           |
-| `issue_generator.min_instance_count`               | `50`                              | A device below ~50 instances is a long-tail entry a curator will reach by working the worklist; an auto-opened GitHub issue for it costs more attention than it saves.                                                                          |
-| `issue_generator.min_machine_count`                | `5`                               | Guards against a single machine with 60 instances of one custom device generating a "high impact" issue that helps exactly one board. Impact must be broad _and_ deep.                                                                          |
-| `issue_generator.top_n`                            | `25`                              | One screen of open issues. Matches the Prospector's top-25 framing (TASKS T6.3) and keeps the "good first mapping" label from becoming a wall of noise contributors scroll past.                                                                |
-| `mapped_instance_share.target`                     | `0.9`                             | The "healthy" band boundary for the dashboard (T6.5 stats chunk) — lives here so no color threshold gets hardcoded in the site. 90% leaves room for genuinely unidentifiable custom silicon, which will never be fully mapped.                  |
-| `mapped_instance_share.warn_below`                 | `0.7`                             | Matches TASKS T3.1's shipping gate (≥ 70% mapped-or-ignored). Below this the dataset's board pages are more guess than fact, and the project should say so loudly on its own health page.                                                       |
-| `stale_review_days`                                | `365`                             | HDL implementation repos change on a scale of years, not weeks; an annual re-check is enough to catch a license change or a rewrite without generating churn.                                                                                   |
-| `version`                                          | `"1.0.0"`                         | Semver of this threshold set. Bumped whenever a value changes, so a report can be traced to the policy that produced it. Not a threshold; recorded for provenance.                                                                              |
-| `warning_cap_per_code`                             | `500`                             | §6.3. 500 entries × ~150 bytes ≈ 75 KB per code before gzip; with nine codes the report stays comfortably inside the 250 KB gzip budget even in the worst case, while still giving a contributor far more work than they can do in one sitting. |
-
-Every key above exists in the config file, and every key in the config file appears above. Adding a threshold means editing both.
-
----
-
-## 10. Implementation notes for T6.4
-
-- Load `pipeline/config/quality-thresholds.json` once at startup; treat it as data. Any numeric literal in the quality code that is not `0`, `1`, or a rounding constant from data-model.md §8.4 is a bug.
-- Compute the instance accounting (§4.2) during the device-map resolution pass, not afterward — the resolution targets are already in hand there, and a second pass over 40k machines would be pure waste.
-- Validate the finished report against `quality-report.schema.json` before writing it. A malformed health report is a `SCHEMA_VIOLATION` like any other file.
-- Assert `chip_instances_total == mapped + ignored + unknown` and `distinct_devices_total == mapped + ignored + unknown` before emitting; a mismatch means the enumeration double-counted and MUST fail the build rather than publish a wrong headline number.
-- The report contains no timestamps and no wall-clock-derived values. `STALE_REVIEW` ages are computed against `manifest.build_date` so a rebuild of an old commit reproduces the old report byte-for-byte.
+-- Second-sourced parts genuinely break family -> manufacturer (a Sharp Z80 is a chip of
+-- the Zilog Z80 family), so this is a warning that names the disagreement, never a
+-- constraint that forbids it (data-model §2.3).
+UNION ALL
+SELECT 'CHIP_MANUFACTURER_FAMILY_MISMATCH', c.chip_id, NULL,
+       'chip manufacturer differs from its family''s manufacturer'
+FROM chip c
+JOIN chip_family f ON f.family_id = c.family_id
+WHERE c.manufacturer_id IS NOT NULL
+  AND f.manufacturer_id IS NOT NULL
+  AND c.manufacturer_id <> f.manufacturer_id;
+```

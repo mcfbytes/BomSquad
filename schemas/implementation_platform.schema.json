@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/implementation_platform.schema.json",
+  "title": "implementation_platform",
+  "description": "One row of the `implementation_platform` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["implementation_id", "platform_id"],
+  "properties": {
+    "implementation_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "platform_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    }
+  }
+}

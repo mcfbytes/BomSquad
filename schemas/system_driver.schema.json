@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/system_driver.schema.json",
+  "title": "system_driver",
+  "description": "One row of the `system_driver` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["mame_sourcefile", "system_id"],
+  "properties": {
+    "mame_sourcefile": {
+      "$ref": "common.schema.json#/$defs/sourcefile",
+      "description": "Every machine in this driver source file belongs to system_id."
+    },
+    "system_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    }
+  }
+}

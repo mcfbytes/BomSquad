@@ -12,41 +12,44 @@ The Prospector turns it into a query: for every board without a core on a given 
 
 ## Architecture
 
+The dataset ships as **one queryable SQLite database** (`dist/bomsquad.sqlite`) — no chunked JSON, no manifest. The site loads it whole and runs SQL directly in the browser (`@sqlite.org/sqlite-wasm`; see [ADR 0001](docs/adr/0001-browser-database.md)).
+
 ```
                           ┌─────────────────────────┐
    MAME -listxml ────────►│  extract/ (generated)   │
    (per-release dump)     │  machines.raw.json      │
                           └───────────┬─────────────┘
                                       │
-   data/ (curated, in Git)            ▼
-   ├─ chips/*.json          ┌─────────────────────┐
-   ├─ implementations/*.json│   BUILD PIPELINE    │──► dist/site-data/ (chunked
-   ├─ cores/*.json          │  (normalize, join,  │      JSON the site consumes)
-   ├─ mappings/             │  validate, derive)  │──► dist/bomsquad.sqlite
-   │   mame-device-map.json └─────────────────────┘──► dist/quality-report.json
-   └─ overlays/*.json                 │
+   data/ (curated, in Git,            ▼
+   one row-file per table —  ┌─────────────────────┐
+   see schemas/README.md)    │   BUILD PIPELINE    │──► dist/bomsquad.sqlite
+                              │ (load rows, apply   │      (primary artifact)
+                              │  schema.sql)        │──► dist/quality-report.json
+                              └─────────────────────┘
+                                      │
                                       ▼
                           ┌─────────────────────────┐
                           │  site/ (Angular SPA)    │
+                          │  in-browser SQLite,     │
                           │  Azure Static Web Apps  │
                           └─────────────────────────┘
 ```
 
-- **`data/`** — curated JSON, the heart of the project, PR-reviewed.
+- **`data/`** — curated row files, one JSON file per row, PR-reviewed.
 - **`extract/`** — deterministic outputs of the MAME parser (and other scrapers), committed for diff-ability or rebuilt in CI.
-- **`dist/`** — build outputs: the chunked site JSON (`site-data/`), a SQLite export for third parties, and the data quality report. Published as versioned release artifacts.
+- **`dist/`** — build outputs: `bomsquad.sqlite` (the primary artifact — every entity, relationship, and coverage view the site queries) and the data quality report. Published as versioned release artifacts.
 - **`site/`** — Angular SPA, deployed to Azure Static Web Apps.
 
-See [PLAN.md](PLAN.md) for the full design (data model, ingestion strategy, site pages, execution plan).
+See [PLAN.md](PLAN.md) and [`docs/data-model.md`](docs/data-model.md) for the full design (schema, taxonomy, coverage semantics, execution plan).
 
 ## How it works
 
 Two kinds of data live in this repo, and they're never mixed:
 
-- **Curated (`data/`)** — hand-authored, PR-reviewed JSON: chip specs, implementation records, core catalogs, and the mapping/overlay files that encode human judgment (MAME device → canonical chip, board → platform family, chip equivalences). This is what contributors edit.
-- **Generated (`extract/`, `dist/`)** — machine output. `extract/` is the deterministic result of parsing MAME's `-listxml` dump. `dist/` is the build pipeline's output: normalized data, coverage numbers, the chunked JSON the site fetches, and the quality report. Same inputs always produce byte-identical output.
+- **Curated (`data/`)** — hand-authored, PR-reviewed row files: chip specs, implementation records, systems, and the device-map and equivalence rows that encode human judgment. This is what contributors edit.
+- **Generated (`extract/`, `dist/`)** — machine output. `extract/` is the deterministic result of parsing MAME's `-listxml` dump. `dist/bomsquad.sqlite` is a straight load of curated rows plus mapped extraction data into `schemas/schema.sql`; coverage, rankings, and the quality report are all views over it computed at query time, not files the build writes out. Same inputs always produce a byte-identical database.
 
-Generated data is **never hand-edited**. If MAME extraction gets a chip wrong, or abstracts several chips into one device, the fix goes in `data/overlays/` (a correction layered on top at build time) or `data/mappings/mame-device-map.json` (a correction to how a device name resolves to a chip), not in `extract/` itself. That way corrections survive every re-run of the extractor against a new MAME release — the alternative, hand-patching generated files, would silently get clobbered the next time the pipeline runs.
+Generated data is **never hand-edited**. If MAME extraction gets a chip wrong, the fix is a curated correction row (`machine_correction` or `machine_chip_correction`, each with a mandatory `reason`) or a `mame_device` mapping row, not an edit to `extract/` itself. That way corrections survive every re-run of the extractor against a new MAME release — the alternative, hand-patching generated files, would silently get clobbered the next time the pipeline runs.
 
 ## Quick start
 
@@ -66,7 +69,12 @@ The site serves at **http://localhost:4200**.
 
 ## Project status
 
-**Phase 0, pre-MVP.** The repo skeleton, CI, and Angular shell exist; the data pipeline, chip catalog, and site views are not yet built.
+**Phase 0 and Phase 1 complete, pre-MVP.** The repo skeleton, CI, Azure deployment, and Angular shell exist.
+Phase 1 delivered the relational schema the dataset ships as: [`schemas/schema.sql`](schemas/schema.sql), one
+JSON Schema per table, a validation pipeline (`pipeline validate`), and the decision to serve the dataset as
+one queryable SQLite database, `dist/bomsquad.sqlite`, loaded directly in the browser — see
+[`docs/data-model.md`](docs/data-model.md) and [ADR 0001](docs/adr/0001-browser-database.md). MAME extraction,
+the chip catalog, and the site's data views are not yet built.
 
 - See [PLAN.md §7](PLAN.md#7-mvp-definition) for what "MVP" means here.
 - See [TASKS.md](TASKS.md) for the full task breakdown and current execution plan.

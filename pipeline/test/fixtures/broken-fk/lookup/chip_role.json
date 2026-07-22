@@ -1,0 +1,16 @@
+{
+  "chip_role": [
+    {
+      "role_id": "audiocpu",
+      "label": "Audio CPU"
+    },
+    {
+      "role_id": "maincpu",
+      "label": "Main CPU"
+    },
+    {
+      "role_id": "sound",
+      "label": "Sound"
+    }
+  ]
+}

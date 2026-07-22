@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/machine.schema.json",
+  "title": "machine",
+  "description": "One row of the `machine` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "machine_id",
+    "name",
+    "mame_sourcefile",
+    "is_bios",
+    "is_device",
+    "is_mechanical"
+  ],
+  "properties": {
+    "machine_id": {
+      "$ref": "common.schema.json#/$defs/mameShortname",
+      "description": "MAME shortname, verbatim."
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "mame_sourcefile": {
+      "$ref": "common.schema.json#/$defs/sourcefile"
+    },
+    "mame_year": {
+      "$ref": "common.schema.json#/$defs/text",
+      "description": "Verbatim MAME string; may be `19??`. The parsed value is v_machine.year."
+    },
+    "mame_manufacturer": {
+      "$ref": "common.schema.json#/$defs/text",
+      "description": "Verbatim MAME string; resolved through manufacturer_alias."
+    },
+    "clone_count": {
+      "$ref": "common.schema.json#/$defs/positiveInt",
+      "description": "How many clone sets MAME lists under this parent. A base fact from MAME, not an aggregate over `machine`: extraction is parents-only, so no clone row exists here."
+    },
+    "driver_status": {
+      "type": "string",
+      "enum": ["good", "imperfect", "preliminary"]
+    },
+    "is_bios": {
+      "$ref": "common.schema.json#/$defs/flag"
+    },
+    "is_device": {
+      "$ref": "common.schema.json#/$defs/flag"
+    },
+    "is_mechanical": {
+      "$ref": "common.schema.json#/$defs/flag"
+    }
+  }
+}

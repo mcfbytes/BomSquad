@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/dataset_meta.schema.json",
+  "title": "dataset_meta",
+  "description": "One row of the `dataset_meta` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["key", "value"],
+  "properties": {
+    "key": {
+      "$ref": "common.schema.json#/$defs/metaKey",
+      "description": "mame_version, dataset_version, schema_version, build_date, threshold.*"
+    },
+    "value": {
+      "$ref": "common.schema.json#/$defs/text"
+    }
+  }
+}

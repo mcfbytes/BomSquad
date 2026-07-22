@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "ym2151",
+      "display_name": "YM2151",
+      "function_id": "sound-fm",
+      "typical_clock_hz": 3579545,
+      "year_introduced": 1984
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/machine_unmapped_device.schema.json",
+  "title": "machine_unmapped_device",
+  "description": "One row of the `machine_unmapped_device` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["machine_id", "mame_device"],
+  "properties": {
+    "machine_id": {
+      "$ref": "common.schema.json#/$defs/mameShortname"
+    },
+    "mame_device": {
+      "$ref": "common.schema.json#/$defs/mameDeviceKey",
+      "description": "A device with no mame_device row. Not a foreign key: the row exists because the referent does not."
+    },
+    "quantity": {
+      "$ref": "common.schema.json#/$defs/positiveInt"
+    }
+  }
+}

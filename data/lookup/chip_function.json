@@ -1,0 +1,160 @@
+{
+  "chip_function": [
+    {
+      "function_id": "cpu",
+      "label": "CPU",
+      "description": "General-purpose processor executing an instruction stream fetched from memory external to the die.",
+      "prospector_band": "medium"
+    },
+    {
+      "function_id": "custom",
+      "label": "Custom ASIC",
+      "description": "Board-specific ASIC spanning two or more top-level categories with no dominant one.",
+      "prospector_band": "hard"
+    },
+    {
+      "function_id": "dma",
+      "label": "DMA controller",
+      "description": "Bus-mastering transfer engine moving blocks between memory and devices without per-word CPU involvement.",
+      "prospector_band": "soft"
+    },
+    {
+      "function_id": "dsp",
+      "label": "DSP / coprocessor",
+      "description": "Fixed-purpose math or signal coprocessor driven by a host CPU, including FPUs and geometry engines.",
+      "prospector_band": "hard"
+    },
+    {
+      "function_id": "glue",
+      "label": "Glue logic",
+      "description": "Catalog logic with no system-level identity: 74-series parts, PAL/GAL decoders, drivers, clock generators.",
+      "prospector_band": "soft"
+    },
+    {
+      "function_id": "io",
+      "label": "I/O and system control",
+      "description": "Fixed-function interface parts: port and serial controllers, input handlers, sound latches, interrupt controllers.",
+      "prospector_band": "soft"
+    },
+    {
+      "function_id": "mcu",
+      "label": "Microcontroller",
+      "description": "Instruction execution plus on-die program store plus integrated peripherals.",
+      "prospector_band": "medium"
+    },
+    {
+      "function_id": "memory",
+      "label": "Memory control and storage",
+      "description": "Parts governing the address space or storing data: MMUs, mappers, DRAM controllers, addressable non-volatile stores.",
+      "prospector_band": "soft"
+    },
+    {
+      "function_id": "protection",
+      "label": "Protection",
+      "description": "Silicon designed to gate operation: lockout, bus or opcode decryption, keyed challenge-response, tamper response.",
+      "prospector_band": "hard"
+    },
+    {
+      "function_id": "rtc",
+      "label": "Real-time clock",
+      "description": "Clock/calendar parts tracking wall-clock time across power-off, usually battery-backed.",
+      "prospector_band": "soft"
+    },
+    {
+      "function_id": "sound-analog",
+      "label": "Analog audio",
+      "description": "Analog or discrete audio circuitry in the audio path: oscillators, op-amps, filters, power amplifiers.",
+      "prospector_band": "soft"
+    },
+    {
+      "function_id": "sound-dac",
+      "label": "Audio DAC",
+      "description": "Digital-to-analog conversion of an audio stream and nothing else.",
+      "prospector_band": "soft"
+    },
+    {
+      "function_id": "sound-fm",
+      "label": "FM synthesis",
+      "description": "Synthesis by frequency modulation between operator cells.",
+      "prospector_band": "medium"
+    },
+    {
+      "function_id": "sound-pcm",
+      "label": "Sample playback",
+      "description": "Sample playback engines (PCM, ADPCM, later codecs) and the address generators that exist only to drive them.",
+      "prospector_band": "medium"
+    },
+    {
+      "function_id": "sound-psg",
+      "label": "Programmable sound generator",
+      "description": "Tone generation from a fixed set of square, pulse, triangle and noise channels with envelope control.",
+      "prospector_band": "medium"
+    },
+    {
+      "function_id": "sound-speech",
+      "label": "Speech synthesis",
+      "description": "Speech synthesizers driven by LPC, formant or allophone parameters rather than sample replay.",
+      "prospector_band": "medium"
+    },
+    {
+      "function_id": "sound-wavetable",
+      "label": "Wavetable synthesis",
+      "description": "Tone generation from arbitrary short waveforms held in waveform RAM or ROM, looped at a programmable rate.",
+      "prospector_band": "medium"
+    },
+    {
+      "function_id": "storage",
+      "label": "Mass-storage controller",
+      "description": "Controllers for a mass-storage medium: floppy, hard disk, CD/GD-ROM, SCSI/IDE, tape.",
+      "prospector_band": "medium"
+    },
+    {
+      "function_id": "timer",
+      "label": "Timer / counter",
+      "description": "Programmable interval timers, counters and watchdogs generating timed events or periodic interrupts.",
+      "prospector_band": "soft"
+    },
+    {
+      "function_id": "video-blitter",
+      "label": "Blitter / rasterizer",
+      "description": "Drawing engines writing pixels into a framebuffer or line buffer from commands or a display list.",
+      "prospector_band": "hard"
+    },
+    {
+      "function_id": "video-crtc",
+      "label": "CRT controller",
+      "description": "Raster timing generation without pixel content: sync, blanking, display address counters.",
+      "prospector_band": "hard"
+    },
+    {
+      "function_id": "video-dac",
+      "label": "Video DAC / encoder",
+      "description": "Conversion of digital pixel data to analog video, and analog video encoding.",
+      "prospector_band": "soft"
+    },
+    {
+      "function_id": "video-mixer",
+      "label": "Video mixer / palette",
+      "description": "Digital composition of already-generated layers: priority resolution, palette lookup, blending.",
+      "prospector_band": "hard"
+    },
+    {
+      "function_id": "video-ppu",
+      "label": "Picture processor / VDP",
+      "description": "Integrated video processor producing a complete picture from one die: tile layers, sprites and raster timing.",
+      "prospector_band": "hard"
+    },
+    {
+      "function_id": "video-sprite",
+      "label": "Sprite generator",
+      "description": "Fetch, position, size, zoom and line-buffering of movable objects.",
+      "prospector_band": "hard"
+    },
+    {
+      "function_id": "video-tilemap",
+      "label": "Tilemap generator",
+      "description": "Generators of scrolling tile or character background layers, including affine rotate/zoom layers.",
+      "prospector_band": "hard"
+    }
+  ]
+}

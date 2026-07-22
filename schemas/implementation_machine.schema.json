@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/implementation_machine.schema.json",
+  "title": "implementation_machine",
+  "description": "One row of the `implementation_machine` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["implementation_id", "machine_id"],
+  "properties": {
+    "implementation_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "machine_id": {
+      "$ref": "common.schema.json#/$defs/mameShortname"
+    }
+  }
+}

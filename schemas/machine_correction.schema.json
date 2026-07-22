@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/machine_correction.schema.json",
+  "title": "machine_correction",
+  "description": "One row of the `machine_correction` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["machine_id", "reason"],
+  "properties": {
+    "machine_id": {
+      "$ref": "common.schema.json#/$defs/mameShortname"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "year": {
+      "$ref": "common.schema.json#/$defs/year"
+    },
+    "manufacturer_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "reason": {
+      "$ref": "common.schema.json#/$defs/text",
+      "description": "Mandatory provenance."
+    },
+    "source_url": {
+      "$ref": "common.schema.json#/$defs/url"
+    }
+  }
+}

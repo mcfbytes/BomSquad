@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/machine_chip_correction.schema.json",
+  "title": "machine_chip_correction",
+  "description": "One row of the `machine_chip_correction` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["machine_id", "mame_tag", "chip_id", "op", "reason"],
+  "properties": {
+    "machine_id": {
+      "$ref": "common.schema.json#/$defs/mameShortname"
+    },
+    "mame_tag": {
+      "$ref": "common.schema.json#/$defs/mameTag"
+    },
+    "chip_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "op": {
+      "type": "string",
+      "enum": ["add", "remove", "set"],
+      "description": "`add`, `remove` or `set`. `remove` carries no value columns; `set` must set at least one."
+    },
+    "clock_hz": {
+      "$ref": "common.schema.json#/$defs/positiveInt"
+    },
+    "quantity": {
+      "$ref": "common.schema.json#/$defs/positiveInt"
+    },
+    "reason": {
+      "$ref": "common.schema.json#/$defs/text",
+      "description": "Mandatory provenance."
+    },
+    "source_url": {
+      "$ref": "common.schema.json#/$defs/url"
+    }
+  },
+  "allOf": [
+    {
+      "description": "CHECK: op='remove' carries no value columns; op='set' must set at least one.",
+      "allOf": [
+        {
+          "if": {
+            "required": ["op"],
+            "properties": {
+              "op": {
+                "const": "remove"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "clock_hz": false,
+              "quantity": false
+            }
+          }
+        },
+        {
+          "if": {
+            "required": ["op"],
+            "properties": {
+              "op": {
+                "const": "set"
+              }
+            }
+          },
+          "then": {
+            "anyOf": [
+              {
+                "required": ["clock_hz"],
+                "properties": {
+                  "clock_hz": {
+                    "$ref": "common.schema.json#/$defs/positiveInt"
+                  }
+                }
+              },
+              {
+                "required": ["quantity"],
+                "properties": {
+                  "quantity": {
+                    "$ref": "common.schema.json#/$defs/positiveInt"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

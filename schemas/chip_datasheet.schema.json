@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/chip_datasheet.schema.json",
+  "title": "chip_datasheet",
+  "description": "One row of the `chip_datasheet` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["chip_id", "url"],
+  "properties": {
+    "chip_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "url": {
+      "$ref": "common.schema.json#/$defs/url",
+      "description": "Absolute http(s) URI."
+    },
+    "title": {
+      "$ref": "common.schema.json#/$defs/text"
+    }
+  }
+}

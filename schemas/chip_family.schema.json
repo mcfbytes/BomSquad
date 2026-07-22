@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/chip_family.schema.json",
+  "title": "chip_family",
+  "description": "One row of the `chip_family` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["family_id", "name"],
+  "properties": {
+    "family_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "manufacturer_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "description": {
+      "$ref": "common.schema.json#/$defs/text"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/chip_equivalence.schema.json",
+  "title": "chip_equivalence",
+  "description": "One row of the `chip_equivalence` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["from_chip_id", "to_chip_id", "kind", "note"],
+  "properties": {
+    "from_chip_id": {
+      "$ref": "common.schema.json#/$defs/text",
+      "description": "Provider for `provides`; sort order only for `equivalent` (coverage.md §1.5)."
+    },
+    "to_chip_id": {
+      "$ref": "common.schema.json#/$defs/text",
+      "description": "Socket for `provides`; sort order only for `equivalent` (coverage.md §1.5)."
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["equivalent", "provides"]
+    },
+    "note": {
+      "$ref": "common.schema.json#/$defs/text",
+      "description": "Mandatory justification with a citation (coverage.md §5.6)."
+    }
+  }
+}

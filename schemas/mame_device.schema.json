@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/mame_device.schema.json",
+  "title": "mame_device",
+  "description": "One row of the `mame_device` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["mame_device"],
+  "properties": {
+    "mame_device": {
+      "$ref": "common.schema.json#/$defs/mameDeviceKey",
+      "description": "MAME device lookup key. The row's presence is what makes a device mapped or ignored."
+    },
+    "chip_id": {
+      "$ref": "common.schema.json#/$defs/slug",
+      "description": "Set exactly when ignore_reason is absent."
+    },
+    "ignore_reason": {
+      "$ref": "common.schema.json#/$defs/text",
+      "description": "Set exactly when chip_id is absent, e.g. `screen`, `speaker`."
+    },
+    "note": {
+      "$ref": "common.schema.json#/$defs/text"
+    }
+  },
+  "allOf": [
+    {
+      "description": "CHECK ((chip_id IS NULL) <> (ignore_reason IS NULL)): a device is mapped or explicitly ignored, never both, never neither.",
+      "oneOf": [
+        {
+          "required": ["chip_id"],
+          "properties": {
+            "chip_id": {
+              "$ref": "common.schema.json#/$defs/slug"
+            },
+            "ignore_reason": false
+          }
+        },
+        {
+          "required": ["ignore_reason"],
+          "properties": {
+            "ignore_reason": {
+              "$ref": "common.schema.json#/$defs/text"
+            },
+            "chip_id": false
+          }
+        }
+      ]
+    }
+  ]
+}

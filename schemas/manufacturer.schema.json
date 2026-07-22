@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/manufacturer.schema.json",
+  "title": "manufacturer",
+  "description": "One row of the `manufacturer` table. Keys and order follow schemas/schema.sql; NULL columns are omitted, never written as null (data-model.md §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manufacturer_id", "name"],
+  "properties": {
+    "manufacturer_id": {
+      "$ref": "common.schema.json#/$defs/slug"
+    },
+    "name": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "country": {
+      "$ref": "common.schema.json#/$defs/countryCode",
+      "description": "ISO 3166-1 alpha-2."
+    },
+    "notes": {
+      "$ref": "common.schema.json#/$defs/text"
+    }
+  }
+}

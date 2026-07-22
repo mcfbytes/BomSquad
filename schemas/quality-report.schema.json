@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bomsquad.dev/schemas/quality-report.schema.json",
+  "title": "quality report",
+  "description": "dist/quality-report.json — the flat scalar summary of a build (docs/data-quality.md §8). Anything with more than one row is a view in the shipped database, not a member here.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "counts",
+    "dataset_version",
+    "db_bytes",
+    "devices",
+    "instances",
+    "mame_version",
+    "schema_version",
+    "threshold_version",
+    "warnings_by_code"
+  ],
+  "properties": {
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "One COUNT(*) per top-level curated entity. Junction and child tables are not counted.",
+      "required": ["chip", "implementation", "machine", "project", "system"],
+      "properties": {
+        "chip": { "$ref": "#/$defs/count" },
+        "implementation": { "$ref": "#/$defs/count" },
+        "machine": { "$ref": "#/$defs/count" },
+        "project": { "$ref": "#/$defs/count" },
+        "system": { "$ref": "#/$defs/count" }
+      }
+    },
+    "dataset_version": {
+      "$ref": "common.schema.json#/$defs/text",
+      "description": "Copied verbatim from dataset_meta."
+    },
+    "db_bytes": {
+      "$ref": "#/$defs/count",
+      "description": "On-disk size of dist/bomsquad.sqlite, so a size regression shows up in the report diff."
+    },
+    "devices": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "v_quality_device.",
+      "required": ["ignored", "mapped", "unmapped"],
+      "properties": {
+        "ignored": { "$ref": "#/$defs/count" },
+        "mapped": { "$ref": "#/$defs/count" },
+        "unmapped": { "$ref": "#/$defs/count" }
+      }
+    },
+    "instances": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "v_quality_instance, with the share rounded by SQL ROUND(x, 4).",
+      "required": ["mapped", "mapped_instance_share", "total", "unmapped"],
+      "properties": {
+        "mapped": { "$ref": "#/$defs/count" },
+        "mapped_instance_share": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "total": { "$ref": "#/$defs/count" },
+        "unmapped": { "$ref": "#/$defs/count" }
+      }
+    },
+    "mame_version": {
+      "$ref": "common.schema.json#/$defs/text",
+      "description": "Copied verbatim from dataset_meta."
+    },
+    "schema_version": { "$ref": "common.schema.json#/$defs/semver" },
+    "threshold_version": {
+      "$ref": "common.schema.json#/$defs/semver",
+      "description": "Semver of pipeline/config/quality-thresholds.json, so a report traces to the policy that produced it."
+    },
+    "warnings_by_code": {
+      "type": "object",
+      "description": "SELECT code, COUNT(*) FROM v_quality_warning GROUP BY code. Codes with zero rows are omitted; a consumer treats a missing key as zero. The registry is closed (data-quality.md §4).",
+      "propertyNames": {
+        "enum": [
+          "CHIP_MISSING_METADATA",
+          "EQUIVALENCE_MUTUAL_PROVIDES",
+          "IMPL_MACHINES_WITHOUT_SYSTEM",
+          "IMPL_STALE_REVIEW",
+          "IMPL_UNTARGETED",
+          "IMPL_UNVERIFIED_ACCURACY",
+          "IMPL_UNVERIFIED_LICENSE",
+          "MACHINE_ZERO_MAPPED_CHIPS",
+          "MAPPED_INSTANCE_SHARE_LOW",
+          "SYSTEM_NO_CHIPS",
+          "SYSTEM_UNMAPPED_SHARE_HIGH",
+          "UNMAPPED_DEVICE_HIGH_IMPACT"
+        ]
+      },
+      "additionalProperties": { "type": "integer", "minimum": 1 }
+    }
+  },
+  "$defs": {
+    "count": { "type": "integer", "minimum": 0 }
+  }
+}

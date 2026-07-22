@@ -1,812 +1,1790 @@
 # BOM Squad Data Model
 
-**Spec version 1.0.0 · Normative**
+**Spec version 2.0.0 · Normative · Replaces spec 1.0.0 in full**
 
-This document is the canonical specification of BOM Squad's entities, identifiers, storage layout, overlay semantics, and serialization rules. The JSON Schemas in `schemas/` are implemented _from_ this document; where they disagree, this document wins and the schema is buggy.
+This document specifies BOM Squad's relational schema: tables, keys, foreign keys, storage layout, correction
+mechanism, and the queries the project exists to answer. It supersedes spec 1.0.0 (git `d747680`) entirely.
+Where any other document disagrees with this one on structure, this one wins.
 
-The key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, MAY, and OPTIONAL are to be interpreted as described in RFC 2119.
+RFC 2119 keywords (MUST, MUST NOT, SHOULD, MAY) apply.
 
-JSON examples in this spec are **normative for shape and canonical form** (field presence, types, key order). Domain values inside examples (clocks, years) illustrate mechanics only and are not asserted as hardware facts.
-
-Delegated sections: the `function` taxonomy value set is owned by `docs/taxonomy.md` (T1.3); equivalence/`provides` _semantics_ and coverage math by the equivalence spec (T1.4); quality warning-code definitions and thresholds by the quality spec (T1.7). Each of those operates strictly inside the envelopes fixed here and MUST NOT alter field names, types, or envelope structure defined in this document.
-
----
-
-## 1. Identifiers
-
-### 1.1 Grammars
-
-All identifiers are ASCII, lowercase, and case-sensitive (there is no case folding anywhere in the system).
-
-| Name               | Regex                                                               | Used by                                                |
-| ------------------ | ------------------------------------------------------------------- | ------------------------------------------------------ |
-| **bare slug**      | `^[a-z0-9]+(?:-[a-z0-9]+)*$` (1–64 chars)                           | chip id, implementation id, platform-family id         |
-| **MAME shortname** | `^[a-z0-9_]{1,64}$`                                                 | payload of `mame:` and `unknown:` ids; device-map keys |
-| **chip id**        | `^[a-z0-9]+(?:-[a-z0-9]+)*$`                                        | curated chips                                          |
-| **chip ref**       | chip id **or** `^unknown:[a-z0-9_]{1,64}$`                          | `chip_id` fields in BOMs                               |
-| **machine id**     | `^mame:[a-z0-9_]{1,64}$` **or** `^custom:[a-z0-9]+(?:-[a-z0-9]+)+$` | machines                                               |
-| **core id**        | `^core:[a-z0-9]+(?:-[a-z0-9]+)*$`                                   | cores                                                  |
-| **family id**      | bare slug                                                           | platform families                                      |
-
-Additional constraints:
-
-- A bare slug MUST NOT contain a colon (`:`). The grammar already guarantees this; implementations MUST treat any colon in a bare-slug position as a validation failure, not as an implicit namespace.
-- A full id (including any prefix) MUST NOT exceed 80 characters.
-- The words `mame`, `unknown`, `core`, and `custom` are **reserved** and MUST NOT be used as a complete bare id (e.g. a chip id of exactly `unknown` is invalid). They MAY appear as segments of longer slugs (`core-logic` is fine).
-- A `custom:` machine slug MUST contain at least two hyphen-separated segments (at least one `-`). This makes the machine route inverse total (§2.3): MAME shortnames can never contain `-`, custom slugs always do.
-- A core id MUST begin, after the `core:` prefix, with the record's `platform` value followed by a hyphen (e.g. `platform: "mister"` ⇒ id matches `^core:mister-`).
-
-### 1.2 Reserved namespace prefixes
-
-The namespace prefixes `mame:`, `unknown:`, `core:`, and `custom:` are reserved. Consumers MUST fail closed: an id containing a colon whose prefix is not one of these four is a validation error, never a passthrough. New namespaces require a version bump of this spec.
-
-| Prefix     | Meaning                                                                                 | Minted by       |
-| ---------- | --------------------------------------------------------------------------------------- | --------------- |
-| `mame:`    | machine extracted from MAME; payload is the MAME shortname verbatim                     | pipeline (T6.1) |
-| `unknown:` | chip stub for an unmapped MAME device; payload is the device lookup key (§6.2) verbatim | pipeline (T6.1) |
-| `core:`    | FPGA core                                                                               | curator         |
-| `custom:`  | machine that does not exist in MAME, created by an overlay (§7.6)                       | curator         |
+Delegated: the `chip_function` value set and its prospector bands are owned by [taxonomy.md](taxonomy.md);
+the domain reasoning behind individual `chip_equivalence` rows by [coverage.md](coverage.md) §1–§2
+(its file-shape and class-algebra sections, §2/§4.2/§5.1, are void — see §2.5). Neither may alter a table,
+column, key, or constraint defined here.
 
 ---
 
-## 2. Route slugs (URLs)
+## 0. Shape of the design
 
-### 2.1 Route spaces
+Three statements govern everything below.
 
-Every entity type owns one route space: `/chip/`, `/machine/`, `/core/`, `/family/`, `/implementation/`.
+1. **SQLite is the query engine.** `dist/bomsquad.sqlite` is the primary published artifact and the thing the
+   SPA loads. Curated JSON in `data/` is the source of truth in Git; the database is a build output. There is
+   no chunked-JSON delivery format — the dataset is one small file.
+2. **The schema does the validating.** `FOREIGN KEY`, `CHECK`, `UNIQUE`, `NOT NULL` and `STRICT` typing are
+   the integrity layer. Hand-written validators exist only for the handful of rules SQL cannot express (§5.4).
+3. **Derived numbers are views.** Coverage, counts, rankings, reverse indexes and the device worklist are
+   `CREATE VIEW`. No base table stores a value computable from other rows.
 
-### 2.2 Derivation (id → path)
+### 0.1 Table conventions
 
-`route(id)`:
+| Convention            | Rule                                                                                                                              |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `STRICT`              | every table. Column types are enforced; `"19??"` cannot land in an `INTEGER` year.                                                |
+| `WITHOUT ROWID`       | every table. All primary keys are natural and textual; rows are narrow. Also makes PK columns implicitly `NOT NULL`.              |
+| Booleans              | `INTEGER NOT NULL CHECK (x IN (0,1))`. SQLite has no boolean type under `STRICT`.                                                 |
+| Dates                 | `TEXT` in `YYYY-MM-DD`, `CHECK … GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'`.                                              |
+| Nullability           | a column is `NULL`-able exactly when "unknown" is a legitimate state. Standing rule 3: omit, never guess.                         |
+| `PRAGMA foreign_keys` | OFF during load (so rows may be inserted in any table order), then `PRAGMA foreign_key_check` once. ON in every consumer session. |
 
-| Entity         | Rule                                    | Example                                                                  |
-| -------------- | --------------------------------------- | ------------------------------------------------------------------------ |
-| chip (bare)    | `/chip/` + id                           | `ym2151` → `/chip/ym2151`                                                |
-| chip (unknown) | `/chip/` + **full id including prefix** | `unknown:sega_315_5197` → `/chip/unknown:sega_315_5197`                  |
-| machine        | `/machine/` + payload after the prefix  | `mame:outrun` → `/machine/outrun`; `custom:foo-bar` → `/machine/foo-bar` |
-| core           | `/core/` + payload after `core:`        | `core:mister-arcade-outrun` → `/core/mister-arcade-outrun`               |
-| family         | `/family/` + id                         | `sega-outrun-hw` → `/family/sega-outrun-hw`                              |
-| implementation | `/implementation/` + id                 | `jt51` → `/implementation/jt51`                                          |
+### 0.2 When a value set becomes a table
 
-`unknown:` chips do **not** strip their prefix. Rationale: bare chip ids and `unknown:` payloads share the `/chip/` route space and could otherwise collide (`unknown:z80x` vs a future chip `z80x`); a colon can never appear in a bare slug, so keeping the prefix makes collision structurally impossible. The colon is a legal path character (RFC 3986 `pchar`); emitters MUST write it literally, and parsers MUST accept both the literal form and `%3A`.
+The maintainer asked for lookup tables instead of repeated free text. The line this spec draws:
 
-### 2.3 Inverse (path → id)
+> **A value set gets its own table when adding a member is a pure data change. It gets a `CHECK` constraint
+> when adding a member would require changing code or a view.**
 
-The inverse MUST be total and computable without data lookups:
+So `implementation_kind`, `chip_function`, `chip_role`, `fpga_platform`, `hdl_language`, `accuracy_level`,
+`system_kind`, `manufacturer`, `license` and `chip_family` are tables — a new manufacturer or a new FPGA
+platform is data. `chip_equivalence.kind` and `machine_chip_correction.op` are `CHECK`s — the satisfaction
+view hard-codes what `equivalent` and `provides` mean, and the loader hard-codes what `add`/`remove`/`set` do,
+so a third value would be a lie until someone wrote code for it.
 
-- `/chip/<s>`: if `<s>` contains `:`, it MUST parse as `unknown:<shortname>`, and the id is `<s>` verbatim; otherwise the id is the bare slug `<s>`.
-- `/machine/<s>`: if `<s>` contains `-`, the id is `custom:<s>`; otherwise the id is `mame:<s>`. (Sound because MAME shortnames never contain `-` and custom slugs always do — §1.1.)
-- `/core/<s>` → `core:<s>`. `/family/<s>` → `<s>`. `/implementation/<s>` → `<s>`.
+### 0.3 `ON DELETE` policy
 
-A path whose slug fails the target grammar is a 404, not an error page.
+| Relationship                                 | Behaviour  | Why                                                                     |
+| -------------------------------------------- | ---------- | ----------------------------------------------------------------------- |
+| child row meaningless without its parent     | `CASCADE`  | deleting a chip deletes its aliases and datasheets                      |
+| reference to a dimension/lookup row          | `RESTRICT` | deleting a function or license that is in use must fail loudly          |
+| reference to a fact another table depends on | `RESTRICT` | deleting a chip a BOM uses must fail, not silently gut the BOM          |
+| a deliberate curator decision                | `RESTRICT` | deleting a system must not silently discard the machines assigned to it |
 
-### 2.4 Collisions
+There is no `SET NULL` foreign key. The one column that had it — `machine.parent_machine_id` —
+is deleted (§1.3), and quietly blanking a curated pointer is a worse failure than refusing the delete.
 
-Within each route space, the set of route slugs derived from **all live ids plus all alias keys** (§3) MUST be unique. The site-data emitter MUST verify this and any duplicate is a **build failure** (`ROUTE_COLLISION`). By grammar this can only arise for `/machine/` (`mame:` vs `custom:` payloads without `-` — already excluded by §1.1) — the check is retained as defense in depth and to protect future namespaces.
-
----
-
-## 3. ID stability and aliases
-
-### 3.1 Stability guarantee
-
-An id that has shipped in any published dataset is **permanent**. It MUST NOT be renamed, re-pointed to a different real-world subject, or reused for a different entity. Fixing a bad slug means minting a new id and recording an alias from the old one.
-
-### 3.2 The alias mechanism: one central file
-
-Aliases live in **one central curated file**, `data/mappings/aliases.json` — not as fields on entity records. Rationale: machines are generated, so a per-record alias field cannot survive re-extraction without abusing overlays, whereas a central file covers every entity type uniformly (including `mame:` renames when MAME itself renames a shortname). It also makes the collision check and the site's redirect map a single-input, single-pass operation.
-
-File shape (`schemas/aliases.schema.json`):
-
-```json
-{
-  "aliases": {
-    "mame:puckmanb": "mame:puckman",
-    "ym-2151": "ym2151"
-  }
-}
-```
-
-- Each key is a retired id; each value is the current id. Both MUST satisfy the id grammar of the same entity type (chip↔chip, machine↔machine, core↔core, family↔family, implementation↔implementation; the type is inferred from the id shape and MUST match on both sides — for prefix-less ids, chip / family / implementation aliasing is distinguished by which live entity the value resolves to).
-- The value MUST resolve to a **live** entity in the built dataset (`DANGLING_REFERENCE` failure otherwise).
-- A key MUST NOT equal any live id (`ALIAS_COLLISION` failure). This also guarantees route-level uniqueness via §2.4.
-- **No chains:** a value MUST NOT itself appear as a key. When an entity is renamed a second time, every alias pointing at it MUST be re-pointed to the newest id in the same change. Resolution is therefore always a single hop.
-- An alias, once shipped, is itself permanent: entries MUST NOT be removed (removing one breaks old URLs).
-- `unknown:` ids MUST NOT appear on either side (they are ephemeral stubs, §6).
-
-### 3.3 Build-time resolution
-
-Wherever a curated input references an id — overlay `target`, `core.machines[]`, family `machines[]`, `implementation.chip_ids[]`, equivalence chip refs, device-map `chip_id` values, overlay-supplied `known_consumers` values — the pipeline MUST resolve through `aliases.json` (single hop) **before** any other processing, and MUST emit a `STALE_REFERENCE` **warning** naming the file and the alias used. Warning, not failure: aliases exist precisely so that existing references keep working; curators clean them up at leisure. Published `dist/` output MUST contain only canonical ids — never alias keys — except inside the `aliases.json` chunk itself.
-
-### 3.4 Site redirects
-
-The build publishes the alias map as the site-data chunk with logical name `aliases.json`. The SPA route resolver, on failing to match a route slug against live data, MUST look up the corresponding id in the alias map and, on a hit, navigate to the canonical route with history replacement (`replaceUrl`) and render a `<link rel="canonical">` pointing at the canonical route. This is the project's 301-equivalent: permanent by contract because aliases are never deleted. (A static host cannot emit true per-entity 301s for an SPA; this is the deliberate substitute.)
+Note the deliberate asymmetry on `system_chip`: `system_id` is `CASCADE` (delete a system, delete its BOM),
+`chip_id` is `RESTRICT` (a chip in use cannot be deleted). Same on `machine_chip`.
 
 ---
 
-## 4. Storage layout and the generated/curated boundary
+## 1. The tables
 
-### 4.1 Authorship table
+36 tables, 21 views, 34 explicit indexes — the counts `schemas/schema.sql` creates, read back from
+`sqlite_master` by `pipeline/test/schema.test.ts`, which fails if this sentence and the DDL disagree.
+Every table has a primary key; every relationship is a declared foreign key. Appendix A is the normative
+DDL; the tables below give each column's meaning. §2's audit enumerates all 36 by name.
 
-| Path                             | Writer        | Mechanism                                                                                  | Hand edits |
-| -------------------------------- | ------------- | ------------------------------------------------------------------------------------------ | ---------- |
-| `schemas/`                       | human         | PR                                                                                         | yes        |
-| `data/chips/`                    | human         | PR (one file per chip, `<id>.json`)                                                        | yes        |
-| `data/implementations/`          | human         | PR (one file per implementation, `<id>.json`)                                              | yes        |
-| `data/cores/`                    | human         | PR (one file per core, `<route-slug>.json`, e.g. `mister-arcade-outrun.json`)              | yes        |
-| `data/mappings/`                 | human         | PR (`mame-device-map.json`, `platform-families.json`, `equivalences.json`, `aliases.json`) | yes        |
-| `data/overlays/machines/`        | human         | PR (§7)                                                                                    | yes        |
-| `data/overlays/implementations/` | human         | PR (§7.7)                                                                                  | yes        |
-| `extract/`                       | pipeline only | `pipeline extract`; committed via automated or reviewed PR for diff-ability                | **never**  |
-| `dist/`                          | pipeline only | `pipeline build`; never committed (released as artifacts)                                  | **never**  |
-| `pipeline/`, `site/`, `docs/`    | human         | PR (code and prose)                                                                        | yes        |
+### 1.1 Lookup tables
 
-Scripts (discovery, seeding) MAY _propose_ curated content, but only by writing candidate files under `extract/` for human review or by opening PRs against `data/`; nothing lands in `data/` without human review.
+#### `manufacturer` — an organization that made silicon or hardware.
 
-### 4.2 The correction rule
+| Column            | Type | Null | Key | Meaning                       |
+| ----------------- | ---- | ---- | --- | ----------------------------- |
+| `manufacturer_id` | TEXT | no   | PK  | slug, e.g. `yamaha`           |
+| `name`            | TEXT | no   |     | display name, e.g. `Yamaha`   |
+| `country`         | TEXT | yes  |     | ISO 3166-1 alpha-2, e.g. `JP` |
+| `notes`           | TEXT | yes  |     | free text                     |
 
-A correction to generated data MUST be expressed as curated input — a device-map entry, a mapping change, an alias, or an overlay — never as an edit to `extract/` or `dist/`. Re-running extraction MUST NOT lose any curation.
+#### `manufacturer_alias` — every string that resolves to a manufacturer.
 
-### 4.3 Filenames
+Carries MAME's free-text `manufacturer` attribute into the normalized vocabulary, and doubles as a search alias.
 
-- Per-entity curated files: filename stem MUST equal the record's id (chips, implementations) or its route slug (cores, machine overlays). Mismatch is a validation failure.
-- Keyed-collection files (`mame-device-map.json`, `platform-families.json`, `aliases.json`, `equivalences.json`) carry ids as object keys; entries MUST NOT repeat the id inside the entry body.
-- Every curated file MAY carry a top-level `"$schema"` string pointing at its schema (relative path); the pipeline MUST ignore it. Files are strict JSON — no comments, no trailing commas, no duplicate keys (the linter MUST reject duplicates).
+| Column            | Type | Null | Key                                       | Meaning                                        |
+| ----------------- | ---- | ---- | ----------------------------------------- | ---------------------------------------------- |
+| `alias`           | TEXT | no   | PK                                        | verbatim string, e.g. `Sega Enterprises, Ltd.` |
+| `manufacturer_id` | TEXT | no   | FK → `manufacturer` **ON DELETE CASCADE** | resolves to                                    |
+
+#### `license` — an SPDX-identified license.
+
+| Column            | Type    | Null | Key | Meaning                                   |
+| ----------------- | ------- | ---- | --- | ----------------------------------------- |
+| `license_id`      | TEXT    | no   | PK  | SPDX id, e.g. `GPL-3.0-only`, or `custom` |
+| `name`            | TEXT    | no   |     | display name                              |
+| `url`             | TEXT    | yes  |     | canonical license text                    |
+| `is_osi_approved` | INTEGER | no   |     | 0/1                                       |
+
+#### `chip_function` — the taxonomy value set ([taxonomy.md](taxonomy.md) §8, 26 values).
+
+| Column            | Type | Null | Key | Meaning                                       |
+| ----------------- | ---- | ---- | --- | --------------------------------------------- |
+| `function_id`     | TEXT | no   | PK  | slug, e.g. `sound-fm`, `video-tilemap`        |
+| `label`           | TEXT | no   |     | display name                                  |
+| `description`     | TEXT | no   |     | one-line definition                           |
+| `prospector_band` | TEXT | no   |     | `hard` \| `medium` \| `soft` (taxonomy.md §5) |
+
+`prospector_band` is a domain classification of the function, not a score. The numeric weight per band stays in
+`pipeline/config/`, so retuning the Prospector never touches data.
+
+#### `chip_family` — a manufacturer's part family, used as a grouping facet.
+
+| Column            | Type | Null | Key                                        | Meaning                  |
+| ----------------- | ---- | ---- | ------------------------------------------ | ------------------------ |
+| `family_id`       | TEXT | no   | PK                                         | slug, e.g. `opm`, `m68k` |
+| `name`            | TEXT | no   |                                            | e.g. `OPM`               |
+| `manufacturer_id` | TEXT | yes  | FK → `manufacturer` **ON DELETE RESTRICT** | owner of the family      |
+| `description`     | TEXT | yes  |                                            |                          |
+
+#### `chip_role` — the controlled vocabulary for a chip's position on a curated board.
+
+Seed values: `maincpu`, `subcpu`, `audiocpu`, `mcu`, `dsp`, `sound`, `video`, `sprite`, `tilemap`, `mixer`,
+`crtc`, `io`, `protection`, `memory`, `dma`, `timer`, `rtc`, `storage`, `glue`, `unspecified`.
+
+| Column        | Type | Null | Key | Meaning      |
+| ------------- | ---- | ---- | --- | ------------ |
+| `role_id`     | TEXT | no   | PK  | slug         |
+| `label`       | TEXT | no   |     | display name |
+| `description` | TEXT | yes  |     |              |
+
+#### `system_kind`
+
+Seed values: `arcade`, `console`, `computer`, `handheld`, `pinball`, `other`.
+
+| Column    | Type | Null | Key | Meaning |
+| --------- | ---- | ---- | --- | ------- |
+| `kind_id` | TEXT | no   | PK  | slug    |
+| `label`   | TEXT | no   |     |         |
+
+#### `hdl_language`
+
+Seed values: `verilog`, `systemverilog`, `vhdl`, `chisel`, `mixed`, `other`, plus `c`, `cpp` for
+`software_emulation` implementations.
+
+| Column        | Type | Null | Key | Meaning |
+| ------------- | ---- | ---- | --- | ------- |
+| `language_id` | TEXT | no   | PK  | slug    |
+| `label`       | TEXT | no   |     |         |
+
+#### `fpga_platform`
+
+Seed values: `mister`, `pocket`, `mist`, `replay`, `neptuno`, `generic`, `other`.
+
+| Column        | Type | Null | Key | Meaning                    |
+| ------------- | ---- | ---- | --- | -------------------------- |
+| `platform_id` | TEXT | no   | PK  | slug                       |
+| `label`       | TEXT | no   |     |                            |
+| `notes`       | TEXT | yes  |     | device family, board notes |
+
+#### `implementation_kind` — how a thing is realized. **The generic discriminator.**
+
+Seed values: `fpga_hdl`, `software_emulation`, `original_silicon`. New kinds (netlist simulation, a
+transistor-level model, an ASIC respin) are inserts, not schema changes.
+
+| Column        | Type | Null | Key | Meaning |
+| ------------- | ---- | ---- | --- | ------- |
+| `kind_id`     | TEXT | no   | PK  | slug    |
+| `label`       | TEXT | no   |     |         |
+| `description` | TEXT | no   |     |         |
+
+#### `accuracy_level`
+
+Seed values: `gate-level`, `cycle-accurate`, `cycle-approximate`, `behavioral`, `partial`.
+
+| Column        | Type | Null | Key | Meaning |
+| ------------- | ---- | ---- | --- | ------- |
+| `accuracy_id` | TEXT | no   | PK  | slug    |
+| `label`       | TEXT | no   |     |         |
+| `description` | TEXT | no   |     |         |
+
+### 1.2 Chips
+
+#### `chip` — one row per canonical part.
+
+| Column             | Type    | Null | Key                                         | Meaning                                       |
+| ------------------ | ------- | ---- | ------------------------------------------- | --------------------------------------------- |
+| `chip_id`          | TEXT    | no   | PK                                          | slug, e.g. `ym2151`                           |
+| `display_name`     | TEXT    | no   |                                             | primary name, e.g. `YM2151`                   |
+| `function_id`      | TEXT    | no   | FK → `chip_function` **ON DELETE RESTRICT** | taxonomy classification                       |
+| `manufacturer_id`  | TEXT    | yes  | FK → `manufacturer` **ON DELETE RESTRICT**  |                                               |
+| `family_id`        | TEXT    | yes  | FK → `chip_family` **ON DELETE RESTRICT**   |                                               |
+| `model`            | TEXT    | yes  |                                             | manufacturer part number                      |
+| `description`      | TEXT    | yes  |                                             | one sentence                                  |
+| `typical_clock_hz` | INTEGER | yes  |                                             | `> 0`                                         |
+| `package`          | TEXT    | yes  |                                             | e.g. `DIP-24`                                 |
+| `year_introduced`  | INTEGER | yes  |                                             | 1950–2100                                     |
+| `notes`            | TEXT    | yes  |                                             | free text; cite sources for non-obvious facts |
+
+#### `chip_datasheet` — 1:N documentation links. Fixes `chip.datasheet_urls[]`.
+
+| Column    | Type | Null | Key                                    | Meaning        |
+| --------- | ---- | ---- | -------------------------------------- | -------------- |
+| `chip_id` | TEXT | no   | PK₁, FK → `chip` **ON DELETE CASCADE** |                |
+| `url`     | TEXT | no   | PK₂                                    | absolute URI   |
+| `title`   | TEXT | yes  |                                        | document title |
+
+#### `chip_name` — 1:N alternate names **and** the chip alias mechanism. Fixes `chip.names[]`.
+
+| Column    | Type | Null | Key                                    | Meaning                                             |
+| --------- | ---- | ---- | -------------------------------------- | --------------------------------------------------- |
+| `chip_id` | TEXT | no   | PK₁, FK → `chip` **ON DELETE CASCADE** | the chip this string resolves to                    |
+| `name`    | TEXT | no   | PK₂, `UNIQUE` globally                 | alternate name or retired id                        |
+| `kind`    | TEXT | no   | `CHECK IN ('alias','retired_id')`      | `alias` = displayable; `retired_id` = redirect only |
+
+`UNIQUE(name)` makes name → chip a function, which is what a resolver needs. `display_name` lives on `chip`
+because a chip has exactly one of them; `chip_name` holds only the alternates.
+
+#### `mame_device` — the MAME device dictionary. Replaces `mappings/mame-device-map.json` in full.
+
+Named after its key, not after `chip`, because it also holds ignore rows that reference no chip.
+
+| Column          | Type | Null | Key                                | Meaning                                                    |
+| --------------- | ---- | ---- | ---------------------------------- | ---------------------------------------------------------- |
+| `mame_device`   | TEXT | no   | PK                                 | MAME device lookup key                                     |
+| `chip_id`       | TEXT | yes  | FK → `chip` **ON DELETE RESTRICT** | the part this device is                                    |
+| `ignore_reason` | TEXT | yes  |                                    | why this device is not board silicon (`screen`, `speaker`) |
+| `note`          | TEXT | yes  |                                    | justification for a non-obvious mapping                    |
+
+`CHECK ((chip_id IS NULL) <> (ignore_reason IS NULL))` — a device is mapped **or** explicitly ignored, never
+both, never neither. A device with no row at all is _unmapped_ and flows to `machine_unmapped_device` (§1.3).
+The PK on `mame_device` alone encodes the functional dependency `mame_device → chip_id`: one device cannot map
+to two chips, structurally.
+
+#### `chip_equivalence` — chip→chip substitution edges. Fixes `equivalences.classes[].chips[]`.
+
+| Column         | Type | Null | Key                                    | Meaning                                                    |
+| -------------- | ---- | ---- | -------------------------------------- | ---------------------------------------------------------- |
+| `from_chip_id` | TEXT | no   | PK₁, FK → `chip` **ON DELETE CASCADE** | the provider                                               |
+| `to_chip_id`   | TEXT | no   | PK₂, FK → `chip` **ON DELETE CASCADE** | the socket                                                 |
+| `kind`         | TEXT | no   | `CHECK IN ('equivalent','provides')`   | symmetric interchange, or one-way substitution             |
+| `note`         | TEXT | no   |                                        | mandatory justification with a citation (coverage.md §5.6) |
+
+`CHECK (from_chip_id <> to_chip_id)` kills self-edges. `CHECK (kind <> 'equivalent' OR from_chip_id < to_chip_id)`
+stores each symmetric pair exactly once — the view `v_chip_satisfies` reads it in both directions, so the
+database never holds the mirror row. Neither relation is transitively closed; a curator states each pair
+(coverage.md §2.1's soundness argument, now applied to `equivalent` as well).
+
+### 1.3 Hardware
+
+#### `system` — an arcade system, board family, or console. **Curated. First-class.**
+
+| Column            | Type    | Null | Key                                        | Meaning                     |
+| ----------------- | ------- | ---- | ------------------------------------------ | --------------------------- |
+| `system_id`       | TEXT    | no   | PK                                         | slug, e.g. `sega-system16a` |
+| `name`            | TEXT    | no   |                                            | `Sega System 16A`           |
+| `kind_id`         | TEXT    | no   | FK → `system_kind` **ON DELETE RESTRICT**  |                             |
+| `manufacturer_id` | TEXT    | yes  | FK → `manufacturer` **ON DELETE RESTRICT** |                             |
+| `year_introduced` | INTEGER | yes  |                                            | 1950–2100                   |
+| `description`     | TEXT    | yes  |                                            |                             |
+| `notes`           | TEXT    | yes  |                                            |                             |
+
+#### `system_name` — alternate names and retired ids for a system. Same contract as `chip_name`.
+
+| Column      | Type | Null | Key                                      | Meaning                   |
+| ----------- | ---- | ---- | ---------------------------------------- | ------------------------- |
+| `system_id` | TEXT | no   | PK₁, FK → `system` **ON DELETE CASCADE** |                           |
+| `name`      | TEXT | no   | PK₂, `UNIQUE` globally                   | e.g. `Capcom Play System` |
+| `kind`      | TEXT | no   | `CHECK IN ('alias','retired_id')`        |                           |
+
+#### `system_chip` — **THE BOM.** The curated bill of materials of a board.
+
+| Column      | Type    | Null | Key                                          | Meaning                                    |
+| ----------- | ------- | ---- | -------------------------------------------- | ------------------------------------------ |
+| `system_id` | TEXT    | no   | PK₁, FK → `system` **ON DELETE CASCADE**     |                                            |
+| `role_id`   | TEXT    | no   | PK₂, FK → `chip_role` **ON DELETE RESTRICT** | position on the board                      |
+| `chip_id`   | TEXT    | no   | PK₃, FK → `chip` **ON DELETE RESTRICT**      | the part                                   |
+| `quantity`  | INTEGER | no   | default 1, `CHECK >= 1`                      | identical parts in this role               |
+| `clock_hz`  | INTEGER | yes  | `CHECK > 0`                                  | as fitted on this board                    |
+| `note`      | TEXT    | yes  |                                              | e.g. "on the optional sound daughterboard" |
+
+The three-column key is forced by the domain: one chip in two roles (Z80 as `maincpu` and as `audiocpu`), and
+two chips in one role (two different sound parts, both `sound`), are both real. `quantity` collapses only
+genuinely identical instances.
+
+Adding `data/system/sega-system16a.json` with its `system_chip` rows is the _entire_ effort of surfacing
+what HDL already exists for System 16A. No other table needs touching.
+
+#### `system_driver` — the **bulk default** mapping a MAME driver source file to a system.
+
+| Column            | Type | Null | Key                                 | Meaning                                |
+| ----------------- | ---- | ---- | ----------------------------------- | -------------------------------------- |
+| `mame_sourcefile` | TEXT | no   | PK                                  | e.g. `sega/system16a.cpp`              |
+| `system_id`       | TEXT | no   | FK → `system` **ON DELETE CASCADE** | default system for every machine in it |
+
+The PK is `mame_sourcefile` **alone**, not `(system_id, mame_sourcefile)`, and the rule it states is
+_"unless something says otherwise, every machine in this driver belongs to this system."_ That is a default,
+not a functional dependency: one MAME driver `.cpp` routinely hosts several distinct systems
+(`nintendo/vsnes.cpp` is VS. UniSystem **and** VS. DualSystem; `sega/segas16b.cpp` also carries System 16C
+and the ISG Selection Master). The per-machine truth lives in `machine_system` and overrides this row;
+see §1.5 and the precedence sentence under `v_machine_system` in §1.6.
+
+Keying on the source file alone still makes "two systems claim one driver **as their default**" a `UNIQUE`
+violation instead of a hand-written `FAMILY_CONFLICT` gate. One deleted check — and, because the escape is a
+plain assignment rather than a correction with a mandatory `reason`, a multi-system driver costs one row per
+machine and no prose.
+
+#### `machine` — one MAME machine. **Generated. 100% MAME vocabulary, zero curated columns.**
+
+**Parents-only.** Extraction records parent machines and drops clone rows (TASKS T2.3, "parents-only by
+default (record clone count on the parent)"), so this table contains no clone and therefore needs no parent
+pointer. `machine.parent_machine_id` and its self-FK are deleted: a nullable self-FK that can never be
+satisfied makes every query conditional for nothing.
+
+| Column              | Type    | Null | Key                                           | Meaning                                          |
+| ------------------- | ------- | ---- | --------------------------------------------- | ------------------------------------------------ |
+| `machine_id`        | TEXT    | no   | PK                                            | MAME shortname verbatim, e.g. `outrun`           |
+| `name`              | TEXT    | no   |                                               | MAME `description`                               |
+| `mame_sourcefile`   | TEXT    | no   |                                               | driver source path                               |
+| `mame_year`         | TEXT    | yes  |                                               | **verbatim**, may be `19??`                      |
+| `mame_manufacturer` | TEXT    | yes  |                                               | **verbatim**; resolved via `manufacturer_alias`  |
+| `clone_count`       | INTEGER | yes  | `CHECK >= 1`                                  | how many clone sets MAME lists under this parent |
+| `driver_status`     | TEXT    | yes  | `CHECK IN ('good','imperfect','preliminary')` |                                                  |
+| `is_bios`           | INTEGER | no   | 0/1                                           |                                                  |
+| `is_device`         | INTEGER | no   | 0/1                                           |                                                  |
+| `is_mechanical`     | INTEGER | no   | 0/1                                           |                                                  |
+
+**`clone_count` is a base fact, not a derived one.** It is what MAME says about the parent — how many sets
+the parents-only filter folded away — and there is nothing in this database it could be computed from,
+because the clone rows are not here. It is therefore neither a stored aggregate nor a 3NF violation, and
+`v_machine` republishes it unchanged. Ingesting clone rows later would mean adding `parent_machine_id` back:
+**a schema change, not a data change**, and the point at which `clone_count` would become derivable and have
+to go.
+
+There is no `system_id` column and no `kind` column. Both are curated facts resolved by views
+(`v_machine_system`, and kind via `system.kind_id`), which is what keeps `extract/` free of curation and
+standing rule 1 structurally true rather than merely asserted.
+
+`mame_year` and `mame_manufacturer` stay `TEXT` on purpose: they record **what MAME says**, which is itself
+the datum. The project's normalized facts are `v_machine.year` (parsed only when the string is four digits)
+and `v_machine.manufacturer_id` (joined through `manufacturer_alias`). That is not denormalization — the two
+columns are different attributes of different subjects.
+
+#### `machine_chip` — MAME's per-title BOM. Fixes `machine.chips[]`.
+
+| Column       | Type    | Null | Key                                       | Meaning                                      |
+| ------------ | ------- | ---- | ----------------------------------------- | -------------------------------------------- |
+| `machine_id` | TEXT    | no   | PK₁, FK → `machine` **ON DELETE CASCADE** |                                              |
+| `mame_tag`   | TEXT    | no   | PK₂                                       | MAME `<chip tag>`, or the reserved `:device` |
+| `chip_id`    | TEXT    | no   | PK₃, FK → `chip` **ON DELETE RESTRICT**   |                                              |
+| `clock_hz`   | INTEGER | yes  | `CHECK > 0`                               |                                              |
+| `quantity`   | INTEGER | no   | default 1, `CHECK >= 1`                   |                                              |
+
+Rows derived from `<device_ref>` (which carries no tag) use `mame_tag = ':device'`. Leading colons are
+stripped from real MAME tags during extraction, so the sentinel is structurally uncollidable.
+
+**The real key of a tagged row is `(machine_id, mame_tag)`, and a partial unique index says so:**
+
+```sql
+CREATE UNIQUE INDEX ux_machine_chip_tag
+  ON machine_chip(machine_id, mame_tag) WHERE mame_tag <> ':device';
+```
+
+A MAME tag names one socket in one machine, and one socket holds one part, so
+`(machine_id, mame_tag) → chip_id, clock_hz, quantity`. `chip_id` is in the primary key only so that the
+tagless `:device` rows — which have no socket to be keyed by — can coexist; without the index above,
+`('outrun','maincpu','m68000')` and `('outrun','maincpu','z80')` both insert, which is two chips in one
+socket and inflates `chips_total` for the whole system. The same index exists on `machine_chip_correction`,
+so a correction cannot create the anomaly either.
+
+#### `machine_unmapped_device` — devices seen in MAME with no `mame_device` row. **Replaces the `unknown:*` convention.**
+
+| Column        | Type    | Null | Key                                       | Meaning                   |
+| ------------- | ------- | ---- | ----------------------------------------- | ------------------------- |
+| `machine_id`  | TEXT    | no   | PK₁, FK → `machine` **ON DELETE CASCADE** |                           |
+| `mame_device` | TEXT    | no   | PK₂                                       | the unmapped lookup key   |
+| `quantity`    | INTEGER | no   | default 1, `CHECK >= 1`                   | instances in this machine |
+
+Nothing is silently dropped: every MAME device reference is mapped, explicitly ignored, or lands here. This
+table deletes an entire v1 subsystem — the `unknown:` id namespace, its reserved-prefix grammar, stub-chip
+materialization in `dist`, the `UNKNOWN_IN_CURATED` grep gate, and `extract/mame-devices.raw.json` (the
+curation worklist is now the view `v_mame_device_worklist`).
+
+### 1.4 Implementations
+
+The maintainer's key insight, implemented: **one generic `implementation` table** discriminated by
+`kind_id`, targeting chips and/or systems through two typed junctions.
+
+#### `project` — a source of implementations.
+
+| Column       | Type | Null | Key | Meaning                                     |
+| ------------ | ---- | ---- | --- | ------------------------------------------- |
+| `project_id` | TEXT | no   | PK  | slug, e.g. `jotego`, `mame`, `mister-devel` |
+| `name`       | TEXT | no   |     |                                             |
+| `url`        | TEXT | yes  |     | repository or homepage                      |
+| `author`     | TEXT | yes  |     | principal author or team                    |
+| `notes`      | TEXT | yes  |     |                                             |
+
+`project_id` is nullable on `implementation`: for `original_silicon` the producer is already recorded as the
+chip's or system's `manufacturer_id`, and minting a synthetic project row would store that fact twice.
+
+#### `implementation` — a realization of one or more chips and/or systems.
+
+| Column                      | Type    | Null | Key                                               | Meaning                                 |
+| --------------------------- | ------- | ---- | ------------------------------------------------- | --------------------------------------- |
+| `implementation_id`         | TEXT    | no   | PK                                                | slug, e.g. `jt51`, `mister-arcade-cps1` |
+| `name`                      | TEXT    | no   |                                                   | display name                            |
+| `kind_id`                   | TEXT    | no   | FK → `implementation_kind` **ON DELETE RESTRICT** | `fpga_hdl` \| `software_emulation` \| … |
+| `project_id`                | TEXT    | yes  | FK → `project` **ON DELETE RESTRICT**             |                                         |
+| `repo_url`                  | TEXT    | yes  |                                                   | when it differs from the project's      |
+| `hdl_language_id`           | TEXT    | yes  | FK → `hdl_language` **ON DELETE RESTRICT**        |                                         |
+| `license_id`                | TEXT    | yes  | FK → `license` **ON DELETE RESTRICT**             | verified from the repo, never guessed   |
+| `accuracy_id`               | TEXT    | yes  | FK → `accuracy_level` **ON DELETE RESTRICT**      |                                         |
+| `verified_against_hardware` | INTEGER | yes  | 0/1                                               | `1` requires a citation in `notes`      |
+| `resource_notes`            | TEXT    | yes  |                                                   | e.g. `≈3k LEs on Cyclone V`             |
+| `last_reviewed`             | TEXT    | yes  | `YYYY-MM-DD`                                      |                                         |
+| `notes`                     | TEXT    | yes  |                                                   |                                         |
+
+`CHECK (kind_id <> 'original_silicon' OR (repo_url IS NULL AND hdl_language_id IS NULL AND license_id IS
+NULL AND accuracy_id IS NULL))`. Original silicon is the part as manufactured, not a codebase: it has no
+repository, no HDL language, no SPDX licence, and no accuracy to assess because it _is_ the reference. This
+names the one seeded kind whose attribute set is empty; it privileges nothing, and a new `implementation_kind`
+row is unconstrained by it. Without the rule, an `original_silicon` row could carry `repo_url` and
+`hdl_language_id`, and `IMPL_UNVERIFIED_LICENSE` / `IMPL_UNVERIFIED_ACCURACY` would accuse it forever of
+lacking two attributes it is forbidden to have. Those two warnings carry the matching kind filter
+(data-quality.md §4).
+
+There is no `core` table. A MiSTer core is an `implementation` with `kind_id = 'fpga_hdl'` and a row in
+`implementation_system`. MAME's `cps1.cpp` driver is one with `kind_id = 'software_emulation'`. The physical
+CPS-1 PCB is one with `kind_id = 'original_silicon'`. All three answer "how has CPS-1 been realized?" from the
+same three tables.
+
+#### `implementation_chip` — N:M. Fixes `implementation.chip_ids[]`.
+
+| Column              | Type | Null | Key                                              |
+| ------------------- | ---- | ---- | ------------------------------------------------ |
+| `implementation_id` | TEXT | no   | PK₁, FK → `implementation` **ON DELETE CASCADE** |
+| `chip_id`           | TEXT | no   | PK₂, FK → `chip` **ON DELETE RESTRICT**          |
+
+N:M, not a column, because one IP genuinely covers several parts (a configurable 6502/65C02 core;
+jt12 covering YM2612 and YM3438) — coverage.md §1.7 rung 6.
+
+#### `implementation_system` — N:M. Replaces `core.platform_families[]`.
+
+| Column              | Type | Null | Key                                              |
+| ------------------- | ---- | ---- | ------------------------------------------------ |
+| `implementation_id` | TEXT | no   | PK₁, FK → `implementation` **ON DELETE CASCADE** |
+| `system_id`         | TEXT | no   | PK₂, FK → `system` **ON DELETE RESTRICT**        |
+
+#### `implementation_path` — 1:N source paths. Fixes `implementation.paths[]`.
+
+| Column              | Type    | Null | Key                                              | Meaning              |
+| ------------------- | ------- | ---- | ------------------------------------------------ | -------------------- |
+| `implementation_id` | TEXT    | no   | PK₁, FK → `implementation` **ON DELETE CASCADE** |                      |
+| `path`              | TEXT    | no   | PK₂                                              | repo-relative        |
+| `is_top`            | INTEGER | no   | default 0, 0/1                                   | the top-level module |
+
+v1 encoded "first entry is the top-level module" as array order — order-significant arrays are the 1NF smell.
+`is_top` states the fact, and a partial unique index (`… ON implementation_path(implementation_id) WHERE is_top = 1`)
+enforces at most one per implementation.
+
+#### `implementation_platform` — N:M. Fixes `implementation.target_platforms[]`.
+
+| Column              | Type | Null | Key                                              |
+| ------------------- | ---- | ---- | ------------------------------------------------ |
+| `implementation_id` | TEXT | no   | PK₁, FK → `implementation` **ON DELETE CASCADE** |
+| `platform_id`       | TEXT | no   | PK₂, FK → `fpga_platform` **ON DELETE RESTRICT** |
+
+#### `implementation_machine` — N:M. Which machines an implementation actually runs. Replaces `core.machines[]`.
+
+| Column              | Type | Null | Key                                              |
+| ------------------- | ---- | ---- | ------------------------------------------------ |
+| `implementation_id` | TEXT | no   | PK₁, FK → `implementation` **ON DELETE CASCADE** |
+| `machine_id`        | TEXT | no   | PK₂, FK → `machine` **ON DELETE RESTRICT**       |
+
+#### `implementation_dependency` — N:M, self-referencing. Replaces `implementation.known_consumers[]`.
+
+| Column        | Type | Null | Key                                               | Meaning                          |
+| ------------- | ---- | ---- | ------------------------------------------------- | -------------------------------- |
+| `consumer_id` | TEXT | no   | PK₁, FK → `implementation` **ON DELETE CASCADE**  | the core                         |
+| `provider_id` | TEXT | no   | PK₂, FK → `implementation` **ON DELETE RESTRICT** | the IP it consumes               |
+| `note`        | TEXT | yes  |                                                   | e.g. "OPM sound", submodule path |
+
+`CHECK (consumer_id <> provider_id)`. This is the table that makes "core → its HDL files" a traversal:
+`implementation_dependency` → `implementation_path`. `known_consumers` is the same table read backwards
+(`WHERE provider_id = 'jt51'`) and therefore is not stored, not derived, and not overlay-patched.
+Because both endpoints are implementations, a core may also consume another core.
+
+### 1.5 Assignments, corrections and build metadata
+
+Two correction tables replace v1's overlay merge algebra (semantics in §5), one assignment table carries a
+structural fact the driver defaults cannot, and two tables carry build-level facts.
+
+#### `machine_correction` — scalar fixes to a MAME machine. `NULL` = no override.
+
+| Column            | Type    | Null | Key                                        | Meaning                |
+| ----------------- | ------- | ---- | ------------------------------------------ | ---------------------- |
+| `machine_id`      | TEXT    | no   | PK, FK → `machine` **ON DELETE CASCADE**   |                        |
+| `name`            | TEXT    | yes  |                                            | corrected display name |
+| `year`            | INTEGER | yes  | 1950–2100                                  | corrected year         |
+| `manufacturer_id` | TEXT    | yes  | FK → `manufacturer` **ON DELETE RESTRICT** | corrected manufacturer |
+| `reason`          | TEXT    | no   |                                            | mandatory provenance   |
+| `source_url`      | TEXT    | yes  |                                            | citation               |
+
+#### `machine_system` — per-machine system assignment. Row present = authoritative.
+
+| Column       | Type | Null | Key                                      | Meaning                         |
+| ------------ | ---- | ---- | ---------------------------------------- | ------------------------------- |
+| `machine_id` | TEXT | no   | PK, FK → `machine` **ON DELETE CASCADE** |                                 |
+| `system_id`  | TEXT | yes  | FK → `system` **ON DELETE RESTRICT**     | `NULL` = deliberately no system |
+| `reason`     | TEXT | yes  |                                          | optional provenance             |
+
+**This is an assignment, not a correction, and that is why `reason` is optional.** A driver `.cpp` hosting
+two systems is structural, not a mistake anyone made (§1.3, `system_driver`); demanding a written apology per
+machine would mean hundreds of hand-authored sentences restating the same fact. A curator who _is_ overruling
+a plausible default should still say why, and the column is there for it.
+
+`ON DELETE RESTRICT`, not `CASCADE`: cascading would delete the curator's deliberate decision when the system
+it points at is removed, silently resurrecting the very `system_driver` default that was overridden. Refusing
+the delete is the only honest option.
+
+Separate from `machine_correction` precisely so `NULL` can mean "deliberately no system" here while meaning
+"no correction" there. Two tables, two unambiguous meanings, zero sentinel columns.
+
+#### `machine_chip_correction` — BOM row fixes.
+
+| Column       | Type    | Null | Key                                       | Meaning               |
+| ------------ | ------- | ---- | ----------------------------------------- | --------------------- |
+| `machine_id` | TEXT    | no   | PK₁, FK → `machine` **ON DELETE CASCADE** |                       |
+| `mame_tag`   | TEXT    | no   | PK₂                                       | target row's tag      |
+| `chip_id`    | TEXT    | no   | PK₃, FK → `chip` **ON DELETE RESTRICT**   | target row's chip     |
+| `op`         | TEXT    | no   | `CHECK IN ('add','remove','set')`         |                       |
+| `clock_hz`   | INTEGER | yes  | `CHECK > 0`                               | value for `add`/`set` |
+| `quantity`   | INTEGER | yes  | `CHECK >= 1`                              | value for `add`/`set` |
+| `reason`     | TEXT    | no   |                                           | mandatory provenance  |
+| `source_url` | TEXT    | yes  |                                           | citation              |
+
+#### `dataset_meta` — free-form build facts.
+
+| Column  | Type | Null | Key | Meaning                                                                                |
+| ------- | ---- | ---- | --- | -------------------------------------------------------------------------------------- |
+| `key`   | TEXT | no   | PK  | `mame_version`, `dataset_version`, `schema_version`, `build_date`, `threshold_version` |
+| `value` | TEXT | no   |     |                                                                                        |
+
+v1 stamped `mame_version` on every machine record. That is redundancy with an update anomaly on every MAME
+bump; it belongs to the build, not to a machine.
+
+Genuinely free-form only. Numeric policy is **not** stored here — see `threshold` below.
+
+#### `threshold` — typed quality policy, read by the quality views.
+
+| Column  | Type | Null | Key | Meaning                                                       |
+| ------- | ---- | ---- | --- | ------------------------------------------------------------- |
+| `name`  | TEXT | no   | PK  | dotted config path, e.g. `issue_generator.min_instance_count` |
+| `value` | REAL | no   |     | `CHECK (value >= 0)`                                          |
+
+Views take no parameters, so the quality gates of [data-quality.md](data-quality.md) §4 must read their
+policy from a table. They used to read it from `dataset_meta` through a `v_threshold` view that `CAST` text
+to a number, and it **failed open in two different ways**: a value that stopped parsing `CAST`ed to `0.0`
+and quietly stopped its comparison from ever being true again, and a deleted row made the comparison `NULL`,
+which is also never true. A gate that switches itself off when its configuration rots is worse than no gate.
+
+A typed column fixes the first — a malformed value cannot be stored at all — and the loader fixes the
+second: it writes every numeric leaf of `pipeline/config/quality-thresholds.json` and then asserts that
+every name the shipped views read is present, failing the build otherwise. The required set is not written
+down twice; it is discovered from the view SQL. `v_threshold` is deleted.
+
+### 1.6 Views
+
+Every column of every view is computed at query time; **no base table stores a value derivable from other
+rows in this database**. (That is the claim, stated precisely. `machine.clone_count` is a base fact MAME
+supplies about a parent whose clones are not in this database at all — see §1.3 — so it is not a derivation
+and does not belong on this list. `mame_year` and `mame_manufacturer` are likewise source-verbatim facts,
+§2.4.)
+
+| View                          | Yields                                                                              |
+| ----------------------------- | ----------------------------------------------------------------------------------- |
+| `v_machine_system`            | machine → system, resolving `machine_system` over `system_driver`                   |
+| `v_machine`                   | machine with corrections applied, year parsed, manufacturer resolved                |
+| `v_machine_bom`               | a machine's effective BOM: its own rows, plus its system's rows for chips it lacks  |
+| `v_chip_satisfies`            | (socket chip, provider chip, via) — self, `equivalent` both ways, `provides`        |
+| `v_chip_implementation_count` | implementations per (chip, kind)                                                    |
+| `v_system_chip_effective`     | curated `system_chip` rows, plus chips observed on the system's machines            |
+| `v_system_unmapped`           | unmapped MAME devices per system — the confidence signal                            |
+| `v_system_core`               | (kind, system, platform) triples that already have a system-level implementation    |
+| `v_prospector`                | **Q2**: systems × platforms with no FPGA core, with coverage and confidence         |
+| `v_chip_gap`                  | **Q4**: per kind, chips no implementation of that kind satisfies, with usage counts |
+| `v_mame_device_worklist`      | unmapped devices ranked by impact — the curation queue                              |
+
+**Precedence, one sentence:** a `machine_system` row wins; otherwise the `system_driver` rule for the
+machine's source file applies; otherwise the machine belongs to no system.
+
+**Coverage has exactly one definition, and it is generic.** `v_chip_fpga_direct`, `v_chip_fpga_satisfied` and
+`v_system_coverage` are **deleted**. All three hardcoded `kind_id = 'fpga_hdl'` and were strict
+specialisations of [coverage.md](coverage.md) §3.4's `v_chip_evidence` and `v_system_coverage_by_kind`, which
+already expose `kind_id` as a column — so the project's headline metric had two SQL definitions that had to
+be edited in lockstep, and the specialised one could not compute `chips_equivalent`, `chips_provided` or
+`confidence`. `v_prospector` now reads the generic view and gains all three for free.
+
+The one surviving kind filter is inside `v_prospector`, which is by definition about FPGA cores. That is
+where a kind literal belongs — in the one view that is about a kind, never in a reusable one.
+`v_system_fpga_core` is likewise generalised to `v_system_core`, which carries `kind_id` as a column.
+
+The v1 plan's "coverage engine" (T6.2) is `v_system_coverage_by_kind`, and its "Prospector ranking" data
+layer (T6.3) is `v_prospector`. What remains of T6.3 is weighting, which is a config file and an `ORDER BY`.
+
+### 1.7 Decision (a): `system` and `machine` are two tables
+
+**Decision: two tables. `system` is curated, `machine` is generated, and there is no self-referencing parent.**
+
+| Reason                | Detail                                                                                                                                                                                                                                                |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Provenance            | `machine` is regenerated wholesale from every MAME release. `system` is hand-authored and never regenerated. One table would mix hand-edited and machine-written rows, which standing rule 1 forbids and which no storage layout can express cleanly. |
+| Independent existence | A system must be creatable with zero machines — that is the maintainer's headline requirement. Under a self-parent scheme, "Sega System 16A" would be a synthetic row inside a generated table.                                                       |
+| Different attributes  | `machine` carries `mame_sourcefile`, `driver_status`, `is_bios`, `clone_count`. `system` carries `kind_id`, `year_introduced`. A merged table would be half `NULL` in every row and would need a discriminator to know which half is meaningful.      |
+| Query shape           | A nullable self-FK makes every "chips of a system" query conditional on whether the row is a parent or a child. Two tables and one FK are boring SQL.                                                                                                 |
+
+The same argument retired the last self-FK in the schema. `machine.parent_machine_id` modelled MAME's
+clone hierarchy, but extraction is parents-only (§1.3), so no clone row ever exists to point at a parent:
+the column was a nullable self-FK that made every query conditional and could hold nothing but `NULL`. It is
+deleted. `clone_count` keeps the fact that matters.
+
+**Where the BOM lives when a system's and a machine's differ.** In both tables, because they are facts about
+different subjects and neither is derived from the other:
+
+- `system_chip` — the curated bill of materials of the **board**. Authoritative for the board.
+- `machine_chip` — what MAME's driver for **one title** models. Authoritative for what MAME says.
+
+They disagree constantly and legitimately: MAME abstracts parts away, and one board revision fits a part
+another does not. Forcing them into one table would require a `source` discriminator and a precedence rule
+baked into the key — exactly the fancy the maintainer rejected.
+
+**How a machine inherits its system's BOM without duplicating rows.** It does not inherit; the view
+`v_machine_bom` unions them, preferring the machine's own row per chip:
+
+```sql
+SELECT mc.machine_id, mc.chip_id, mc.mame_tag AS role, mc.quantity, mc.clock_hz, 'machine' AS via
+FROM machine_chip mc
+UNION ALL
+SELECT vms.machine_id, sc.chip_id, sc.role_id, sc.quantity, sc.clock_hz, 'system'
+FROM v_machine_system vms
+JOIN system_chip sc ON sc.system_id = vms.system_id
+WHERE NOT EXISTS (SELECT 1 FROM machine_chip m2
+                  WHERE m2.machine_id = vms.machine_id AND m2.chip_id = sc.chip_id);
+```
+
+Zero duplicated rows on disk; the `via` column tells the reader where each row came from. The dual runs the
+other way too: `v_system_chip_effective` lets a system with no curated BOM yet borrow the chips MAME observed
+on its machines, so a curator gets useful coverage from a driver rule alone and refines from there.
+
+**Machines cannot be created by hand.** v1 had `create: true` overlays minting `custom:` machines. Deleted.
+`machine` is MAME's vocabulary; if MAME does not have the hardware, the thing you have is a documented board
+with a chip list, which is a `system` plus `system_chip` rows. This deletes the `custom:` id namespace, the
+`create` flag, and merge-into-`{}` semantics. The accepted limitation: a specific PCB variant absent from
+MAME cannot be recorded at title granularity. Adding a curated `machine` source later is additive.
+
+### 1.8 Decision (b): one `implementation` table, two typed junctions
+
+**Decision: one table. `system_implementation` does not exist. The target is not polymorphic — it is two
+foreign keys in two junction tables.**
+
+The three candidates and why the third wins:
+
+| Option                                                                  | Referential integrity                            | Verdict                                                                                                                                                                                                                                                               |
+| ----------------------------------------------------------------------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Two tables (`implementation`, `system_implementation`)                  | Full                                             | Rejected. Duplicates the entire column set (kind, project, license, language, accuracy, verified, notes) and duplicates four child tables — `*_path`, `*_platform`. The same attributes in two tables is the normalization smell, and it is more machinery, not less. |
+| One table, polymorphic `(target_kind, target_id)`                       | **None.** SQLite cannot FK a polymorphic column. | Rejected outright. It would force hand-written dangling-reference checks — precisely the work `PRAGMA foreign_key_check` already does for free.                                                                                                                       |
+| One table, targets in `implementation_chip` and `implementation_system` | Full — both are ordinary FKs                     | **Chosen.**                                                                                                                                                                                                                                                           |
+
+An exclusive-arc variant (nullable `chip_id` and `system_id` on `implementation` with
+`CHECK ((chip_id IS NULL) <> (system_id IS NULL))`) preserves FKs and was the near-miss. It loses to the
+junctions because `implementation_chip` must be N:M anyway — one IP legitimately claims several chips — so
+the arc's `chip_id` column would be redundant with the junction it cannot replace.
+
+**The trade-off, stated plainly.** Two things SQLite can no longer enforce:
+
+1. _"An implementation targets at least one thing."_ A row with no junction rows is legal. It is a build
+   warning (`UNTARGETED_IMPLEMENTATION`), not a failure.
+2. _"Only system-level implementations run machines."_ `implementation_machine` is structurally open to
+   chip-level rows. This is deliberate rather than merely tolerated: the fact "this implementation runs these
+   machines" is well-formed for any implementation and simply happens to be empty for chip-level ones. That
+   is the maintainer's "allow for generic use of facts". A build warning flags the suspicious case.
+
+What this buys: adding an `implementation_kind` row is the entire cost of modelling a new way of realizing
+hardware. FPGA HDL is not privileged anywhere in the schema — it is a string in one column, and the only
+places that name it are the coverage views and the queries in §6.
+
+### 1.9 Deviations from the proposed table set
+
+| Proposed                                   | Delivered                                                  | Why                                                                                                                                                                                                      |
+| ------------------------------------------ | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `chip_mame_device`                         | `mame_device`                                              | It holds ignore rows that reference no chip, and its PK is the device name alone (encoding `device → chip`). Naming it after `chip` would misdescribe both facts.                                        |
+| `chip_role` on both BOM tables             | `chip_role` on `system_chip` only; `machine_chip.mame_tag` | Curated roles are a controlled vocabulary worth a lookup. MAME tags are an open set of thousands of generated strings; forcing them through a curated table would mint a lookup row per tag for no gain. |
+| `implementation` + `system_implementation` | `implementation` alone                                     | §1.8.                                                                                                                                                                                                    |
+| `system_implementation_machine`            | `implementation_machine`                                   | §1.8.                                                                                                                                                                                                    |
+| `system_implementation_implementation`     | `implementation_dependency`                                | §1.8; self-referencing, so a core may consume a core.                                                                                                                                                    |
+| —                                          | **added** `manufacturer_alias`                             | Resolves MAME's free-text manufacturer into the lookup without curating 5,000 strings by hand, and doubles as a search alias.                                                                            |
+| —                                          | **added** `chip_family`                                    | `family` is purely a _grouping_ attribute; as free text one misspelling silently splits the group. (`package` stays free text — see §2.4.)                                                               |
+| —                                          | **added** `system_name`                                    | Systems need aliases (`CPS-1` / `Capcom Play System`) for the same reasons chips do; mirrors `chip_name` exactly rather than inventing a mechanism.                                                      |
+| —                                          | **added** `machine_unmapped_device`                        | Replaces the whole `unknown:*` stub convention with a table, and makes the curation worklist a view.                                                                                                     |
+| —                                          | **added** `dataset_meta`                                   | Build facts that were redundantly stamped on every machine row in v1.                                                                                                                                    |
+| —                                          | **added** `machine_correction`, `machine_chip_correction`  | §5, replacing the overlay merge algebra.                                                                                                                                                                 |
+| —                                          | **added** `machine_system`                                 | Per-machine system assignment. One driver `.cpp` legitimately hosts several systems, so `system_driver` is a bulk default and this is the structural exception — an assignment, not a correction (§1.5). |
+| —                                          | **added** `threshold`                                      | Typed quality policy. The untyped `dataset_meta` rows it replaces made a rotted threshold silently disable its own gate (§1.5).                                                                          |
+| `core` (PLAN §3.4)                         | **deleted**                                                | A core is an `implementation` of kind `fpga_hdl` with a row in `implementation_system`.                                                                                                                  |
+| `platform_family` (PLAN §3.5)              | **deleted**                                                | It _is_ `system`.                                                                                                                                                                                        |
+| `aliases.json` (v1 §3.2)                   | **deleted**                                                | `chip_name` and `system_name` already do this. §3.4.                                                                                                                                                     |
 
 ---
 
-## 5. Entities
+## 2. Normal-form audit
 
-Field tables use: **Req** = REQUIRED, Opt = OPTIONAL. "—" in _Format_ means free-form string. Optional means the key is **absent** when unknown — never `null` (rule 3: omit rather than guess; `null` is reserved by overlay semantics §7).
+**Scope.** The object list below is generated from `sqlite_master` after applying `schemas/schema.sql`, not
+written by hand, and `pipeline/test/schema.test.ts` fails if the counts in this document, in the DDL's own
+header comment, and in `sqlite_master` are not all three equal. Measured: **36 tables, 21 views, 34 explicit
+indexes.** Every one of the 36 tables appears in §2.2's key analysis — 22 with a single-column key, 14 with a
+composite one — and every view is listed in §1.6 or in the sibling specs that own it
+([coverage.md](coverage.md) §3.4, [data-quality.md](data-quality.md) Appendix Q). The previous edition of
+this section enumerated a schema that no longer existed, and the tables it silently omitted were exactly
+where the surviving 1NF/2NF defects were.
 
-### 5.1 chip (curated: `data/chips/<id>.json`)
+### 2.1 First normal form
 
-| Field              | Type     | Req | Format / values                                                              | Meaning                                                      |
-| ------------------ | -------- | --- | ---------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| `id`               | string   | Req | chip id (bare slug); = filename stem                                         | permanent identity                                           |
-| `names`            | string[] | Req | minItems 1, unique; **order significant, first is the primary display name** | display names / well-known aliases (e.g. `["YM2151","OPM"]`) |
-| `function`         | string   | Req | taxonomy value per `docs/taxonomy.md`; grammar `^[a-z]+(?:\.[a-z]+)?$`       | single classification (e.g. `cpu`, `sound.fm`)               |
-| `manufacturer`     | string   | Opt | —                                                                            | e.g. `Yamaha`                                                |
-| `model`            | string   | Opt | —                                                                            | manufacturer part number, e.g. `YM2151`                      |
-| `family`           | string   | Opt | —                                                                            | free-text family grouping, e.g. `OPM`                        |
-| `description`      | string   | Opt | one sentence                                                                 | what the chip is                                             |
-| `typical_clock_hz` | integer  | Opt | > 0                                                                          | typical operating clock                                      |
-| `package`          | string   | Opt | —                                                                            | e.g. `DIP-24`                                                |
-| `year_introduced`  | integer  | Opt | 1950–2030                                                                    | first commercial year                                        |
-| `datasheet_urls`   | string[] | Opt | URIs, sorted, unique                                                         | datasheet / doc links                                        |
-| `notes`            | string   | Opt | —                                                                            | free text; MUST carry source citations for non-obvious facts |
+> **Rule.** Every attribute holds a single atomic value from its domain. No repeating groups, no arrays, no
+> embedded documents, no order-carrying position. Every row is identified by a primary key.
 
-**`mame_devices` is deliberately absent from curated chips and MUST NOT appear there.** The MAME-device → chip join has exactly one curated home: `data/mappings/mame-device-map.json` (§5.6). Rationale: a single source of truth removes dual-maintenance drift, and the map is also the only possible home for `ignore` entries — splitting the join across chip files would fragment it. (This refines PLAN §3.1, whose example shows `mame_devices` illustratively.) The _normalized_ chip (§5.1.1) carries a derived `mame_devices`.
+**Compliance.** No column in any of the 36 tables holds a list, a JSON blob, a delimited string, or a nested
+object. `STRICT` typing makes this mechanically checkable: every column is `TEXT` or `INTEGER` (there is not a
+single `ANY` or `BLOB` column). Every table declares a `PRIMARY KEY`. Every 1:N is a child table with the
+parent's key in its own key; every N:M is a junction whose key is exactly the two participating keys.
 
-The value `unknown` for `function` is reserved for pipeline-minted stubs (§6.4) and MUST NOT appear in curated chip files.
+**Every v1 repeating group and the table that fixes it:**
 
-Normative example (`data/chips/ym2151.json`):
+| v1 violation                                      | Fixed by                                                                                     |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `machine.chips[]`                                 | `machine_chip` (PK `machine_id, mame_tag, chip_id`)                                          |
+| `chip.names[]` (order-significant)                | `chip.display_name` for the single-valued name + `chip_name` for the alternates              |
+| `chip.datasheet_urls[]`                           | `chip_datasheet` (PK `chip_id, url`)                                                         |
+| `chip.mame_devices[]`                             | `mame_device` (PK `mame_device`) — the relation is stored once, in the direction its FD runs |
+| `implementation.paths[]` (order = top)            | `implementation_path` (PK `implementation_id, path`) with an explicit `is_top` column        |
+| `implementation.target_platforms[]`               | `implementation_platform` (PK `implementation_id, platform_id`)                              |
+| `implementation.known_consumers[]`                | `implementation_dependency` read backwards — not stored at all                               |
+| `implementation.chip_ids[]`                       | `implementation_chip` (PK `implementation_id, chip_id`)                                      |
+| `core.machines[]`                                 | `implementation_machine` (PK `implementation_id, machine_id`)                                |
+| `core.platform_families[]`                        | `implementation_system` (PK `implementation_id, system_id`)                                  |
+| `equivalences.classes[].chips[]`                  | `chip_equivalence` rows (PK `from_chip_id, to_chip_id`)                                      |
+| `equivalences.provides[]`                         | same table, `kind = 'provides'`                                                              |
+| `machine.coverage.missing[]`                      | not stored — `v_system_chip_coverage` where `satisfied_via = 'unsatisfied'`                  |
+| `platform_families.*.machines[]`                  | `machine_system`                                                                             |
+| `platform_families.*.drivers[]`                   | `system_driver` (PK `mame_sourcefile`)                                                       |
+| `quality_report.warnings[]`, `unmapped_devices[]` | `v_mame_device_worklist` and the build's own diagnostics; not model data                     |
 
-```json
-{
-  "id": "ym2151",
-  "description": "8-channel, 4-operator FM sound synthesis chip",
-  "family": "OPM",
-  "function": "sound.fm",
-  "manufacturer": "Yamaha",
-  "model": "YM2151",
-  "names": ["YM2151", "OPM"],
-  "package": "DIP-24",
-  "typical_clock_hz": 3579545,
-  "year_introduced": 1984
-}
+The subtle 1NF fix is `implementation_path.is_top`. v1 encoded a fact ("this is the top module") as _array
+position_, which is not an attribute value at all. Positional encoding is the repeating-group problem wearing
+a different hat, and it breaks the moment the array is sorted for determinism.
+
+### 2.2 Second normal form
+
+> **Rule.** 1NF, and every non-key attribute is functionally dependent on the **whole** primary key — no
+> attribute depends on a proper subset of a composite key.
+
+**All 22 single-column-key tables satisfy 2NF vacuously** (no proper subset of a one-column key exists):
+`accuracy_level`, `chip`, `chip_family`, `chip_function`, `chip_role`, `dataset_meta`, `fpga_platform`,
+`hdl_language`, `implementation`, `implementation_kind`, `license`, `machine`, `machine_correction`,
+`machine_system`, `mame_device`, `manufacturer`, `manufacturer_alias`, `project`, `system`, `system_driver`,
+`system_kind`, `threshold`.
+
+**All 14 composite-key tables**, each non-key attribute checked against the full key:
+
+| Table                       | Key                             | Non-key attributes                         | Depends on the whole key?                                                                                                                                                                                                            |
+| --------------------------- | ------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `chip_datasheet`            | (chip_id, url)                  | title                                      | Yes.                                                                                                                                                                                                                                 |
+| `chip_equivalence`          | (from_chip_id, to_chip_id)      | kind, note                                 | Yes — both describe the edge, not either endpoint.                                                                                                                                                                                   |
+| `chip_name`                 | (chip_id, name)                 | kind                                       | Yes. Whether a string is displayable or a retired id is a property of that string for that chip.                                                                                                                                     |
+| `implementation_chip`       | both columns                    | none                                       | Vacuous — pure junction.                                                                                                                                                                                                             |
+| `implementation_dependency` | (consumer_id, provider_id)      | note                                       | Yes.                                                                                                                                                                                                                                 |
+| `implementation_machine`    | both columns                    | none                                       | Vacuous — pure junction.                                                                                                                                                                                                             |
+| `implementation_path`       | (implementation_id, path)       | is_top                                     | Yes.                                                                                                                                                                                                                                 |
+| `implementation_platform`   | both columns                    | none                                       | Vacuous — pure junction.                                                                                                                                                                                                             |
+| `implementation_system`     | both columns                    | none                                       | Vacuous — pure junction.                                                                                                                                                                                                             |
+| `machine_chip`              | (machine_id, mame_tag, chip_id) | clock_hz, quantity                         | **No, and the DDL now says so.** MAME tags are unique within a machine, so the determinant is `(machine_id, mame_tag)` and `chip_id` is functionally dependent on it, not part of it. `ux_machine_chip_tag` restores the real key. ¹ |
+| `machine_chip_correction`   | (machine_id, mame_tag, chip_id) | op, clock_hz, quantity, reason, source_url | Same as `machine_chip`, and for the same reason; `ux_machine_chip_correction_tag` is the same fix. ¹                                                                                                                                 |
+| `machine_unmapped_device`   | (machine_id, mame_device)       | quantity                                   | Yes — instances of that device in that machine.                                                                                                                                                                                      |
+| `system_chip`               | (system_id, role_id, chip_id)   | quantity, clock_hz, note                   | Yes. The clock of the YM2151 _in the `sound` role of System 16A_ is a fact about all three, and two chips in one role is real on a curated board — two sound parts both at `sound`.                                                  |
+| `system_name`               | (system_id, name)               | kind                                       | Yes.                                                                                                                                                                                                                                 |
+
+¹ The previous edition of this table asserted the violation away ("Yes — MAME states the clock per tagged
+instance"), and the schema accepted `('outrun','maincpu','m68000')` alongside `('outrun','maincpu','z80')`:
+two chips in one socket, which inflated `chips_total` and deflated `satisfied_share` for the whole system.
+The declared key stays three columns only because the tagless `:device` sentinel rows have no socket to be
+keyed by; every tagged row is keyed by `(machine_id, mame_tag)` through a partial unique index
+(§1.3). Note the deliberate contrast with `system_chip`, where the third key column is genuine: a curated
+role is a position a board may fill twice, while a MAME tag is a socket that holds one part.
+
+**The v1 2NF violations named in the brief, and their fixes:**
+
+| v1 violation                                                       | Fix                                                                                                     |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| `mame_version` repeated on every machine record                    | `dataset_meta` — it depends on the build, not on `machine_id`                                           |
+| `manufacturer` free text on every chip / machine / core record     | `chip.manufacturer_id`, `system.manufacturer_id` → `manufacturer`; MAME's string → `manufacturer_alias` |
+| `license` free text on every implementation record                 | `implementation.license_id` → `license`                                                                 |
+| coverage numbers stored alongside base facts on the machine record | `v_system_coverage_by_kind` — nothing derived is stored                                                 |
+
+One key decision is worth spelling out because it deletes a build gate: **`system_driver`'s key is
+`mame_sourcefile` alone, not `(system_id, mame_sourcefile)`.** That is not a claim that
+`mame_sourcefile → system_id` holds in the domain — it does not; one driver `.cpp` genuinely hosts several
+systems. It is the statement that a driver file has one _default_ system, which makes "two systems claim one
+driver as their default" a `UNIQUE` violation instead of a hand-written `FAMILY_CONFLICT` check. The real
+per-machine fact lives in `machine_system`, whose key is `machine_id` — the actual determinant — so the
+exception costs one row per machine and no prose (§1.5).
+
+### 2.3 Third normal form
+
+> **Rule.** 2NF, and no non-key attribute is transitively dependent on the key — every non-key attribute
+> depends on the key, the whole key, and nothing but the key.
+
+Every transitive dependency in v1 was of the form _record → some code → that code's descriptive attributes_.
+Each is now a foreign key to the table that owns those attributes:
+
+| Transitive dependency in v1                                        | Now                                                                      |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| `chip_id → manufacturer_name → (country, alternate spellings)`     | `chip.manufacturer_id` → `manufacturer`, `manufacturer_alias`            |
+| `chip_id → function → (label, description, prospector band)`       | `chip.function_id` → `chip_function`                                     |
+| `chip_id → family → (family's manufacturer)`                       | `chip.family_id` → `chip_family` ²                                       |
+| `implementation_id → license → (license name, url, OSI status)`    | `implementation.license_id` → `license`                                  |
+| `implementation_id → language → (display label)`                   | `implementation.hdl_language_id` → `hdl_language`                        |
+| `implementation_id → accuracy → (definition)`                      | `implementation.accuracy_id` → `accuracy_level`                          |
+| `implementation_id → platform → (platform label)`                  | `implementation_platform.platform_id` → `fpga_platform`                  |
+| `implementation_id → author` (repeated on every implementation)    | `implementation.project_id` → `project.author` — stored once per project |
+| `system_chip → role → (role label)`                                | `system_chip.role_id` → `chip_role`                                      |
+| `system_id → kind → (kind label)`                                  | `system.kind_id` → `system_kind`                                         |
+| `machine_id → platform_family → (family name, manufacturer, kind)` | `v_machine_system` → `system`                                            |
+
+² `chip.manufacturer_id` and `chip_family.manufacturer_id` can legitimately disagree, so this is not a
+transitive dependency to eliminate: **second-sourced parts genuinely break `family → manufacturer`.** A Sharp
+LH0080 belongs to the Zilog Z80 family and is made by Sharp; forcing the family's manufacturer onto the chip
+would record a falsehood. What a constraint cannot do is tell a real second source from a data-entry slip, so
+the disagreement raises the warning `CHIP_MANUFACTURER_FAMILY_MISMATCH` (data-quality.md §4) and no
+constraint at all. A curator confirms the second source in `chip.notes` and leaves it.
+
+**Stored derived values, all removed.** These were 3NF violations of the worst kind — an attribute dependent
+not on the key but on _other rows entirely_, and therefore stale the moment anything changes:
+
+| v1 stored derivation                                                | Now                                                                      |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `machine.coverage.{implemented, mapped_total, percent, confidence}` | `v_system_coverage_by_kind` (coverage.md §3.4)                           |
+| `machine.coverage.missing[]`                                        | `v_system_chip_coverage` rows where `satisfied_via = 'unsatisfied'`      |
+| `machine.cores[]` (reverse index)                                   | `implementation_machine` read backwards                                  |
+| `machine.kind`                                                      | `system.kind_id` via `v_machine_system`                                  |
+| `chip.mame_devices[]` (normalized: "derived by inverting the map")  | `mame_device` — the map _is_ the relation; there was never a second fact |
+| `implementation.known_consumers[]`                                  | `implementation_dependency` read backwards                               |
+| `core.platform_families` (curated ∪ derived union)                  | `implementation_system` ∪ `v_machine_system`, resolved in the query      |
+| Prospector rankings                                                 | `v_prospector` + an `ORDER BY`                                           |
+| `quality_report.summary.*` counters                                 | aggregate queries over `machine_unmapped_device` and `machine_chip`      |
+
+**Higher normal forms.** The schema is incidentally in BCNF: every table's only determinant is its primary
+key. No table has two overlapping candidate keys, which is the usual source of a BCNF violation. There are no
+multi-valued dependencies within a single table (the classic 4NF trap — putting `paths` and `platforms` in one
+table — is avoided because they are separate tables).
+
+### 2.4 What deliberately stays free text
+
+Normalizing costs a join; a database engineer pays it where it buys something. These columns are not lookups,
+by design:
+
+| Column                                                             | Why it stays text                                                                                                                                                                              |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `chip.package`                                                     | descriptive, not a grouping facet. No planned query groups by package, and its one derivable attribute (pin count) is in the string. Promoting it later is additive.                           |
+| `machine.mame_year`, `machine.mame_manufacturer`                   | source-verbatim MAME data. The normalized facts are `v_machine.year` and `v_machine.manufacturer_id`.                                                                                          |
+| `project.author`                                                   | single-valued per project and stored once per project. The v1 defect was repeating it on every implementation; that is fixed. A `person` table buys nothing until authorship gains attributes. |
+| `*.note`, `*.notes`, `*.reason`, `*.description`, `resource_notes` | prose. Normalizing prose is not a thing.                                                                                                                                                       |
+
+### 2.5 What this supersedes in the sibling specs
+
+- [coverage.md](coverage.md) §8 (supersession), and
+  §10 rules 2/4/7/8 are **void**: there are no classes, so there is nothing to lift, disjoin, or close. Its
+  §1, §3, §5.2, §6 and §9 — what the two relations mean, the decision ladder, single-hop soundness, the 2A03
+  doctrine, and the mandatory-note contract — remain normative and now apply to `chip_equivalence` rows.
+- [taxonomy.md](taxonomy.md) is unaffected: its 26 values become 26 `chip_function` rows and its §5 bands
+  become the `prospector_band` column.
+- [data-quality.md](data-quality.md) keeps its warning-code registry and thresholds; its metrics become
+  queries rather than a stored report envelope.
+
+---
+
+## 3. Identifiers
+
+### 3.1 Decision: readable text slugs, no integer surrogates
+
+Every primary key is the natural, human-readable key. No table has a synthetic integer id.
+
+| Criterion              | Verdict                                                                                                                                                                                                                                                                                                                        |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **PR reviewability**   | Decisive. The curated source of truth is JSON in Git, reviewed by humans. `{"chip_id": "ym2151", "role_id": "sound"}` is reviewable; `{"chip_id": 417, "role_id": 9}` is not. Integer surrogates would have to be assigned by the build, so no contributor could write a correct file by hand and no diff would mean anything. |
+| **Join cost**          | Not a factor. Text keys with `BINARY` collation compare by `memcmp`; SQLite indexes them as B-trees exactly as it does integers. The dataset is thousands of entities and low hundreds of thousands of junction rows. Quoting the maintainer: "any capable b-tree implementation will be more than enough."                    |
+| **ID stability**       | A slug is chosen once by a curator and is meaningful, so it is _less_ likely to need changing than a surrogate whose stability depends on load order. Slugs also appear in URLs, which surrogates could not without a second lookup.                                                                                           |
+| **Cost, acknowledged** | A rename touches every referencing file. This is the right trade: renames are rare, `PRAGMA foreign_key_check` makes a missed reference a build failure rather than silent rot, and §3.4 preserves the old URL.                                                                                                                |
+
+`WITHOUT ROWID` on every table means the text key _is_ the storage key — no shadow rowid, no secondary lookup.
+
+### 3.2 Slug grammar
+
+```
+slug              ^[a-z0-9]+(?:-[a-z0-9]+)*$                    1–64 characters
+identifier        ^[a-z0-9]+(?:[_-][a-z0-9]+)*$                 1–64; implementation_kind.kind_id only
+mame_shortname    ^[a-z0-9_]{1,32}$                             machine_id — MAME's own grammar, verbatim
+mame_device_key   ^[a-z0-9_]{1,64}$                             mame_device
+mame_tag          ^:device$|^[a-z0-9_]+(?:[.:][a-z0-9_]+)*$     machine_chip.mame_tag
+spdx_id           ^[A-Za-z0-9.+-]{1,64}$                        license_id (SPDX syntax, or the literal `custom`)
+sourcefile        ^[a-z0-9_]+(?:/[a-z0-9_]+)*\.cpp$             system_driver.mame_sourcefile, machine.mame_sourcefile
+repo_path         ^[A-Za-z0-9._+-]+(?:/[A-Za-z0-9._+-]+)*$      1–256; implementation_path.path
+meta_key          ^[a-z][a-z0-9_]*(?:\.[a-z0-9_]+)*$            1–64; dataset_meta.key, threshold.name
+date              ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+country           ^[A-Z]{2}$                                    manufacturer.country (ISO 3166-1 alpha-2)
 ```
 
-#### 5.1.1 chip (normalized, dist only)
+`slug` applies to: `chip_id`, `system_id`, `project_id`, `implementation_id`, and every lookup-table key
+except `license_id` and `implementation_kind.kind_id`. All are ASCII, lowercase, case-sensitive; there is no
+case folding anywhere.
 
-The normalized chip is the curated record plus derived fields:
+**One grammar per column, and the two expressions of it are provably equal.** Each grammar above is written
+twice — as a `CHECK` in `schemas/schema.sql` and as a `pattern` (plus `minLength`/`maxLength`) in
+`schemas/common.schema.json` — because SQLite and JSON Schema are different engines and neither can be
+derived from the other. `pipeline/test/schema.test.ts` therefore offers every grammar the same corpus twice,
+once to the live DDL and once to the regex, and fails on any string the two disagree about. Three columns
+were measured to disagree before this rule was enforced:
 
-| Field          | Type     | Req | Meaning                                                                             |
-| -------------- | -------- | --- | ----------------------------------------------------------------------------------- |
-| `mame_devices` | string[] | Opt | device lookup keys mapped to this chip, derived by inverting the device map; sorted |
-| `stub`         | boolean  | Opt | present (and `true`) only on `unknown:` stubs (§6.4)                                |
+| Column                     | Was                                                                              | Now                                                              |
+| -------------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `implementation_path.path` | `a//b` DDL-rejected / JSON-accepted; `a/` and `a b` DDL-accepted / JSON-rejected | `repo_path`, above: no leading or trailing `/`, no empty segment |
+| `dataset_meta.key`         | `a..b` DDL-accepted / JSON-rejected                                              | `meta_key`, above; the DDL gained `NOT GLOB '*..*'`              |
+| `schema_version.version`   | `01.2.3` DDL-accepted / JSON-rejected                                            | moot — the table is deleted (see "Change control")               |
 
-Reverse indexes (machines using the chip, implementations of it) are presentation data assembled per chunk by the emitter (T6.5), not entity fields.
+**No namespace prefixes.** v1 needed `mame:`, `unknown:`, `core:` and `custom:` because every id lived in one
+JSON namespace and could collide. In a relational model, `chip.chip_id` and `machine.machine_id` are columns
+of different tables and cannot collide by construction. The table name _is_ the namespace. This deletes v1 §1.2
+(reserved prefixes), §2 in full (route derivation, inverse totality, colon escaping in URLs, `ROUTE_COLLISION`)
+and the 80-character composite-id limit.
 
-### 5.2 implementation (curated: `data/implementations/<id>.json`)
+URLs are therefore `/chip/<chip_id>`, `/system/<system_id>`, `/machine/<machine_id>`,
+`/implementation/<implementation_id>`, `/project/<project_id>` — every slug is already URL-safe.
 
-| Field                       | Type     | Req | Format / values                                                                              | Meaning                                                                                                                                                                 |
-| --------------------------- | -------- | --- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`                        | string   | Req | bare slug; = filename stem                                                                   | permanent identity                                                                                                                                                      |
-| `name`                      | string   | Req | —                                                                                            | display name, e.g. `JT51`                                                                                                                                               |
-| `chip_ids`                  | string[] | Req | minItems 1; curated chip ids (no `unknown:`); sorted, unique                                 | chips this HDL implements. Plural by design: one IP may cover several canonical chips (PLAN §8 granularity mitigation). Supersedes the singular `chip_id` of PLAN §3.2. |
-| `repo`                      | string   | Req | URI                                                                                          | source repository                                                                                                                                                       |
-| `language`                  | string   | Req | `mixed` \| `other` \| `systemverilog` \| `verilog` \| `vhdl`                                 | HDL language                                                                                                                                                            |
-| `paths`                     | string[] | Opt | repo-relative; **order significant, first entry is the top-level module**                    | where the HDL lives                                                                                                                                                     |
-| `license`                   | string   | Opt | SPDX license expression, or the literal `custom` (details in `notes`)                        | verified from the repo's LICENSE — never guessed; omit when unverified (quality warns)                                                                                  |
-| `author`                    | string   | Opt | —                                                                                            | principal author                                                                                                                                                        |
-| `accuracy`                  | string   | Opt | `behavioral` \| `cycle-accurate` \| `cycle-approximate` \| `gate-level` \| `partial`         | omit when unassessed (quality warns)                                                                                                                                    |
-| `verified_against_hardware` | boolean  | Opt | `true` REQUIRES a citation in `notes`; `false` = assessed and not verified; absent = unknown | hardware verification status                                                                                                                                            |
-| `target_platforms`          | string[] | Opt | values from platform enum (§5.5) plus `generic`; sorted, unique                              | platforms it is known to build for                                                                                                                                      |
-| `resource_notes`            | string   | Opt | —                                                                                            | e.g. `≈3k LEs on Cyclone V`                                                                                                                                             |
-| `last_reviewed`             | string   | Opt | `YYYY-MM-DD`                                                                                 | last curator review date                                                                                                                                                |
-| `notes`                     | string   | Opt | —                                                                                            | free text, citations                                                                                                                                                    |
+### 3.3 Stability guarantee
 
-**`known_consumers` MUST NOT appear in curated implementation files.** It is derived at build time (T4.5) from core/discovery data, with curated additions or removals expressed as implementation overlays (§7.7). The normalized implementation carries `known_consumers`: sorted, unique core ids.
+An identifier that has appeared in any published dataset is **permanent**. It MUST NOT be renamed, re-pointed
+at a different real-world subject, or reused. Fixing a bad slug means inserting a new row under a new id,
+re-pointing every reference in the same PR (the FKs make this mechanical — the build fails until it is
+complete), and recording the old id as an alias.
 
-Normative example:
+Two identifiers are exempt because they are not ours to guarantee:
 
-```json
-{
-  "id": "jt51",
-  "accuracy": "cycle-approximate",
-  "author": "Jose Tejada (jotego)",
-  "chip_ids": ["ym2151"],
-  "language": "verilog",
-  "last_reviewed": "2026-07-01",
-  "license": "GPL-3.0-only",
-  "name": "JT51",
-  "notes": "De-facto standard OPM implementation. Hardware verification: see repo README test reports.",
-  "paths": ["hdl/jt51.v"],
-  "repo": "https://github.com/jotego/jt51",
-  "target_platforms": ["generic", "mist", "mister", "pocket"],
-  "verified_against_hardware": true
-}
+- `machine.machine_id` is MAME's shortname. If MAME renames a machine, the row is deleted and re-added on the
+  next refresh. Curated references to machines live only in `implementation_machine`, `machine_system` and
+  the correction tables, all of which fail the FK check loudly on a MAME bump — which is exactly when a human
+  should look.
+- `mame_device.mame_device` is likewise MAME's key.
+
+### 3.4 Alias mechanism
+
+**`chip_name` and `system_name` are the alias mechanism. There is no second mechanism and no central alias
+file.** A retired id is inserted as a row with `kind = 'retired_id'`; a display alias uses `kind = 'alias'`.
+Resolution is one indexed lookup:
+
+```sql
+SELECT chip_id FROM chip WHERE chip_id = :s
+UNION ALL
+SELECT chip_id FROM chip_name WHERE name = :s AND NOT EXISTS (SELECT 1 FROM chip WHERE chip_id = :s);
 ```
 
-### 5.3 machine — raw (generated: `extract/machines.raw.json`)
+Rules, all enforced at build time (§5.4): a retired id MUST NOT equal any live `chip_id`; aliases MUST NOT
+chain (`UNIQUE(name)` plus the previous rule makes resolution single-hop by construction); once shipped, an
+alias row MUST NOT be deleted, because deleting one breaks a URL.
 
-One file, an envelope:
+**`chip.display_name` and `system.name` sit outside `ux_chip_name_name` / `ux_system_name_name`**, so one
+chip's display name may equal another chip's alias and the resolver would answer with the wrong row. The
+alternative — folding `display_name` into `chip_name` as a `kind = 'display'` row policed by a partial unique
+index — was rejected in one sentence: it would trade a `NOT NULL` single-valued column for a nullable outer
+join and a mandatory second row per chip, buying at-most-one where the column already guarantees exactly-one.
+The collision is instead caught by one query, exactly as the cross-table `RETIRED_ID_COLLISION` check already
+is, and reported as `CHIP_NAME_COLLISION` / `SYSTEM_NAME_COLLISION` (data-quality.md §4).
 
-| Field          | Type         | Req | Meaning                                                                                 |
-| -------------- | ------------ | --- | --------------------------------------------------------------------------------------- |
-| `mame_version` | string       | Req | e.g. `0.288`, from the input XML                                                        |
-| `filter`       | object       | Opt | verbatim copy of the applied filter configuration (shape owned by T2.3's config schema) |
-| `machines`     | RawMachine[] | Req | sorted by `mame_name`                                                                   |
+`project` and `implementation` get no alias table. Their ids are internal — they are not the primary way a
+human refers to the thing, and their reference graph is small enough that an in-PR rename is a mechanical,
+FK-verified change. Adding an alias table later is additive.
 
-`RawMachine` — MAME vocabulary only; **no BOM Squad ids are minted at this stage** (the normalizer is the single place ids are minted):
+---
 
-| Field           | Type      | Req | Format / values                                                | Meaning                           |
-| --------------- | --------- | --- | -------------------------------------------------------------- | --------------------------------- |
-| `mame_name`     | string    | Req | MAME shortname                                                 | machine key within MAME           |
-| `description`   | string    | Req | verbatim from XML                                              | MAME display name                 |
-| `sourcefile`    | string    | Req | e.g. `sega/outrun.cpp`                                         | driver source file                |
-| `year`          | string    | Opt | verbatim (`"1986"`, `"19??"`) — raw keeps MAME's string form   | claimed year                      |
-| `manufacturer`  | string    | Opt | verbatim                                                       | claimed manufacturer              |
-| `cloneof`       | string    | Opt | MAME shortname                                                 | parent machine                    |
-| `romof`         | string    | Opt | MAME shortname                                                 | ROM parent                        |
-| `is_bios`       | boolean   | Req |                                                                | `isbios` attr                     |
-| `is_device`     | boolean   | Req |                                                                | `isdevice` attr                   |
-| `is_mechanical` | boolean   | Req |                                                                | `ismechanical` attr               |
-| `runnable`      | boolean   | Req |                                                                | `runnable` attr                   |
-| `driver_status` | string    | Opt | `good` \| `imperfect` \| `preliminary`                         | `<driver status>`                 |
-| `coin_slots`    | integer   | Opt | ≥ 1; from `<input coins>`; absent when the attr is absent or 0 | drives `kind` derivation (§5.4.1) |
-| `clone_count`   | integer   | Opt | ≥ 1; present iff clones were dropped by the filter             | clones folded into this parent    |
-| `chips`         | RawChip[] | Req | **document order** (may be empty)                              | `<chip>` elements                 |
-| `device_refs`   | string[]  | Req | **document order, duplicates preserved** (may be empty)        | `<device_ref name>` values        |
+## 4. On-disk storage layout
 
-`RawChip`:
+### 4.1 The rule
 
-| Field      | Type    | Req | Meaning                                         |
-| ---------- | ------- | --- | ----------------------------------------------- |
-| `type`     | string  | Req | `audio` \| `cpu` — MAME's `type` attr           |
-| `tag`      | string  | Req | MAME tag, e.g. `maincpu` (leading `:` stripped) |
-| `name`     | string  | Req | MAME display name attr, verbatim, e.g. `M68000` |
-| `clock_hz` | integer | Opt | > 0; from `clock` attr when present and > 0     |
+Curated JSON in `data/` is the source of truth. `extract/` is regenerated from MAME. `dist/` is build output.
+The two invariants:
 
-The committed file is the **post-filter** output (T2.3); the schema nevertheless describes the full shape so filter-config changes never require a schema change.
+1. **Every row is flat.** No nested objects, no arrays, no positional encoding. A row object's keys are the
+   table's column names.
+2. **Every file is a set of _table fragments_.** A curated file is a JSON object whose top-level keys are
+   **table names** and whose values are arrays of flat rows. A key is never a field name. The loader is
+   therefore: for each file, for each key, insert the rows into that table.
 
-### 5.4 machine — normalized (dist only; produced by T6.1)
-
-| Field                | Type       | Req | Format / values                                                           | Meaning                                                                                |
-| -------------------- | ---------- | --- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `id`                 | string     | Req | machine id (`mame:` or `custom:`)                                         | identity                                                                               |
-| `name`               | string     | Req | —                                                                         | display name (raw `description`, overlay-correctable)                                  |
-| `kind`               | string     | Req | `arcade` \| `computer` \| `console` \| `handheld` \| `other` \| `unknown` | machine class (derivation §5.4.1)                                                      |
-| `source`             | object     | Req | §5.4.2                                                                    | provenance                                                                             |
-| `chips`              | BomEntry[] | Req | sorted by (`role`, `chip_id`); may be empty                               | the BOM (assembly §6.5)                                                                |
-| `manufacturer`       | string     | Opt | —                                                                         | from raw / overlay                                                                     |
-| `year`               | integer    | Opt | 1900–2100                                                                 | parsed from raw `year` **only when it is a plain 4-digit number**; otherwise omitted   |
-| `platform_family`    | string     | Opt | family id                                                                 | from `platform-families.json` **only** — never settable by overlay (one home per fact) |
-| `cloneof`            | string     | Opt | machine id                                                                | present only if the filter admits clones                                               |
-| `clone_count`        | integer    | Opt | ≥ 1                                                                       | from raw                                                                               |
-| `mame_driver_status` | string     | Opt | `good` \| `imperfect` \| `preliminary`                                    | raw passthrough                                                                        |
-| `notes`              | string     | Opt | —                                                                         | overlay-supplied commentary (e.g. discrete-logic notes)                                |
-| `coverage`           | object     | Opt | §5.4.3                                                                    | derived by T6.2                                                                        |
-| `cores`              | string[]   | Opt | core ids, sorted, unique                                                  | derived reverse index                                                                  |
-
-`BomEntry`:
-
-| Field      | Type    | Req | Format / values                                                                                                                                                                   | Meaning                                                                          |
-| ---------- | ------- | --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `chip_id`  | string  | Req | chip ref (bare or `unknown:`)                                                                                                                                                     | what the part is                                                                 |
-| `role`     | string  | Req | verbatim MAME tag for `<chip>`-derived rows; the literal `device` for `device_ref`-derived rows; curator-chosen tag-grammar string (`^[a-z0-9_.:]{1,64}$`) for overlay-added rows | position on the board                                                            |
-| `origin`   | string  | Req | `mame` \| `overlay`                                                                                                                                                               | who introduced the row (`mame` even when a field was later corrected by overlay) |
-| `clock_hz` | integer | Opt | > 0                                                                                                                                                                               | clock                                                                            |
-| `count`    | integer | Opt | ≥ 2; **omitted when 1** (canonical form)                                                                                                                                          | identical instances collapsed into this row                                      |
-| `note`     | string  | Opt | —                                                                                                                                                                                 | per-row commentary (overlay-supplied)                                            |
-
-**(`role`, `chip_id`) is the identity key of a BOM row** and MUST be unique within a machine (§6.5 guarantees it; violation is a build failure). To "change" a key field, an overlay removes the old row and adds a new one (§7.4).
-
-#### 5.4.1 `kind` derivation
-
-Precedence, first match wins: (1) overlay-set `kind`; (2) the machine's platform family `kind` (§5.8); (3) `arcade` if raw `coin_slots` ≥ 1; (4) `unknown`. MAME's XML has no machine-class field; this rule is honest about that — consoles/computers/handhelds reach their true kind via family or overlay curation, and `unknown` is the visible backlog.
-
-#### 5.4.2 `source`
-
-For `mame:` machines: `{ "driver": "<sourcefile>", "mame_version": "<version>", "type": "mame" }`.
-For `custom:` machines: `{ "overlay": "<path relative to data/overlays/>", "type": "overlay" }`.
-`source` is immutable: overlays MUST NOT touch it.
-
-#### 5.4.3 `coverage` (envelope fixed here; math owned by T1.4/T6.2)
-
-```json
+```jsonc
+// data/system/sega-system16a.json  — the whole contribution, one file
 {
-  "confidence": "high",
-  "implemented": 9,
-  "mapped_total": 11,
-  "missing": [{ "chip_id": "unknown:sega_315_5197", "reason": "unmapped-device" }],
-  "percent": 81.8
-}
-```
-
-`confidence` ∈ `high` | `medium` | `low` (MUST be ≤ `medium` when any `unknown:` row is present). `missing[].reason` ∈ `no-implementation` | `unknown-chip` | `unmapped-device`. `missing` sorted by (`chip_id`). `percent` per §8.4. The equivalence spec (T1.4) governs how `implemented` counts through equivalence and `provides` edges; it MUST NOT change this envelope.
-
-### 5.5 core (curated: `data/cores/<route-slug>.json`)
-
-Platform enum (shared with §5.2): `mist` | `mister` | `neptuno` | `other` | `pocket` | `replay`. (`generic` is legal only in `implementation.target_platforms`.)
-
-| Field               | Type     | Req               | Format / values                                                | Meaning                                                              |
-| ------------------- | -------- | ----------------- | -------------------------------------------------------------- | -------------------------------------------------------------------- |
-| `id`                | string   | Req               | core id; §1.1 platform-prefix rule; route slug = filename stem | identity                                                             |
-| `name`              | string   | Req               | —                                                              | display name                                                         |
-| `platform`          | string   | Req               | platform enum                                                  | target FPGA platform                                                 |
-| `open_source`       | boolean  | Req               |                                                                | HDL sources public (`false` for rbf-only / closed; basis in `notes`) |
-| `machines`          | string[] | Req               | machine ids; sorted, unique; MAY be empty                      | machines this core implements                                        |
-| `unmapped_reason`   | string   | conditionally Req | REQUIRED iff `machines` is empty, else MUST be absent          | why no machine mapping exists                                        |
-| `repo`              | string   | Opt               | URI                                                            | repository                                                           |
-| `author`            | string   | Opt               | —                                                              | principal author                                                     |
-| `platform_families` | string[] | Opt               | family ids; sorted, unique                                     | curated family claims (e.g. console cores without machine lists)     |
-| `notes`             | string   | Opt               | —                                                              | free text                                                            |
-
-Normalized core (dist): curated record plus `platform_families` replaced by the sorted union of curated values and the families of all mapped machines.
-
-Normative example (`data/cores/mister-arcade-outrun.json`):
-
-```json
-{
-  "id": "core:mister-arcade-outrun",
-  "machines": ["mame:outrun", "mame:outruneh"],
-  "name": "Arcade: Out Run",
-  "open_source": true,
-  "platform": "mister",
-  "repo": "https://github.com/MiSTer-devel/Arcade-OutRun_MiSTer"
-}
-```
-
-### 5.6 device-map entry (curated: `data/mappings/mame-device-map.json`)
-
-The **single source of truth** for the MAME-device → chip join.
-
-```json
-{
-  "devices": {
-    "m68000": { "chip_id": "m68000" },
-    "screen": { "ignore": true, "reason": "MAME presentation abstraction, not board silicon" },
-    "sega_315_5124": {
-      "chip_id": "sega-vdp-315-5124",
-      "note": "SMS/Mark III VDP; MAME shortname per src/devices/video/315_5124.cpp"
-    }
-  }
-}
-```
-
-- Keys: device **lookup keys** (§6.2), grammar `^[a-z0-9_]{1,64}$`, sorted. The worklist (§5.7) emits exactly these keys, so curators map exactly what the pipeline looks up.
-- Entry, exactly one of the two forms:
-  - **map**: `chip_id` (Req, curated chip id — `unknown:` and aliases-of-nothing are invalid; alias keys resolve per §3.3) + `note` (Opt — SHOULD be present for every non-obvious mapping).
-  - **ignore**: `ignore: true` (Req) + `reason` (Req, non-empty). Mandatory reason keeps the shrinking worklist honest.
-- A `chip_id` value MUST resolve to an existing curated chip (`DANGLING_REFERENCE` failure).
-
-### 5.7 device worklist (generated: `extract/mame-devices.raw.json`)
-
-Envelope `{ "devices": [...], "mame_version": "0.288" }`. Entry:
-
-| Field                  | Type     | Req | Meaning                                                                                                   |
-| ---------------------- | -------- | --- | --------------------------------------------------------------------------------------------------------- |
-| `key`                  | string   | Req | device lookup key (§6.2)                                                                                  |
-| `display_names`        | string[] | Req | distinct raw `chips[].name` strings that normalized to this key; sorted; empty for pure `device_ref` keys |
-| `chip_instances`       | integer  | Req | occurrences via `<chip>` elements across filtered machines                                                |
-| `device_ref_instances` | integer  | Req | occurrences via `device_ref` (after §6.5 dedup)                                                           |
-| `machine_count`        | integer  | Req | distinct machines referencing the key                                                                     |
-| `sample_machines`      | string[] | Req | ≤ 5 `mame_name`s, sorted                                                                                  |
-
-Array sorted by (`chip_instances` + `device_ref_instances`) descending, then `key` ascending — the curation priority order.
-
-### 5.8 platform-family (curated: `data/mappings/platform-families.json`)
-
-```json
-{
-  "families": {
-    "sega-outrun-hw": {
-      "drivers": ["sega/outrun.cpp"],
-      "kind": "arcade",
-      "manufacturer": "Sega",
-      "name": "Sega Out Run Hardware"
-    }
-  }
-}
-```
-
-Entry (key = family id, bare slug):
-
-| Field          | Type     | Req | Meaning                                                                                            |
-| -------------- | -------- | --- | -------------------------------------------------------------------------------------------------- |
-| `name`         | string   | Req | display name                                                                                       |
-| `machines`     | string[] | Opt | explicit member machine ids; sorted, unique                                                        |
-| `drivers`      | string[] | Opt | MAME `sourcefile` values; every machine whose raw `sourcefile` matches is a member; sorted, unique |
-| `kind`         | string   | Opt | machine-kind enum value inherited by members (§5.4.1)                                              |
-| `manufacturer` | string   | Opt | —                                                                                                  |
-| `description`  | string   | Opt | —                                                                                                  |
-| `notes`        | string   | Opt | —                                                                                                  |
-
-At least one of `machines` / `drivers` MUST be present. Membership resolution: explicit `machines` listing **overrides** driver-rule membership (so one oddball machine in a shared driver can belong elsewhere). After resolution every machine MUST belong to at most one family; two explicit claims, or two driver-rule claims from different families, are a **build failure** (`FAMILY_CONFLICT`). Every explicit machine id and every driver value MUST match at least one extracted machine (`DANGLING_REFERENCE`).
-
-### 5.9 equivalence edges (curated: `data/mappings/equivalences.json`)
-
-Structural contract (semantics and coverage math: T1.4 spec):
-
-```json
-{
-  "classes": [
+  "system": [
     {
-      "chips": ["ym2612", "ym3438"],
-      "note": "YM3438 is a CMOS die-shrink of YM2612; functionally interchangeable here"
-    }
+      "system_id": "sega-system16a",
+      "name": "Sega System 16A",
+      "kind_id": "arcade",
+      "manufacturer_id": "sega",
+      "year_introduced": 1985,
+    },
   ],
-  "provides": [
+  "system_name": [{ "system_id": "sega-system16a", "name": "System 16A", "kind": "alias" }],
+  "system_driver": [{ "mame_sourcefile": "sega/system16a.cpp", "system_id": "sega-system16a" }],
+  "system_chip": [
     {
-      "note": "68010 is socket/ISA compatible upward for 68000 software",
-      "provider": "m68010",
-      "provides": "m68000"
-    }
-  ]
+      "system_id": "sega-system16a",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 10000000,
+    },
+    { "system_id": "sega-system16a", "role_id": "audiocpu", "chip_id": "z80", "clock_hz": 4000000 },
+    { "system_id": "sega-system16a", "role_id": "sound", "chip_id": "ym2151", "clock_hz": 4000000 },
+  ],
 }
 ```
 
-- `classes[]`: `chips` (Req, ≥ 2 curated chip ids, sorted, unique) + `note` (Req). Classes MUST be pairwise disjoint (equivalence is transitive — merge instead of overlapping). Array sorted by `chips[0]`.
-- `provides[]`: `provider` (Req), `provides` (Req), `note` (Req); `provider` ≠ `provides`; no duplicate (`provider`, `provides`) pairs; array sorted by (`provider`, `provides`). Directional: an implementation of `provider` can satisfy a `provides` socket, not vice versa.
-- All chip refs MUST be curated chip ids — `unknown:` is forbidden.
+**Deviation from the recommended one-file-per-row default, and why.** The recommendation's stated goal is
+that "a PR adding a chip touches exactly one new file". Strict one-file-per-row cannot meet it: a chip has
+alias rows and datasheet rows, so it would touch three files — or force them into shared files that produce
+merge conflicts between unrelated PRs. The bundle form meets the goal exactly, keeps rows flat, keeps the
+file→table mapping mechanical, and avoids fourteen directories of near-empty files. It is a _tabular_
+document, not the entity document v1 had: there is no field whose value is a sub-entity.
 
-### 5.10 overlay (curated: `data/overlays/…`) — shape
+### 4.2 File map
 
-See §7 for merge semantics. File shape (`schemas/overlay-machine.schema.json`):
+| Path                                           | Tables in the file                                                                                                                                                                                              | Writer   |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| `data/lookup/<table>.json`                     | one lookup table each: `manufacturer` (+ `manufacturer_alias`), `license`, `chip_function`, `chip_family`, `chip_role`, `system_kind`, `hdl_language`, `fpga_platform`, `implementation_kind`, `accuracy_level` | curator  |
+| `data/chip/<chip_id>.json`                     | `chip`, `chip_name`, `chip_datasheet`                                                                                                                                                                           | curator  |
+| `data/system/<system_id>.json`                 | `system`, `system_name`, `system_driver`, `system_chip`                                                                                                                                                         | curator  |
+| `data/project/<project_id>.json`               | `project`                                                                                                                                                                                                       | curator  |
+| `data/implementation/<implementation_id>.json` | `implementation`, `implementation_chip`, `implementation_system`, `implementation_path`, `implementation_platform`, `implementation_machine`, `implementation_dependency`                                       | curator  |
+| `data/mame_device.json`                        | `mame_device`                                                                                                                                                                                                   | curator  |
+| `data/chip_equivalence.json`                   | `chip_equivalence`                                                                                                                                                                                              | curator  |
+| `data/correction/machine.json`                 | `machine_correction`, `machine_system`                                                                                                                                                                          | curator  |
+| `data/correction/machine_chip.json`            | `machine_chip_correction`                                                                                                                                                                                       | curator  |
+| `extract/machine.json`                         | `machine`                                                                                                                                                                                                       | pipeline |
+| `extract/machine_chip.json`                    | `machine_chip`                                                                                                                                                                                                  | pipeline |
+| `extract/machine_unmapped_device.json`         | `machine_unmapped_device`                                                                                                                                                                                       | pipeline |
+| `extract/dataset_meta.json`                    | `dataset_meta` (the `mame_version` row)                                                                                                                                                                         | pipeline |
+| `dist/bomsquad.sqlite`                         | everything                                                                                                                                                                                                      | pipeline |
 
-| Field         | Type     | Req | Meaning                                                                                               |
-| ------------- | -------- | --- | ----------------------------------------------------------------------------------------------------- |
-| `target`      | string   | Req | machine id (machine overlays) or implementation id (implementation overlays); alias-resolved per §3.3 |
-| `reason`      | string   | Req | **why this overlay exists** — provenance is mandatory                                                 |
-| `patch`       | object   | Req | the merge document (§7)                                                                               |
-| `create`      | boolean  | Opt | `true` only when minting a `custom:` machine (§7.6); absent otherwise                                 |
-| `source_urls` | string[] | Opt | citations backing the correction; sorted, unique                                                      |
+**Placement rules.** A child row lives in its parent's file when it has exactly one parent
+(`implementation_dependency` belongs to the consumer). A table whose rows span two entities with no natural
+owner (`chip_equivalence`) or whose key belongs to neither (`mame_device`) gets its own file. Large generated
+tables live under `extract/`, never `data/`, and are never hand-edited.
 
-Filename: `<route-slug-of-target>.json`, or `<route-slug-of-target>__<qualifier>.json` (qualifier `^[a-z0-9-]{1,32}$`) when multiple overlays target one entity. The stem before `__` MUST equal the target's route slug.
+**Filename rule.** For a per-entity file, the filename stem MUST equal the primary key of the file's single
+entity row, and every row in the file MUST carry that key in its parent column. Mismatch is a build failure.
 
-### 5.11 site-data manifest (generated: `dist/site-data/manifest.json`)
+### 4.3 Byte-identical output
 
-| Field             | Type   | Req | Meaning                                                                                                                                                                                                                |
-| ----------------- | ------ | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `schema_version`  | string | Req | semver of the manifest contract (this spec: `1.0.0`)                                                                                                                                                                   |
-| `dataset_version` | string | Req | `^\d{4}\.\d{2}\.\d{2}(?:\.\d+)?$` for releases; supplied as a build input by the release workflow; a build without one MUST use the constant `0.0.0-dev`                                                               |
-| `mame_version`    | string | Req | pinned MAME release, e.g. `0.288`                                                                                                                                                                                      |
-| `build_date`      | string | Req | ISO 8601 UTC `YYYY-MM-DDTHH:MM:SSZ`; MUST be derived from `SOURCE_DATE_EPOCH` if set, else the HEAD commit's committer timestamp, else `1970-01-01T00:00:00Z` — never wall-clock, so double-builds stay byte-identical |
-| `counts`          | object | Req | integers: `chips` (curated), `chips_unknown` (stubs), `cores`, `families`, `implementations`, `machines`                                                                                                               |
-| `chunks`          | object | Req | logical name → chunk descriptor, keys sorted                                                                                                                                                                           |
+**JSON.** UTF-8, no BOM; `\n` newlines; exactly one trailing newline; two-space indentation, one key per line
+(`JSON.stringify(v, null, 2)` layout); strict JSON, no comments, no duplicate keys; minimal escaping with
+non-ASCII written verbatim.
 
-Chunk descriptor: `{ "bytes": <int>, "gzip_bytes": <int>, "path": "<hashed path>", "sha256": "<64 hex>" }` — all REQUIRED. `gzip_bytes` MUST be ≤ 256 000 (the 250 KB budget) for every chunk; violation fails the build.
+- **Key order within a row: DDL column order.** Mechanical, self-documenting, trivially lintable against the
+  schema, and it makes diffs line up column-wise. (This replaces v1's hoist-then-lexicographic rule, which
+  existed because entity documents had no column order to inherit.)
+- **Top-level key order within a file:** the entity table first, then the remaining table names bytewise ascending.
+- **Row order within an array:** by the table's primary-key columns in declaration order, bytewise ascending.
+- **`NULL` columns are omitted**, never written as `null`. `null` has no meaning anywhere in this model.
+- All string comparison is bytewise on UTF-8. No locale, no case folding.
 
-Logical names (fixed): `aliases.json`, `stats.json`, `chips/index.json`, `chips/{id}.json` (id = chip route slug), `machines/index-{nn}.json` (`nn` = zero-padded decimal shard from `00`), `machines/detail/{xx}.json` (`xx` = first 2 hex chars of `sha256(utf8(machine id))`; file body = object keyed by machine id, keys sorted), `families/index.json`, `families/{id}.json`, `implementations/index.json`, `cores/index.json`, `prospector/{platform}.json`, `search/{n}.json`, `quality-report.json`.
+**SQLite.** The build MUST produce a byte-identical `.sqlite` from identical inputs. The recipe (verified):
 
-Physical path of a chunk: `<logical-dir>/<logical-stem>.<first 12 hex of sha256 of the file bytes>.json`. Only `manifest.json` itself is unhashed. The payload shapes of `stats.json`, `prospector/*`, and `search/*` chunks are owned by T6.5/T6.3/T7.3 respectively; they MUST obey §8 and carry only data derived from build inputs. Index and detail chunks carry the normalized entities of §5 (indexes MAY project a field subset, defined by T6.5).
+```
+<apply schemas/schema.sql — OUTSIDE any transaction; see below>
+PRAGMA page_size = 4096;  PRAGMA encoding = 'UTF-8';  PRAGMA journal_mode = DELETE;
+PRAGMA foreign_keys = OFF;              -- load in any table order
+<insert every table's rows in primary-key order>
+PRAGMA foreign_keys = ON;  PRAGMA foreign_key_check;  PRAGMA integrity_check;
+ANALYZE;   VACUUM;
+```
 
-### 5.12 quality-report (generated: `dist/quality-report.json`, also published as a chunk)
+**`PRAGMA foreign_keys` MUST NOT be executed inside a transaction.** SQLite ignores it between `BEGIN` and
+`COMMIT` and reports no error, so a builder that wrapped the DDL for speed would ship a database with no
+referential enforcement at all and never find out. `applySchema()` therefore reads the pragma back after
+running the DDL and throws if it is not `1`; the regression test opens a connection with foreign keys
+explicitly off, applies the schema, and asserts both that the pragma is on and that a dangling insert throws.
 
-| Field              | Type       | Req | Meaning                                                                                                                 |
-| ------------------ | ---------- | --- | ----------------------------------------------------------------------------------------------------------------------- |
-| `schema_version`   | string     | Req | semver of this envelope (`1.0.0`)                                                                                       |
-| `dataset_version`  | string     | Req | as manifest                                                                                                             |
-| `mame_version`     | string     | Req | as manifest                                                                                                             |
-| `summary`          | object     | Req | REQUIRED members below; the quality spec (T1.7) MAY add members (this is the one deliberately open object in the model) |
-| `warnings`         | Warning[]  | Req | sorted by (`code`, `subject`, `message`); may be empty                                                                  |
-| `unmapped_devices` | Unmapped[] | Req | sorted by `instance_count` desc, then `key` asc                                                                         |
+The SQLite file header carries no timestamp, and `VACUUM` after in-order inserts normalizes page layout, so
+double-build byte-comparison is a valid CI gate (`NONDETERMINISTIC_BUILD`).
 
-`summary` REQUIRED members: `chip_instances_total`, `chip_instances_mapped`, `chip_instances_ignored`, `chip_instances_unknown` (integers; total = mapped + ignored + unknown) and `mapped_instance_share` (number 0–1 per §8.4 — `(mapped + ignored) / total`, the project's headline metric).
-
-`Warning`: `{ "code": "<SCREAMING_SNAKE>", "message": "<text>", ... }` plus Opt `subject` (entity id or repo-relative file path) and Opt `impact` (number). The code registry and thresholds are owned by T1.7 within this shape.
-
-`Unmapped`: `{ "instance_count": <int>, "key": "<lookup key>", "machine_count": <int>, "sample_machines": [<machine ids, ≤ 5, sorted>] }` (same `sample_machines` field name as the worklist, §5.7, but dist-side it carries machine ids, not raw shortnames).
-
-There is no `failures` field: a build with any failure-grade defect (§9) exits non-zero and publishes nothing, so a shipped report by construction contains only warnings.
+**Budget.** `dist/bomsquad.sqlite` MUST NOT exceed 48 MB uncompressed; CI fails otherwise. The site loads the
+whole file, so if the budget is ever hit the fix is to split the per-title `machine_chip` detail into a second,
+lazily-fetched database — not to invent a chunking format. (`sql.js-httpvfs`, which would allow ranged reads,
+is unmaintained since 2022 and MUST NOT be adopted.)
 
 ---
 
-## 6. The `unknown:*` convention
+## 5. Corrections to generated data
 
-### 6.1 When it is minted
+### 5.1 The mechanism
 
-During BOM assembly (§6.5), every device reference in a filtered machine resolves through the device map. A lookup key with **no map entry** (neither mapped nor ignored) yields the chip ref `unknown:<lookup-key>`. Nothing is ever silently dropped: every device instance is mapped, ignored (with reason), or visibly unknown.
+Three tables (§1.5) and one pass, applied after `extract/` is loaded and before any view is read:
 
-### 6.2 Device lookup keys
+```sql
+-- 1. remove
+DELETE FROM machine_chip WHERE (machine_id, mame_tag, chip_id) IN
+  (SELECT machine_id, mame_tag, chip_id FROM machine_chip_correction WHERE op = 'remove');
 
-The device map, the worklist, and `unknown:` payloads share one key space:
+-- 2. add
+INSERT INTO machine_chip (machine_id, mame_tag, chip_id, clock_hz, quantity)
+SELECT machine_id, mame_tag, chip_id, clock_hz, COALESCE(quantity, 1)
+FROM machine_chip_correction WHERE op = 'add';
 
-- For a `device_refs[]` value: the key is the value verbatim (already a MAME shortname).
-- For a `chips[]` element: `key = normalize_device_key(name)` where `normalize_device_key(s)` = lowercase `s`, then replace every maximal run of characters outside `[a-z0-9]` with a single `_`, then strip leading/trailing `_`. An empty result is a build failure. (Examples: `M68000` → `m68000`; `Sega 315-5124 VDP` → `sega_315_5124_vdp`.)
-
-This normalization is part of the data contract: T2.4 emits worklist keys with it, curators map those exact keys, T6.1 looks them up. Changing the function is a breaking change to this spec.
-
-### 6.3 Rules
-
-- `unknown:` chip refs appear **only** in dist output (normalized BOMs, coverage `missing` lists, quality metrics) and, narrowly, in overlays as the `chip_id` of a row being corrected or removed (§7.4). An overlay MUST NOT _introduce_ a new `unknown:` row — a curator adding a row knows what the chip is and MUST curate a real (even if sparse) chip record first.
-- `unknown:` ids MUST NEVER appear: as files under `data/chips/`; as device-map `chip_id` targets; in `implementation.chip_ids`; in equivalences; in `aliases.json`; in `core.machines`-adjacent data. CI MUST grep-gate `data/` for `"unknown:` outside `data/overlays/` (`UNKNOWN_IN_CURATED` failure).
-- `unknown:` ids are ephemeral: mapping the device later replaces them with a real chip id in the next build. No alias is recorded for that transition (stub ids are not stable ids; their permanence guarantee is explicitly void, and their routes are expected to die).
-
-### 6.4 Stub records
-
-For every distinct `unknown:` ref in the built dataset, the pipeline materializes a stub chip **in dist only**:
-
-```json
-{
-  "id": "unknown:sega_315_5197",
-  "function": "unknown",
-  "mame_devices": ["sega_315_5197"],
-  "names": ["sega_315_5197"],
-  "stub": true
-}
+-- 3. set (non-key columns only; NULL leaves the existing value alone)
+UPDATE machine_chip SET
+  clock_hz = COALESCE((SELECT c.clock_hz FROM machine_chip_correction c
+                       WHERE c.machine_id = machine_chip.machine_id
+                         AND c.mame_tag = machine_chip.mame_tag
+                         AND c.chip_id  = machine_chip.chip_id AND c.op = 'set'), clock_hz),
+  quantity = COALESCE((SELECT c.quantity FROM machine_chip_correction c
+                       WHERE c.machine_id = machine_chip.machine_id
+                         AND c.mame_tag = machine_chip.mame_tag
+                         AND c.chip_id  = machine_chip.chip_id AND c.op = 'set'), quantity)
+WHERE EXISTS (SELECT 1 FROM machine_chip_correction c
+              WHERE c.machine_id = machine_chip.machine_id AND c.mame_tag = machine_chip.mame_tag
+                AND c.chip_id = machine_chip.chip_id AND c.op = 'set');
 ```
 
-`names[0]` is the most frequent raw display name for the key (ties broken lexicographically), else the key itself.
+`machine_correction` and `machine_system` need no pass at all — `v_machine` and `v_machine_system` apply
+them with a `COALESCE` and a `CASE`.
 
-### 6.5 BOM assembly (normative algorithm for T6.1)
+The correction tables ship inside `dist/bomsquad.sqlite`. Provenance ("was this row corrected, and why?") is a
+`LEFT JOIN` to the correction table, not a stored `source` column — that column would be derivable from other
+rows, which is the thing §0 forbids.
 
-For each filtered raw machine, in order:
+### 5.2 Staleness
 
-1. **Chip rows.** For each `chips[]` element in document order: `key = normalize_device_key(name)`; resolve via device map → `chip_id` (mapped), _skip_ (ignored), or `unknown:<key>`. Emit `{ chip_id, role: tag, clock_hz?, origin: "mame" }`.
-2. **Device-ref counting.** For each `device_refs[]` value: resolve the key identically; ignored → skip; otherwise accumulate `count` per resolved chip ref.
-3. **Dedup by subtraction.** For each chip ref from step 2, subtract the number of step-1 rows with the same `chip_id`; if the remainder `r` ≥ 1, emit `{ chip_id, role: "device", origin: "mame" }` with `count: r` when `r` ≥ 2. Rationale: `device_ref` lists every referenced device including those already described by `<chip>` elements; post-mapping subtraction removes the double count using the map itself as the vocabulary unifier. Residual mistakes (a `device_ref` that is genuinely a second physical instance) are overlay-correctable.
-4. **Key uniqueness.** If two rows now share (`role`, `chip_id`), the build fails (`BOM_KEY_COLLISION`). (MAME tags are unique per machine, so this cannot occur from well-formed input.)
-5. **Overlays** (§7), then family attachment (§5.8), `kind` (§5.4.1), then derived fields (coverage, cores).
-6. **Sort** `chips` by (`role`, `chip_id`).
+A correction whose target no longer exists is a **build failure**, exactly as in v1 and for the same reason: a
+silently-skipped correction either masks an upstream fix or rots invisibly, and the MAME-bump PR is precisely
+where a human should be told. Two of the three cases are free:
 
-### 6.6 Quality accounting
+| Condition                                                                | Detected by                                                    |
+| ------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| correction targets a machine that no longer exists                       | `PRAGMA foreign_key_check` — `machine_id` is a real FK         |
+| correction names a chip that no longer exists                            | `PRAGMA foreign_key_check` — `chip_id` is a real FK            |
+| `op='remove'`/`'set'` matches no row, `op='add'` matches an existing row | one `SELECT` per op, run in the same pass (`STALE_CORRECTION`) |
 
-Each `unknown:` **instance** (row `count` included) counts against `mapped_instance_share` as unknown (§5.12). Machines containing any `unknown:` row MUST have coverage `confidence` ≤ `medium`. `unmapped_devices` in the quality report is the dist-side view of the same keys, feeding the good-first-mapping issue generator.
+### 5.3 What was deleted from v1, and why
+
+| v1 mechanism                                             | Status      | Why it is not needed                                                                                                                                                                                                         |
+| -------------------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Recursive deep merge of arbitrary JSON documents         | **deleted** | Rows are flat and have primary keys. There is nothing to recurse into; "merge" is `UPDATE … WHERE pk = …`.                                                                                                                   |
+| `null` as a delete sentinel (RFC 7386 style)             | **deleted** | `NULL` means unknown, everywhere, with no second meaning. Deleting a row is `op='remove'`; clearing a column is not a supported operation (no field in the correctable set has "unknown" as a meaningful correction target). |
+| `$add` / `$remove` / `$append` array wrappers            | **deleted** | Arrays are gone. Adding a BOM row is `op='add'`; removing one is `op='remove'`.                                                                                                                                              |
+| Declared keyed-array identity keys (v1 §7.2)             | **deleted** | The identity key of a BOM row is the table's primary key, declared once in the DDL.                                                                                                                                          |
+| Overlay application order by filename (`__qualifier`)    | **deleted** | Corrections are rows keyed by their target. One row per target per table; ordering is meaningless. Two corrections for one row is a `UNIQUE` violation instead of an ordering subtlety.                                      |
+| `OVERLAY_FORBIDDEN_FIELD` gate (v1 §7.3)                 | **deleted** | The correction tables have only the correctable columns. You cannot patch `mame_sourcefile` because there is nowhere to write it.                                                                                            |
+| `create: true` machine minting (v1 §7.6)                 | **deleted** | §1.7 — a board absent from MAME is a `system`.                                                                                                                                                                               |
+| Implementation overlays (v1 §7.7, for `known_consumers`) | **deleted** | `known_consumers` is not stored. Curators edit `implementation_dependency` directly, because it is curated data, not generated data.                                                                                         |
+| Post-merge re-validation against the entity schema       | **deleted** | The constraints are on the table; an illegal correction fails at `INSERT`/`UPDATE`.                                                                                                                                          |
+
+Roughly 120 lines of specification and an entire merge engine collapse into three tables and three statements.
+
+### 5.4 Build gates
+
+The point of the exercise: most integrity is now free.
+
+| Gate                                                                | Enforced by                                              |
+| ------------------------------------------------------------------- | -------------------------------------------------------- |
+| Every cross-reference resolves                                      | `PRAGMA foreign_key_check` (**free**)                    |
+| No duplicate ids, no duplicate junction rows, no duplicate BOM rows | `PRIMARY KEY` (**free**)                                 |
+| One device maps to one chip; one driver maps to one system          | `PRIMARY KEY` on the determinant (**free**)              |
+| A device is mapped xor ignored                                      | `CHECK` (**free**)                                       |
+| At most one top-level path per implementation                       | partial `UNIQUE` index (**free**)                        |
+| No self-edges, no mirrored `equivalent` rows                        | `CHECK` (**free**)                                       |
+| Types, ranges, enumerations, boolean domains                        | `STRICT` + `CHECK` (**free**)                            |
+| Database is structurally sound                                      | `PRAGMA integrity_check` (**free**)                      |
+| Every grammar of §3.2                                               | `CHECK` (**free**) — a `GLOB` conjunction expresses each |
+| `CHECK` and JSON `pattern` agree, per column                        | brute-force corpus comparison in the test suite          |
+| Foreign keys are actually enforced in the shipped file              | `applySchema()` reads `PRAGMA foreign_keys` back (§4.3)  |
+| One chip per MAME socket                                            | partial `UNIQUE` index (**free**)                        |
+| Every threshold a quality view reads exists                         | the loader, which fails the build otherwise (§1.5)       |
+| Filename stem matches the entity key                                | linter                                                   |
+| JSON canonical form (key order, row order, formatting)              | linter                                                   |
+| `chip_name`/`system_name` retired ids do not collide with live ids  | one `SELECT` (cross-table, so no `CHECK` can express it) |
+| Stale corrections                                                   | one `SELECT` per op (§5.2)                               |
+| Implementation with no chip and no system                           | one `SELECT` (warning)                                   |
+| Chip-level implementation with `implementation_machine` rows        | one `SELECT` (warning)                                   |
+| Byte-identical double build                                         | CI byte-compare                                          |
+| `dist/bomsquad.sqlite` ≤ 48 MB                                      | CI                                                       |
 
 ---
 
-## 7. Overlay merge semantics
+## 6. The canonical queries
 
-Overlays are the only mechanism for correcting generated data (§4.2). They are applied by the normalizer after device mapping and before derivation (§6.5 step 5).
+All five run against Appendix A + B. Named parameters use `:name`. These are the acceptance tests for the
+schema; the schema is wrong if any of them needs a structural change.
 
-### 7.1 Model
+### Q1 — For system X, its chips and how many `fpga_hdl` implementations each has
 
-An overlay's `patch` is a partial document merged into the target entity. The merge is defined per JSON type, recursively:
+_Ad-hoc query over the view `v_chip_implementation_count`. This is the maintainer's example, and it is a
+three-table join._
 
-1. **Objects: deep merge, key by key.** For each key in the patch: apply the value rules below to the corresponding target key. Keys absent from the patch are untouched. Merging into an absent target key of object type treats the target as `{}` (this is how nested objects are introduced).
-2. **Scalars (string / number / boolean): set.** The patch value replaces the target value, or introduces the key.
-3. **`null`: delete.** A patch value of `null` deletes the target key. Chosen over a `$delete` marker for RFC 7386 (JSON Merge Patch) familiarity, and unambiguous here because no field in this model is nullable. Deleting a key that is **absent** is a build failure (`STALE_OVERLAY` — the overlay no longer does anything; see §7.5). Deleting a REQUIRED field survives to post-merge validation, which then fails.
-4. **Arrays of scalars: replace is the DEFAULT.** A plain array value replaces the target array wholesale. Rationale: replace is idempotent and leaves no ordering/dedup ambiguity; scalar arrays in this model are small. Append/remove without restating is requested with a **wrapper object**: `{ "$append": [ ... ] }`, `{ "$remove": [ ... ] }`, or both members at once. Order of operations: `$remove` first, then `$append`, then canonical sort (unless the field is order-significant, §8.3, in which case appends go to the end). Every `$remove` value MUST be present in the target and every `$append` value MUST be absent — otherwise `STALE_OVERLAY` failure.
-5. **Keyed arrays (arrays of objects with a declared identity key): merge by key.** Each patch element is matched against target elements by the array's key fields. Per element:
-   - **no marker — correct:** a matching target element MUST exist (`STALE_OVERLAY` failure otherwise — this catches typos that would silently become additions); the element is deep-merged into the match per rules 1–4 (so `"clock_hz": null` inside an element deletes that field of the row).
-   - **`"$add": true` — add:** a matching element MUST NOT exist (failure otherwise); the element minus the marker is inserted. It MUST carry all fields REQUIRED of the row.
-   - **`"$remove": true` — remove:** a matching element MUST exist (failure otherwise); it is removed. Only the key fields and the marker are allowed in the element.
-   - `$add` and `$remove` are mutually exclusive; key fields are immutable (change = `$remove` old + `$add` new).
-
-The sentinels `$add`, `$remove`, `$append` are reserved: no data key may begin with `$` except `$schema` at file top level.
-
-### 7.2 Declared keyed arrays
-
-| Array           | Identity key        |
-| --------------- | ------------------- |
-| `machine.chips` | (`role`, `chip_id`) |
-
-All other arrays in the model are scalar arrays (rule 4). Future keyed arrays MUST be declared here.
-
-### 7.3 Overlayable surface
-
-Machine overlays MAY touch: `name`, `kind`, `manufacturer`, `year`, `notes`, `chips` (and within a row: `clock_hz`, `count`, `note`). They MUST NOT touch: `id`, `source`, `platform_family` (owned by the families file), `cloneof`, `clone_count`, `mame_driver_status`, any derived field (`coverage`, `cores`), or `origin` within rows (the normalizer stamps `origin`: rows introduced by `$add` get `overlay`, corrected rows keep `mame`). A patch touching a forbidden key is a build failure (`OVERLAY_FORBIDDEN_FIELD`).
-
-### 7.4 `unknown:` rows in overlays
-
-An overlay MAY correct or `$remove` a row whose `chip_id` is `unknown:*` (e.g. delete a device MAME wrongly lists). It MUST NOT `$add` one (§6.3).
-
-### 7.5 Ordering, conflicts, staleness
-
-- **Application order** when multiple overlays target one entity: ascending **bytewise lexicographic order of the overlay file path relative to `data/overlays/`**. The `__qualifier` convention (§5.10) guarantees the base file sorts before its qualified siblings (`.` 0x2E < `_` 0x5F). Overlays for different targets are independent; any global processing order yields the same result.
-- **Missing target: hard failure.** An overlay whose `target` (after alias resolution, §3.3) matches no machine in the filtered extract fails the build (`OVERLAY_TARGET_MISSING`).
-- **Stale operation: hard failure.** Any `STALE_OVERLAY` condition from §7.1 (correct/remove with no match, `$add` with a match, `null`-delete of an absent key, `$append`/`$remove` value mismatch) fails the build.
-- Justification: overlays encode human corrections; when a MAME upgrade renames a machine, fixes the underlying data, or restructures a BOM, a silently skipped or half-applied overlay would either mask the upstream fix or rot invisibly. Hard failure surfaces exactly which overlays need deletion or re-pointing **in the MAME-bump PR itself**, where the context is, and deleting a satisfied overlay is a one-line change. Error messages MUST name the overlay file, the target, and the failing operation.
-- **Post-merge validation.** After all overlays for a target apply, the result MUST validate against the normalized machine schema (minus derived fields); violations fail the build naming the last-applied overlay file.
-
-### 7.6 Machine creation (`create: true`)
-
-An overlay with `create: true` mints a machine that does not exist in MAME. `target` MUST be a `custom:` id and MUST NOT already exist; the merge starts from `{}`; `patch` MUST produce all REQUIRED normalized fields except `id` and `source`, which the normalizer stamps (`source` per §5.4.2). Every `chips` element MUST carry `"$add": true` (explicit — nothing can be matched in an empty document). `create: true` with an existing target, or a `mame:` target, is a build failure.
-
-### 7.7 Implementation overlays
-
-`data/overlays/implementations/<impl-id>.json` exists solely to adjust **derived** fields of implementations — v1: `known_consumers` only, via the scalar-array wrapper (`$append` / `$remove` of core ids), applied after derivation (T4.5). All other implementation fields are curated in place, so patching them through an overlay is a build failure. Machine-overlay rules (§7.1, §7.5) apply unchanged.
-
-### 7.8 Worked examples
-
-Base (relevant excerpt of normalized `mame:outrun` before overlays):
-
-```json
-{
-  "id": "mame:outrun",
-  "chips": [
-    { "chip_id": "z80", "clock_hz": 4000000, "origin": "mame", "role": "audiocpu" },
-    { "chip_id": "m68000", "clock_hz": 10000000, "origin": "mame", "role": "maincpu" },
-    { "chip_id": "ym2151", "clock_hz": 4000000, "origin": "mame", "role": "sound" },
-    { "chip_id": "unknown:sega_315_5197", "origin": "mame", "role": "custom" }
-  ]
-}
+```sql
+SELECT sc.role_id                            AS role,
+       c.chip_id,
+       c.display_name,
+       c.function_id,
+       COALESCE(ic.implementation_count, 0)  AS fpga_hdl_implementations
+FROM system_chip sc
+JOIN chip c ON c.chip_id = sc.chip_id
+LEFT JOIN v_chip_implementation_count ic
+       ON ic.chip_id = c.chip_id AND ic.kind_id = 'fpga_hdl'
+WHERE sc.system_id = :system_id
+ORDER BY sc.role_id, c.chip_id;
 ```
 
-**A — add a chip MAME omits** (`data/overlays/machines/outrun.json`):
-
-```json
-{
-  "target": "mame:outrun",
-  "patch": {
-    "chips": [{ "$add": true, "chip_id": "sega-pcm", "role": "pcm" }]
-  },
-  "reason": "MAME abstracts the Sega PCM sound device on this driver; present on the physical board.",
-  "source_urls": ["https://example.org/outrun-pcb-photo"]
-}
+```
+role      | chip_id       | display_name  | function_id | fpga_hdl_implementations
+audiocpu  | z80           | Z80           | cpu         | 1
+maincpu   | m68000        | MC68000       | cpu         | 1
+sound     | ym2151        | YM2151        | sound-fm    | 1
+video     | sega-315-5011 | Sega 315-5011 | custom      | 0
 ```
 
-After: the BOM gains `{ "chip_id": "sega-pcm", "origin": "overlay", "role": "pcm" }` (sorted into place).
+### Q2 — The Prospector: systems with no `fpga_hdl` core on platform P, ranked by chip coverage
 
-**B — correct one field without restating the row** (`data/overlays/machines/outrun__audiocpu-clock.json`, applied after A by filename order):
+_`v_prospector` is a **VIEW**. It emits one row per (platform, system) with no core, so the caller filters
+rather than parameterizing a view SQLite cannot parameterize._
 
-```json
-{
-  "target": "mame:outrun",
-  "patch": {
-    "chips": [{ "chip_id": "z80", "clock_hz": 5000000, "role": "audiocpu" }]
-  },
-  "reason": "Clock divider documented incorrectly in MAME; measured 5 MHz on hardware."
-}
+```sql
+SELECT p.system_id, s.name,
+       p.chips_total, p.chips_satisfied, p.chips_equivalent, p.chips_provided,
+       ROUND(100.0 * p.satisfied_share, 1) AS satisfied_pct,
+       p.unmapped_device_count, p.confidence
+FROM v_prospector p
+JOIN system s ON s.system_id = p.system_id
+WHERE p.platform_id = :platform_id
+ORDER BY p.satisfied_share DESC, p.unmapped_device_count ASC, p.chips_total DESC, p.system_id;
 ```
 
-After: the `audiocpu` row reads `"clock_hz": 5000000`; `origin` stays `"mame"`. Had the row not existed (e.g. after a MAME fix), the build would fail `STALE_OVERLAY` instead of silently adding a row.
+`chips_equivalent`, `chips_provided` and `confidence` are available because `v_prospector` reads
+`v_system_coverage_by_kind` (coverage.md §3.4) rather than a private FPGA-only copy of the same arithmetic.
+The specialised copy could not compute them, and the caller had to join the generic view back in to get them.
 
-**C — remove a chip MAME wrongly lists, and delete a field**:
+`unmapped_device_count` is the confidence signal that replaces v1's `coverage.confidence` enum: a system whose
+machines still reference unmapped MAME devices has a coverage percentage that is not yet trustworthy, and
+sorting on it keeps honest candidates above flattering ones. Weighting by `chip_function.prospector_band` is
+an extra join and an `ORDER BY` expression — it is T6.3's config, not a schema concern.
 
-```json
-{
-  "target": "mame:outrun",
-  "patch": {
-    "chips": [
-      { "$remove": true, "chip_id": "unknown:sega_315_5197", "role": "custom" },
-      { "chip_id": "ym2151", "clock_hz": null, "role": "sound" }
-    ],
-    "notes": "Deluxe cabinet variant; motor driver board tracked separately."
-  },
-  "reason": "315-5197 is not populated on this board revision; YM2151 clock unverified, removing until measured."
-}
+### Q3 — For a given core, every chip implementation it consumes and the HDL paths behind them
+
+_Ad-hoc, recursive so that a core consuming a core still resolves to leaf HDL. This is the traversal that
+replaces v1's hand-maintained `known_consumers[]`._
+
+```sql
+WITH RECURSIVE consumed(implementation_id, depth) AS (
+  SELECT provider_id, 1 FROM implementation_dependency WHERE consumer_id = :core
+  UNION
+  SELECT d.provider_id, c.depth + 1
+  FROM implementation_dependency d
+  JOIN consumed c ON d.consumer_id = c.implementation_id
+)
+SELECT co.depth, i.implementation_id, i.name,
+       ic.chip_id, ip.path, ip.is_top,
+       COALESCE(i.repo_url, pr.url) AS repo_url, i.license_id
+FROM consumed co
+JOIN implementation i        ON i.implementation_id = co.implementation_id
+LEFT JOIN project pr         ON pr.project_id = i.project_id
+LEFT JOIN implementation_chip ic ON ic.implementation_id = i.implementation_id
+LEFT JOIN implementation_path ip ON ip.implementation_id = i.implementation_id
+WHERE i.kind_id = 'fpga_hdl'
+ORDER BY co.depth, i.implementation_id, ip.is_top DESC, ip.path;
 ```
 
-After: the `custom` row is gone; the `ym2151` row has no `clock_hz`; machine `notes` is set.
-
-**D — create a non-MAME machine** (`data/overlays/machines/example-proto.json`):
-
-```json
-{
-  "target": "custom:example-proto",
-  "create": true,
-  "patch": {
-    "chips": [{ "$add": true, "chip_id": "z80", "role": "maincpu" }],
-    "kind": "arcade",
-    "name": "Example Prototype"
-  },
-  "reason": "Location-test board absent from MAME; documented from PCB photos.",
-  "source_urls": ["https://example.org/proto-scan"]
-}
+```
+depth | implementation_id | chip_id | path            | is_top | license_id
+1     | fx68k             | m68000  | fx68k.sv        | 1      |
+1     | jt51              | ym2151  | hdl/jt51.v      | 1      | GPL-3.0-only
+1     | jt51              | ym2151  | hdl/jt51_op.v   | 0      | GPL-3.0-only
+1     | t80               | z80     | T80.vhd         | 1      |
 ```
 
-**E — scalar-array wrapper on a derived field** (`data/overlays/implementations/jt51.json`):
+Reverse direction — "who consumes jt51?", v1's `known_consumers` — is the same table:
+`SELECT consumer_id FROM implementation_dependency WHERE provider_id = 'jt51'`.
 
-```json
-{
-  "target": "jt51",
-  "patch": {
-    "known_consumers": {
-      "$append": ["core:mister-x68000"],
-      "$remove": ["core:mister-arcade-example"]
-    }
-  },
-  "reason": "x68000 consumer missed by discovery; arcade-example is a false positive (bundles a different OPM)."
-}
+### Q4 — Chips with no `fpga_hdl` implementation, ranked by how many systems use them
+
+_`v_chip_gap` is a **VIEW**. "No implementation" means *not satisfiable* — a chip whose equivalent has HDL is
+not a gap._
+
+```sql
+SELECT chip_id, display_name, function_id, prospector_band, system_count, machine_count
+FROM v_chip_gap
+WHERE kind_id = 'fpga_hdl'
+ORDER BY system_count DESC, machine_count DESC, chip_id;
+```
+
+`v_chip_gap` carries `kind_id` as a column, so the same view answers "what has MAME not modelled?" with a
+different `WHERE`. The kind is the caller's, never the view's.
+
+### Q5 — Coverage for one system, counting `equivalent` and `provides` edges as satisfying
+
+_`v_system_coverage_by_kind` (coverage.md §3.4) is a **VIEW** — it is the entirety of what v1 planned as a
+"coverage engine", and it is the only definition of the metric._
+
+```sql
+SELECT * FROM v_system_coverage_by_kind WHERE system_id = :system_id AND kind_id = 'fpga_hdl';
+```
+
+```
+system_id      | chips_total | chips_direct | chips_satisfied | satisfied_share | unmapped_device_count | confidence
+sega-system16a | 4           | 3            | 3               | 0.75            | 1                     | medium
+```
+
+`chips_direct` counts chips with their own HDL; `chips_satisfied` additionally counts chips reachable through
+`v_chip_satisfies`, which walks `equivalent` in both directions and `provides` in the provider→socket
+direction only, exactly one hop. Per-chip explanation ("_how_ is this socket satisfied?"):
+
+```sql
+SELECT chip_id, satisfied_via, provider_chip_id, chip_confidence
+FROM v_system_chip_coverage
+WHERE system_id = :system_id AND kind_id = 'fpga_hdl'
+ORDER BY chip_id;
+```
+
+The `missing[]` list of v1 is the rows of that query where `satisfied_via = 'unsatisfied'`.
+
+### 6.1 Which of these are views
+
+| Query | Form                                                                                                                  |
+| ----- | --------------------------------------------------------------------------------------------------------------------- |
+| Q1    | ad-hoc, over the view `v_chip_implementation_count`                                                                   |
+| Q2    | **VIEW** `v_prospector` (built on `v_system_coverage_by_kind` and `v_system_core`), plus a caller-supplied `ORDER BY` |
+| Q3    | ad-hoc — it is a recursive traversal from a parameter, which a view cannot usefully encapsulate                       |
+| Q4    | **VIEW** `v_chip_gap`, filtered by `kind_id`                                                                          |
+| Q5    | **VIEW** `v_system_coverage_by_kind`, plus `v_system_chip_coverage` for the per-chip explanation                      |
+
+---
+
+## Appendix A — DDL (normative)
+
+The shipped file is `schemas/schema.sql`, which is this DDL plus the constraint tightenings its header
+enumerates (grammar `CHECK`s, the partial unique indexes, the index policy). Where the two differ, the
+shipped file is the artifact and its header explains each delta; nothing below is looser in a way that
+changes a key, a foreign key, or an `ON DELETE`.
+
+```sql
+PRAGMA foreign_keys = ON;   -- must not be executed inside a transaction (§4.3)
+
+-- ---------- lookup ----------
+CREATE TABLE manufacturer (
+  manufacturer_id TEXT PRIMARY KEY,
+  name            TEXT NOT NULL,
+  country         TEXT,
+  notes           TEXT
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE manufacturer_alias (
+  alias           TEXT PRIMARY KEY,
+  manufacturer_id TEXT NOT NULL REFERENCES manufacturer(manufacturer_id) ON DELETE CASCADE
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE license (
+  license_id      TEXT PRIMARY KEY,
+  name            TEXT NOT NULL,
+  url             TEXT,
+  is_osi_approved INTEGER NOT NULL CHECK (is_osi_approved IN (0,1))
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE chip_function (
+  function_id     TEXT PRIMARY KEY,
+  label           TEXT NOT NULL,
+  description     TEXT NOT NULL,
+  prospector_band TEXT NOT NULL CHECK (prospector_band IN ('hard','medium','soft'))
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE chip_family (
+  family_id       TEXT PRIMARY KEY,
+  name            TEXT NOT NULL,
+  manufacturer_id TEXT REFERENCES manufacturer(manufacturer_id) ON DELETE RESTRICT,
+  description     TEXT
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE chip_role (
+  role_id     TEXT PRIMARY KEY,
+  label       TEXT NOT NULL,
+  description TEXT
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE system_kind (
+  kind_id TEXT PRIMARY KEY,
+  label   TEXT NOT NULL
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE hdl_language (
+  language_id TEXT PRIMARY KEY,
+  label       TEXT NOT NULL
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE fpga_platform (
+  platform_id TEXT PRIMARY KEY,
+  label       TEXT NOT NULL,
+  notes       TEXT
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE implementation_kind (
+  kind_id     TEXT PRIMARY KEY,
+  label       TEXT NOT NULL,
+  description TEXT NOT NULL
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE accuracy_level (
+  accuracy_id TEXT PRIMARY KEY,
+  label       TEXT NOT NULL,
+  description TEXT NOT NULL
+) STRICT, WITHOUT ROWID;
+
+-- ---------- chips ----------
+CREATE TABLE chip (
+  chip_id          TEXT PRIMARY KEY,
+  display_name     TEXT NOT NULL,
+  function_id      TEXT NOT NULL REFERENCES chip_function(function_id) ON DELETE RESTRICT,
+  manufacturer_id  TEXT REFERENCES manufacturer(manufacturer_id) ON DELETE RESTRICT,
+  family_id        TEXT REFERENCES chip_family(family_id) ON DELETE RESTRICT,
+  model            TEXT,
+  description      TEXT,
+  typical_clock_hz INTEGER CHECK (typical_clock_hz IS NULL OR typical_clock_hz > 0),
+  package          TEXT,
+  year_introduced  INTEGER CHECK (year_introduced IS NULL OR (year_introduced BETWEEN 1950 AND 2100)),
+  notes            TEXT
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE chip_name (
+  chip_id TEXT NOT NULL REFERENCES chip(chip_id) ON DELETE CASCADE,
+  name    TEXT NOT NULL,
+  kind    TEXT NOT NULL CHECK (kind IN ('alias','retired_id')),
+  PRIMARY KEY (chip_id, name)
+) STRICT, WITHOUT ROWID;
+CREATE UNIQUE INDEX ux_chip_name_name ON chip_name(name);
+
+CREATE TABLE chip_datasheet (
+  chip_id TEXT NOT NULL REFERENCES chip(chip_id) ON DELETE CASCADE,
+  url     TEXT NOT NULL,
+  title   TEXT,
+  PRIMARY KEY (chip_id, url)
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE mame_device (
+  mame_device   TEXT PRIMARY KEY,
+  chip_id       TEXT REFERENCES chip(chip_id) ON DELETE RESTRICT,
+  ignore_reason TEXT,
+  note          TEXT,
+  CHECK ((chip_id IS NULL) <> (ignore_reason IS NULL))
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE chip_equivalence (
+  from_chip_id TEXT NOT NULL REFERENCES chip(chip_id) ON DELETE CASCADE,
+  to_chip_id   TEXT NOT NULL REFERENCES chip(chip_id) ON DELETE CASCADE,
+  kind         TEXT NOT NULL CHECK (kind IN ('equivalent','provides')),
+  note         TEXT NOT NULL,
+  PRIMARY KEY (from_chip_id, to_chip_id),
+  CHECK (from_chip_id <> to_chip_id),
+  CHECK (kind <> 'equivalent' OR from_chip_id < to_chip_id)
+) STRICT, WITHOUT ROWID;
+
+-- ---------- hardware ----------
+CREATE TABLE system (
+  system_id       TEXT PRIMARY KEY,
+  name            TEXT NOT NULL,
+  kind_id         TEXT NOT NULL REFERENCES system_kind(kind_id) ON DELETE RESTRICT,
+  manufacturer_id TEXT REFERENCES manufacturer(manufacturer_id) ON DELETE RESTRICT,
+  year_introduced INTEGER CHECK (year_introduced IS NULL OR (year_introduced BETWEEN 1950 AND 2100)),
+  description     TEXT,
+  notes           TEXT
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE system_name (
+  system_id TEXT NOT NULL REFERENCES system(system_id) ON DELETE CASCADE,
+  name      TEXT NOT NULL,
+  kind      TEXT NOT NULL CHECK (kind IN ('alias','retired_id')),
+  PRIMARY KEY (system_id, name)
+) STRICT, WITHOUT ROWID;
+CREATE UNIQUE INDEX ux_system_name_name ON system_name(name);
+
+CREATE TABLE system_chip (
+  system_id TEXT NOT NULL REFERENCES system(system_id) ON DELETE CASCADE,
+  role_id   TEXT NOT NULL REFERENCES chip_role(role_id) ON DELETE RESTRICT,
+  chip_id   TEXT NOT NULL REFERENCES chip(chip_id)      ON DELETE RESTRICT,
+  quantity  INTEGER NOT NULL DEFAULT 1 CHECK (quantity >= 1),
+  clock_hz  INTEGER CHECK (clock_hz IS NULL OR clock_hz > 0),
+  note      TEXT,
+  PRIMARY KEY (system_id, role_id, chip_id)
+) STRICT, WITHOUT ROWID;
+CREATE INDEX ix_system_chip_chip ON system_chip(chip_id);
+
+CREATE TABLE system_driver (
+  mame_sourcefile TEXT PRIMARY KEY,
+  system_id       TEXT NOT NULL REFERENCES system(system_id) ON DELETE CASCADE
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE machine (
+  machine_id        TEXT PRIMARY KEY,
+  name              TEXT NOT NULL,
+  mame_sourcefile   TEXT NOT NULL,
+  mame_year         TEXT,
+  mame_manufacturer TEXT,
+  clone_count       INTEGER CHECK (clone_count IS NULL OR clone_count >= 1),
+  driver_status     TEXT CHECK (driver_status IS NULL OR driver_status IN ('good','imperfect','preliminary')),
+  is_bios           INTEGER NOT NULL CHECK (is_bios IN (0,1)),
+  is_device         INTEGER NOT NULL CHECK (is_device IN (0,1)),
+  is_mechanical     INTEGER NOT NULL CHECK (is_mechanical IN (0,1))
+) STRICT, WITHOUT ROWID;
+CREATE INDEX ix_machine_sourcefile ON machine(mame_sourcefile);
+
+CREATE TABLE machine_chip (
+  machine_id TEXT NOT NULL REFERENCES machine(machine_id) ON DELETE CASCADE,
+  mame_tag   TEXT NOT NULL,
+  chip_id    TEXT NOT NULL REFERENCES chip(chip_id) ON DELETE RESTRICT,
+  clock_hz   INTEGER CHECK (clock_hz IS NULL OR clock_hz > 0),
+  quantity   INTEGER NOT NULL DEFAULT 1 CHECK (quantity >= 1),
+  PRIMARY KEY (machine_id, mame_tag, chip_id)
+) STRICT, WITHOUT ROWID;
+-- The real key of a tagged row: one MAME tag is one socket, and one socket is one chip.
+CREATE UNIQUE INDEX ux_machine_chip_tag
+  ON machine_chip(machine_id, mame_tag) WHERE mame_tag <> ':device';
+CREATE INDEX ix_machine_chip_chip ON machine_chip(chip_id);
+
+CREATE TABLE machine_unmapped_device (
+  machine_id  TEXT NOT NULL REFERENCES machine(machine_id) ON DELETE CASCADE,
+  mame_device TEXT NOT NULL,
+  quantity    INTEGER NOT NULL DEFAULT 1 CHECK (quantity >= 1),
+  PRIMARY KEY (machine_id, mame_device)
+) STRICT, WITHOUT ROWID;
+CREATE INDEX ix_machine_unmapped_device ON machine_unmapped_device(mame_device);
+
+-- ---------- implementations ----------
+CREATE TABLE project (
+  project_id TEXT PRIMARY KEY,
+  name       TEXT NOT NULL,
+  url        TEXT,
+  author     TEXT,
+  notes      TEXT
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE implementation (
+  implementation_id         TEXT PRIMARY KEY,
+  name                      TEXT NOT NULL,
+  kind_id                   TEXT NOT NULL REFERENCES implementation_kind(kind_id)  ON DELETE RESTRICT,
+  project_id                TEXT REFERENCES project(project_id)                    ON DELETE RESTRICT,
+  repo_url                  TEXT,
+  hdl_language_id           TEXT REFERENCES hdl_language(language_id)              ON DELETE RESTRICT,
+  license_id                TEXT REFERENCES license(license_id)                    ON DELETE RESTRICT,
+  accuracy_id               TEXT REFERENCES accuracy_level(accuracy_id)            ON DELETE RESTRICT,
+  verified_against_hardware INTEGER CHECK (verified_against_hardware IS NULL OR verified_against_hardware IN (0,1)),
+  resource_notes            TEXT,
+  last_reviewed             TEXT CHECK (last_reviewed IS NULL OR
+                                        last_reviewed GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+  notes                     TEXT,
+  -- Original silicon is the part as manufactured, not a codebase (§1.4).
+  CHECK (kind_id <> 'original_silicon'
+         OR (repo_url IS NULL AND hdl_language_id IS NULL
+             AND license_id IS NULL AND accuracy_id IS NULL))
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE implementation_chip (
+  implementation_id TEXT NOT NULL REFERENCES implementation(implementation_id) ON DELETE CASCADE,
+  chip_id           TEXT NOT NULL REFERENCES chip(chip_id) ON DELETE RESTRICT,
+  PRIMARY KEY (implementation_id, chip_id)
+) STRICT, WITHOUT ROWID;
+CREATE INDEX ix_implementation_chip_chip ON implementation_chip(chip_id);
+
+CREATE TABLE implementation_system (
+  implementation_id TEXT NOT NULL REFERENCES implementation(implementation_id) ON DELETE CASCADE,
+  system_id         TEXT NOT NULL REFERENCES system(system_id) ON DELETE RESTRICT,
+  PRIMARY KEY (implementation_id, system_id)
+) STRICT, WITHOUT ROWID;
+CREATE INDEX ix_implementation_system_system ON implementation_system(system_id);
+
+CREATE TABLE implementation_path (
+  implementation_id TEXT NOT NULL REFERENCES implementation(implementation_id) ON DELETE CASCADE,
+  path              TEXT NOT NULL,
+  is_top            INTEGER NOT NULL DEFAULT 0 CHECK (is_top IN (0,1)),
+  PRIMARY KEY (implementation_id, path)
+) STRICT, WITHOUT ROWID;
+CREATE UNIQUE INDEX ux_implementation_path_top ON implementation_path(implementation_id) WHERE is_top = 1;
+
+CREATE TABLE implementation_platform (
+  implementation_id TEXT NOT NULL REFERENCES implementation(implementation_id) ON DELETE CASCADE,
+  platform_id       TEXT NOT NULL REFERENCES fpga_platform(platform_id) ON DELETE RESTRICT,
+  PRIMARY KEY (implementation_id, platform_id)
+) STRICT, WITHOUT ROWID;
+CREATE INDEX ix_implementation_platform_platform ON implementation_platform(platform_id);
+
+CREATE TABLE implementation_machine (
+  implementation_id TEXT NOT NULL REFERENCES implementation(implementation_id) ON DELETE CASCADE,
+  machine_id        TEXT NOT NULL REFERENCES machine(machine_id) ON DELETE RESTRICT,
+  PRIMARY KEY (implementation_id, machine_id)
+) STRICT, WITHOUT ROWID;
+CREATE INDEX ix_implementation_machine_machine ON implementation_machine(machine_id);
+
+CREATE TABLE implementation_dependency (
+  consumer_id TEXT NOT NULL REFERENCES implementation(implementation_id) ON DELETE CASCADE,
+  provider_id TEXT NOT NULL REFERENCES implementation(implementation_id) ON DELETE RESTRICT,
+  note        TEXT,
+  PRIMARY KEY (consumer_id, provider_id),
+  CHECK (consumer_id <> provider_id)
+) STRICT, WITHOUT ROWID;
+CREATE INDEX ix_implementation_dependency_provider ON implementation_dependency(provider_id);
+
+-- ---------- corrections and metadata ----------
+CREATE TABLE machine_correction (
+  machine_id      TEXT PRIMARY KEY REFERENCES machine(machine_id) ON DELETE CASCADE,
+  name            TEXT,
+  year            INTEGER CHECK (year IS NULL OR (year BETWEEN 1950 AND 2100)),
+  manufacturer_id TEXT REFERENCES manufacturer(manufacturer_id) ON DELETE RESTRICT,
+  reason          TEXT NOT NULL,
+  source_url      TEXT
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE machine_system (
+  machine_id TEXT PRIMARY KEY REFERENCES machine(machine_id) ON DELETE CASCADE,
+  system_id  TEXT REFERENCES system(system_id) ON DELETE RESTRICT,   -- NULL = deliberately no system
+  reason     TEXT                                                    -- an assignment, not an apology
+) STRICT, WITHOUT ROWID;
+CREATE INDEX ix_machine_system_system ON machine_system(system_id);
+
+CREATE TABLE machine_chip_correction (
+  machine_id TEXT NOT NULL REFERENCES machine(machine_id) ON DELETE CASCADE,
+  mame_tag   TEXT NOT NULL,
+  chip_id    TEXT NOT NULL REFERENCES chip(chip_id) ON DELETE RESTRICT,
+  op         TEXT NOT NULL CHECK (op IN ('add','remove','set')),
+  clock_hz   INTEGER CHECK (clock_hz IS NULL OR clock_hz > 0),
+  quantity   INTEGER CHECK (quantity IS NULL OR quantity >= 1),
+  reason     TEXT NOT NULL,
+  source_url TEXT,
+  PRIMARY KEY (machine_id, mame_tag, chip_id)
+) STRICT, WITHOUT ROWID;
+CREATE UNIQUE INDEX ux_machine_chip_correction_tag
+  ON machine_chip_correction(machine_id, mame_tag) WHERE mame_tag <> ':device';
+
+CREATE TABLE dataset_meta (
+  key   TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+) STRICT, WITHOUT ROWID;
+
+CREATE TABLE threshold (
+  name  TEXT PRIMARY KEY,
+  value REAL NOT NULL CHECK (value >= 0)
+) STRICT, WITHOUT ROWID;
+```
+
+## Appendix B — Views (normative)
+
+**Creation order.** `v_prospector` and `v_chip_gap` read the four coverage views of
+[coverage.md](coverage.md) §3.4, so those must exist first. `schemas/schema.sql` is the assembled whole and
+creates all 21 in dependency order; the blocks here are grouped by owning document, not by execution order.
+
+```sql
+-- Precedence: a machine_system row wins, then the system_driver default, then no system.
+CREATE VIEW v_machine_system AS
+SELECT m.machine_id,
+       CASE WHEN ms.machine_id IS NOT NULL THEN ms.system_id ELSE sd.system_id END AS system_id
+FROM machine m
+LEFT JOIN machine_system ms ON ms.machine_id = m.machine_id
+LEFT JOIN system_driver sd ON sd.mame_sourcefile = m.mame_sourcefile;
+
+CREATE VIEW v_machine AS
+SELECT m.machine_id,
+       COALESCE(mc.name, m.name) AS name,
+       vms.system_id,
+       COALESCE(mc.year, CASE WHEN m.mame_year GLOB '[0-9][0-9][0-9][0-9]'
+                              THEN CAST(m.mame_year AS INTEGER) END) AS year,
+       COALESCE(mc.manufacturer_id, ma.manufacturer_id) AS manufacturer_id,
+       m.mame_sourcefile, m.driver_status, m.clone_count
+FROM machine m
+LEFT JOIN machine_correction mc  ON mc.machine_id  = m.machine_id
+LEFT JOIN v_machine_system vms   ON vms.machine_id = m.machine_id
+LEFT JOIN manufacturer_alias ma  ON ma.alias       = m.mame_manufacturer;
+
+CREATE VIEW v_machine_bom AS
+SELECT mc.machine_id, mc.chip_id, mc.mame_tag AS role, mc.quantity, mc.clock_hz, 'machine' AS via
+FROM machine_chip mc
+UNION ALL
+SELECT vms.machine_id, sc.chip_id, sc.role_id, sc.quantity, sc.clock_hz, 'system'
+FROM v_machine_system vms
+JOIN system_chip sc ON sc.system_id = vms.system_id
+WHERE NOT EXISTS (SELECT 1 FROM machine_chip m2
+                  WHERE m2.machine_id = vms.machine_id AND m2.chip_id = sc.chip_id);
+
+CREATE VIEW v_chip_satisfies AS
+SELECT chip_id AS socket_chip_id, chip_id AS provider_chip_id, 'self' AS via FROM chip
+UNION ALL
+SELECT to_chip_id,   from_chip_id, 'equivalent' FROM chip_equivalence WHERE kind = 'equivalent'
+UNION ALL
+SELECT from_chip_id, to_chip_id,   'equivalent' FROM chip_equivalence WHERE kind = 'equivalent'
+UNION ALL
+SELECT to_chip_id,   from_chip_id, 'provides'   FROM chip_equivalence WHERE kind = 'provides';
+
+CREATE VIEW v_chip_implementation_count AS
+SELECT ic.chip_id, i.kind_id, COUNT(*) AS implementation_count
+FROM implementation_chip ic
+JOIN implementation i ON i.implementation_id = ic.implementation_id
+GROUP BY ic.chip_id, i.kind_id;
+
+CREATE VIEW v_system_chip_effective AS
+SELECT system_id, chip_id, 'curated' AS via FROM system_chip
+UNION
+SELECT vms.system_id, mc.chip_id, 'mame'
+FROM v_machine_system vms
+JOIN machine_chip mc ON mc.machine_id = vms.machine_id
+WHERE vms.system_id IS NOT NULL
+  AND NOT EXISTS (SELECT 1 FROM system_chip sc
+                  WHERE sc.system_id = vms.system_id AND sc.chip_id = mc.chip_id);
+
+CREATE VIEW v_system_unmapped AS
+SELECT vms.system_id, COUNT(DISTINCT mud.mame_device) AS unmapped_device_count
+FROM v_machine_system vms
+JOIN machine_unmapped_device mud ON mud.machine_id = vms.machine_id
+WHERE vms.system_id IS NOT NULL
+GROUP BY vms.system_id;
+
+CREATE VIEW v_mame_device_worklist AS
+SELECT mud.mame_device,
+       COUNT(DISTINCT mud.machine_id) AS machine_count,
+       SUM(mud.quantity)              AS instance_count
+FROM machine_unmapped_device mud
+GROUP BY mud.mame_device;
+
+-- kind_id is a column, not a filter, so this is reusable; v_prospector supplies the kind.
+CREATE VIEW v_system_core AS
+SELECT DISTINCT i.kind_id, isy.system_id, ip.platform_id, i.implementation_id
+FROM implementation_system isy
+JOIN implementation i           ON i.implementation_id  = isy.implementation_id
+JOIN implementation_platform ip ON ip.implementation_id = i.implementation_id;
+```
+
+The two views below read `v_system_coverage_by_kind` and `v_chip_evidence` (coverage.md §3.4) and are
+therefore created after them:
+
+```sql
+-- Q2. The one view that is *about* FPGA cores, so the one place a kind filter belongs.
+CREATE VIEW v_prospector AS
+SELECT p.platform_id, c.system_id, c.chips_total, c.chips_direct, c.chips_equivalent,
+       c.chips_provided, c.chips_satisfied, c.satisfied_share, c.unmapped_device_count,
+       c.confidence
+FROM fpga_platform p
+CROSS JOIN v_system_coverage_by_kind c
+WHERE c.kind_id = 'fpga_hdl'
+  AND NOT EXISTS (SELECT 1 FROM v_system_core f
+                  WHERE f.kind_id     = c.kind_id
+                    AND f.system_id   = c.system_id
+                    AND f.platform_id = p.platform_id);
+
+-- Q4. One row per (kind, chip) no implementation of that kind satisfies.
+CREATE VIEW v_chip_gap AS
+SELECT ik.kind_id, c.chip_id, c.display_name, c.function_id, cf.prospector_band,
+       (SELECT COUNT(DISTINCT sc.system_id)  FROM system_chip  sc WHERE sc.chip_id = c.chip_id) AS system_count,
+       (SELECT COUNT(DISTINCT mc.machine_id) FROM machine_chip mc WHERE mc.chip_id = c.chip_id) AS machine_count
+FROM implementation_kind ik
+CROSS JOIN chip c
+JOIN chip_function cf ON cf.function_id = c.function_id
+WHERE NOT EXISTS (SELECT 1 FROM v_chip_evidence e
+                  WHERE e.kind_id = ik.kind_id AND e.chip_id = c.chip_id);
 ```
 
 ---
 
-## 8. Determinism and serialization
+## Change control
 
-Same inputs MUST produce byte-identical outputs; CI enforces this by building twice and byte-comparing `extract/` and `dist/` (`NONDETERMINISTIC_BUILD` failure).
-
-### 8.1 JSON serialization contract
-
-Applies to **every** JSON file in the repo — generated files by the emitter, curated files by the linter (T1.6):
-
-- Encoding UTF-8, no BOM. Newline `\n` only. Exactly one trailing newline at EOF.
-- Indentation: 2 spaces; no trailing whitespace. One key per line (i.e. `JSON.stringify(value, null, 2)` layout).
-- String escaping: ECMAScript `JSON.stringify` minimal escaping; non-ASCII characters verbatim, never `\u`-escaped.
-- Strict JSON: no comments, no duplicate keys.
-
-### 8.2 Key order
-
-In every object at every depth: the keys `$schema`, `id`, `mame_name`, `target` — in that order, when present — are hoisted first; all remaining keys follow in **bytewise lexicographic** order. One mechanical rule, human-friendly enough, trivially lintable.
-
-### 8.3 Array order
-
-Arrays are sorted, with exceptions only where order is data:
-
-| Array                          | Order                                            |
-| ------------------------------ | ------------------------------------------------ |
-| `machines.raw.json` `machines` | `mame_name` asc                                  |
-| raw `chips`, raw `device_refs` | **document order** (raw passthrough)             |
-| normalized `machine.chips`     | (`role`, `chip_id`) asc                          |
-| `chip.names`                   | **curated order** (first = primary display name) |
-| `implementation.paths`         | **curated order** (first = top-level module)     |
-| worklist `devices`             | total instances desc, `key` asc                  |
-| quality `unmapped_devices`     | `instance_count` desc, `key` asc                 |
-| quality `warnings`             | (`code`, `subject`, `message`) asc               |
-| equivalence `classes`          | `chips[0]` asc (each `chips` sorted asc)         |
-| equivalence `provides`         | (`provider`, `provides`) asc                     |
-| coverage `missing`             | `chip_id` asc                                    |
-| every other string[]           | bytewise asc, unique                             |
-
-All string comparisons are bytewise on UTF-8 (no locale, no case folding).
-
-### 8.4 Numbers
-
-- All numbers MUST be finite; `NaN`/`±Infinity` are unrepresentable and MUST fail the emitter; `-0` MUST be normalized to `0`.
-- Integers are emitted without decimal point or exponent.
-- Non-integer numbers exist only where this spec says so: `coverage.percent` = `Math.round(x * 10) / 10` of the percentage; `mapped_instance_share` (and any ratio) = `Math.round(x * 10000) / 10000` of the 0–1 value. `Math.round` semantics (round half toward +∞) — all such values are non-negative.
-- Serialization is ECMAScript Number-to-String (what `JSON.stringify` does): `81.8` stays `81.8`, `0.7` stays `0.7` (no padding).
-
-### 8.5 Hashing and timestamps
-
-- Chunk hashes: lowercase-hex SHA-256 of the exact file bytes; physical filenames embed the first 12 hex chars (§5.11); machine detail bucketing uses the first 2 hex chars of SHA-256 of the UTF-8 id.
-- The only timestamp anywhere in generated output is `manifest.build_date`, derived per §5.11 (never wall-clock).
-
----
-
-## 9. Pipeline order and gate registry
-
-Normative stage order: fetch XML → stream-parse → filter → worklist → validate curated inputs → alias-resolve references (§3.3) → device-map + `unknown:` minting + dedup (§6.5) → overlays (§7) → families + `kind` → equivalence/coverage (T6.2) → Prospector (T6.3) → reverse indexes → quality report (T6.4) → emit chunks + SQLite + manifest (T6.5) → double-build compare.
-
-**Failure gates** (exit non-zero, nothing published):
-
-| Code                                                                   | Condition                                                                                                                                        |
-| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `SCHEMA_VIOLATION`                                                     | any file fails its schema, incl. post-merge machines                                                                                             |
-| `SLUG_INVALID`                                                         | id fails its grammar, filename/stem mismatch, reserved-word id                                                                                   |
-| `DUPLICATE_ID`                                                         | one id defined twice                                                                                                                             |
-| `DANGLING_REFERENCE`                                                   | any cross-reference does not resolve (machine→chip, implementation→chip, core→machine, equivalence→chip, family→machine, alias→entity, map→chip) |
-| `ALIAS_COLLISION`                                                      | alias key equals a live id, or alias chains                                                                                                      |
-| `ROUTE_COLLISION`                                                      | two live-or-alias ids derive the same route (§2.4)                                                                                               |
-| `FAMILY_CONFLICT`                                                      | machine claimed by two families (§5.8)                                                                                                           |
-| `BOM_KEY_COLLISION`                                                    | duplicate (`role`, `chip_id`) in one machine (§6.5)                                                                                              |
-| `OVERLAY_TARGET_MISSING` / `STALE_OVERLAY` / `OVERLAY_FORBIDDEN_FIELD` | §7.5, §7.3                                                                                                                                       |
-| `UNKNOWN_IN_CURATED`                                                   | `unknown:` id inside `data/` outside overlay correct/remove positions (§6.3)                                                                     |
-| `CHUNK_OVER_BUDGET`                                                    | chunk gzip size > 256 000 bytes                                                                                                                  |
-| `NONDETERMINISTIC_BUILD`                                               | double-build byte mismatch                                                                                                                       |
-
-**Warning gates** (recorded in the quality report; codes seeded here, definitions and thresholds owned by T1.7): `STALE_REFERENCE` (§3.3), `UNMAPPED_SHARE_HIGH`, `MISSING_METADATA`, `UNVERIFIED_LICENSE`, `UNVERIFIED_ACCURACY`, `ZERO_MAPPED_CHIPS`, `STALE_REVIEW`.
-
----
-
-## 10. Schema registry
-
-T1.2 implements, under `schemas/` (JSON Schema 2020-12, `additionalProperties: false` except `quality-report.summary`):
-
-`chip.schema.json`, `implementation.schema.json`, `machine-raw.schema.json` (envelope + record), `machine.schema.json` (normalized), `core.schema.json`, `mame-device-map.schema.json`, `mame-devices-raw.schema.json`, `platform-families.schema.json`, `equivalences.schema.json`, `aliases.schema.json`, `overlay-machine.schema.json`, `overlay-implementation.schema.json`, `site-manifest.schema.json`, `quality-report.schema.json`.
-
-This spec is versioned semver (T9.4): additive OPTIONAL fields bump minor; anything that changes meaning, grammar, key order, sort order, `normalize_device_key`, or merge semantics bumps major. `manifest.schema_version` and `quality-report.schema_version` track it.
+Spec version is semver. **It is stored once inside the database, as `PRAGMA user_version` (the major
+component), written by the DDL itself.** `dataset_meta.schema_version` is a different subject — the
+_dataset's_ claim about which schema it was built for — and is written by the build. There is no
+`schema_version` table: keeping the same value in three places required a hand-written loader assertion whose
+only purpose was to reconcile copies that should never have existed. Adding a table, adding a nullable column, adding a view, or adding a row to a lookup
+table is a **minor** bump. Changing a primary key, changing an `ON DELETE` behaviour, making a column
+`NOT NULL`, removing anything, or changing the meaning of a `CHECK` value is a **major** bump and requires a
+migration note in `docs/versioning.md`.

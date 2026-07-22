@@ -1,0 +1,11 @@
+{
+  "system": [
+    {
+      "system_id": "sega-system1",
+      "name": "Sega System 1",
+      "kind_id": "arcade",
+      "manufacturer_id": "sega",
+      "year_introduced": 1983
+    }
+  ]
+}
