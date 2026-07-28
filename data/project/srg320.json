@@ -1,0 +1,11 @@
+{
+  "project": [
+    {
+      "project_id": "srg320",
+      "name": "srg320",
+      "url": "https://github.com/srg320",
+      "author": "srg320",
+      "notes": "Author of the SH7604/SH7034, Saturn, 32X and SNES FPGA cores."
+    }
+  ]
+}

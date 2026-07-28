@@ -1,0 +1,34 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jt8255",
+      "name": "JT8255",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jt8255",
+      "hdl_language_id": "verilog",
+      "license_id": "MIT",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: MIT, read from https://github.com/jotego/jt8255/blob/master/LICENSE (\"Copyright (c) Jose Tejada aka Jotego 2021, JTFPGA\" + verbatim MIT text). This repo is deliberately NOT GPL like most of the jt* family. accuracy_id omitted: the README notes the original 8255 was fully asynchronous while this version is clocked to detect input edges, so it is explicitly not a timing replica."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "jt8255",
+      "chip_id": "i8255"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jt8255",
+      "path": "hdl/jt8255.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jt8255",
+      "platform_id": "generic"
+    }
+  ]
+}

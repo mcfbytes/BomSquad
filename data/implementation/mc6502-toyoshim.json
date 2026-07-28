@@ -1,0 +1,39 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mc6502-toyoshim",
+      "name": "MC6502 (Toyoshima)",
+      "kind_id": "fpga_hdl",
+      "project_id": "toyoshim",
+      "repo_url": "https://github.com/toyoshim/mc6502",
+      "hdl_language_id": "verilog",
+      "license_id": "BSD-3-Clause",
+      "accuracy_id": "cycle-accurate",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: BSD-3-Clause, read from https://github.com/toyoshim/mc6502/blob/master/LICENSE (Copyright (c) 2014, Takashi Toyoshima; three conditions including the non-endorsement clause). accuracy_id from the README title line \"Cycle accurate MC6502 compatible processor in Verilog\", but the same README immediately qualifies it: \"This is an experimental project, and wasn't verified well. There will be many bugs and it will not meet practical use requirements.\" Treat the accuracy claim as the author's intent rather than a validated result. This core is the one vendored into JTFRAME at modules/jtframe/hdl/cpu/mc6502, whose LICENSE file matches this one."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "mc6502-toyoshim",
+      "chip_id": "m6502"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mc6502-toyoshim",
+      "path": "rtl"
+    },
+    {
+      "implementation_id": "mc6502-toyoshim",
+      "path": "rtl/MC6502.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mc6502-toyoshim",
+      "platform_id": "generic"
+    }
+  ]
+}

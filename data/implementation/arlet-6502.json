@@ -1,0 +1,38 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "arlet-6502",
+      "name": "Arlet Ottens verilog-6502",
+      "kind_id": "fpga_hdl",
+      "project_id": "arlet-ottens",
+      "repo_url": "https://github.com/Arlet/verilog-6502",
+      "hdl_language_id": "verilog",
+      "accuracy_id": "partial",
+      "last_reviewed": "2026-07-28",
+      "notes": "license_id deliberately omitted: there is no LICENSE file and no SPDX identifier. The only grant is the header of https://github.com/Arlet/verilog-6502/blob/master/cpu.v: \"Feel free to use this code in any project (commercial or not), as long as you keep this message, and the copyright notice. This code is provided 'as is', without any warranties of any kind.\" That is a custom permissive grant with no SPDX equivalent, so nothing is claimed here. accuracy_id partial, from the same file: \"Note that not all 6502 interface signals are supported (yet). The goal is to create an Acorn Atom model, and the Atom didn't use all signals on the main board.\" The README also warns the core assumes synchronous memory (data valid the cycle after the address)."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "arlet-6502",
+      "chip_id": "m6502"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "arlet-6502",
+      "path": "ALU.v"
+    },
+    {
+      "implementation_id": "arlet-6502",
+      "path": "cpu.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "arlet-6502",
+      "platform_id": "generic"
+    }
+  ]
+}

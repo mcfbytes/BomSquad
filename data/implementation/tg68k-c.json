@@ -1,0 +1,55 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "tg68k-c",
+      "name": "TG68K.C",
+      "kind_id": "fpga_hdl",
+      "project_id": "tobiflex",
+      "repo_url": "https://github.com/TobiFlex/TG68K.C",
+      "hdl_language_id": "vhdl",
+      "license_id": "LGPL-3.0-or-later",
+      "accuracy_id": "cycle-approximate",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: LGPL-3.0-or-later. The repository has no LICENSE file; every source file carries the grant, e.g. https://github.com/TobiFlex/TG68K.C/blob/master/TG68K.vhd: \"free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License ... either version 3 of the License, or (at your option) any later version\" (Copyright (c) 2009-2021 Tobias Gubener). accuracy_id from the README: \"The core does not value cycle accuracy. The core saves the FPGA resources with a good execution speed.\" Chips linked per the README: \"It can be easily switched between a 68000, a 68010 and a 68020.\" m68ec020, the embedded-controller 68020 variant, is not claimed."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "tg68k-c",
+      "chip_id": "m68000"
+    },
+    {
+      "implementation_id": "tg68k-c",
+      "chip_id": "m68010"
+    },
+    {
+      "implementation_id": "tg68k-c",
+      "chip_id": "m68020"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "tg68k-c",
+      "path": "TG68K.vhd",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "tg68k-c",
+      "path": "TG68K_ALU.vhd"
+    },
+    {
+      "implementation_id": "tg68k-c",
+      "path": "TG68K_Pack.vhd"
+    },
+    {
+      "implementation_id": "tg68k-c",
+      "path": "TG68KdotC_Kernel.vhd"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "tg68k-c",
+      "platform_id": "generic"
+    }
+  ]
+}

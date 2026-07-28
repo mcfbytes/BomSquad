@@ -1,0 +1,38 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mc8051-oregano",
+      "name": "MC8051 (Oregano Systems)",
+      "kind_id": "fpga_hdl",
+      "project_id": "oregano-systems",
+      "repo_url": "https://github.com/jotego/jtcores",
+      "hdl_language_id": "vhdl",
+      "license_id": "LGPL-2.1-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Oregano Systems published MC8051 on its own site and on OpenCores; neither is a git repository, so repo_url points at the copy actually used by the arcade FPGA ecosystem -- the one vendored into JTFRAME at modules/jtframe/hdl/cpu/8051 -- and the paths are relative to that repository. License: LGPL-2.1-or-later, read from https://github.com/jotego/jtcores/blob/master/modules/jtframe/hdl/cpu/8051/mc8051_core_struc.vhd (\"This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License ... either version 2.1 of the License, or (at your option) any later version\", Copyright (C) 2001 OREGANO SYSTEMS), with the full LGPL-2.1 text alongside it in LGPL.TXT. accuracy_id omitted: no fidelity claim in the sources."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "mc8051-oregano",
+      "chip_id": "i8051"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mc8051-oregano",
+      "path": "modules/jtframe/hdl/cpu/8051"
+    },
+    {
+      "implementation_id": "mc8051-oregano",
+      "path": "modules/jtframe/hdl/cpu/8051/mc8051_core_struc.vhd",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mc8051-oregano",
+      "platform_id": "generic"
+    }
+  ]
+}

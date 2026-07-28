@@ -1,0 +1,46 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mcl51",
+      "name": "MCL51",
+      "kind_id": "fpga_hdl",
+      "project_id": "microcore-labs",
+      "repo_url": "https://github.com/MicroCoreLabs/Projects",
+      "hdl_language_id": "verilog",
+      "license_id": "MIT",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: MIT, from the per-file header of https://github.com/MicroCoreLabs/Projects/blob/master/MCL51/Core/MCL51_top.v (\"Copyright (c) 2020 Ted Fried\" + verbatim MIT text); the monorepo has no root LICENSE file. MCL51_top.v is written for an Arty Artix-7 board but the core itself is board-independent, so the platform is recorded as generic. accuracy_id omitted: no fidelity claim in the repository."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "mcl51",
+      "chip_id": "i8051"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mcl51",
+      "path": "MCL51/Core"
+    },
+    {
+      "implementation_id": "mcl51",
+      "path": "MCL51/Core/MCL51_top.v",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "mcl51",
+      "path": "MCL51/Core/biu.v"
+    },
+    {
+      "implementation_id": "mcl51",
+      "path": "MCL51/Core/eu.v"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mcl51",
+      "platform_id": "generic"
+    }
+  ]
+}

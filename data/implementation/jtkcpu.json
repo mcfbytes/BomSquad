@@ -1,0 +1,31 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtkcpu",
+      "name": "JTKCPU",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtkcpu",
+      "hdl_language_id": "verilog",
+      "last_reviewed": "2026-07-28",
+      "notes": "license_id deliberately omitted: this repository carries NO license file. Checked the full tree of https://github.com/jotego/jtkcpu at master (no LICENSE, COPYING or SPDX header) and the GitHub license endpoint, which reports none. Unlike the rest of the jt* family this work is therefore all-rights-reserved by default; do not assume GPL by association. No implementation_chip row: Konami 052001/052526 are not catalogued under data/chip/. accuracy_id omitted."
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jtkcpu",
+      "path": "hdl"
+    },
+    {
+      "implementation_id": "jtkcpu",
+      "path": "hdl/jtkcpu.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtkcpu",
+      "platform_id": "generic"
+    }
+  ]
+}

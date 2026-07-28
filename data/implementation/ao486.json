@@ -1,0 +1,28 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "ao486",
+      "name": "ao486",
+      "kind_id": "fpga_hdl",
+      "project_id": "alfikpl",
+      "repo_url": "https://github.com/alfikpl/ao486",
+      "hdl_language_id": "verilog",
+      "license_id": "BSD-2-Clause",
+      "accuracy_id": "behavioral",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: BSD-2-Clause for the core. https://github.com/alfikpl/ao486/blob/master/LICENSE is explicitly scoped -- \"All files in the following directories: rtl, ao486_tool, sim are licensed under the BSD license\" followed by the two-condition BSD text (Copyright (c) 2014, Aleksander Osman) -- while bochs486/ and bochsDevs/ are LGPL code taken from the Bochs project and some sd/ binaries come from FreeDOS and Bochs. license_id therefore describes rtl/ only, which is the path recorded here. accuracy_id behavioral: the README describes a new 4-stage pipelined microarchitecture \"modeled and tested based on the Bochs software x86 implementation\" implementing all 486 instructions, i.e. functional rather than timing fidelity. No implementation_chip row: no 486-class x86 part is catalogued under data/chip/."
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "ao486",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "ao486",
+      "platform_id": "generic"
+    }
+  ]
+}

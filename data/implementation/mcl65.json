@@ -1,0 +1,38 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mcl65",
+      "name": "MCL65",
+      "kind_id": "fpga_hdl",
+      "project_id": "microcore-labs",
+      "repo_url": "https://github.com/MicroCoreLabs/Projects",
+      "hdl_language_id": "verilog",
+      "license_id": "MIT",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: MIT. The monorepo has no root LICENSE file; the grant is the per-file header of https://github.com/MicroCoreLabs/Projects/blob/master/MCL65/MCL65.v -- \"Copyright (c) 2020 Ted Fried\" followed by the verbatim MIT permission and warranty text. accuracy_id omitted: the file describes a \"Microsequencer implementation of the MOS 6502 microprocessor\" and makes no timing-fidelity claim. Only the synthesizable microsequencer core is catalogued; MCL65/MCL65_C_Version is C for a Teensy and is not an fpga_hdl implementation."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "mcl65",
+      "chip_id": "m6502"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mcl65",
+      "path": "MCL65/MCL65.v",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "mcl65",
+      "path": "MCL65/microcode.coe"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mcl65",
+      "platform_id": "generic"
+    }
+  ]
+}

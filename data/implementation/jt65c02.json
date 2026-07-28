@@ -1,0 +1,46 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jt65c02",
+      "name": "JT65C02",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtcores",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Part of the jt680x module set inside the jtcores monorepo. License: https://github.com/jotego/jtcores/blob/master/LICENSE (GPLv3 text) plus the \"or (at your option) any later version\" grant in https://github.com/jotego/jtcores/blob/master/modules/jt680x/hdl/jt65c02.v. Linked to r65c02 as well as the base m65c02 because the microcode source modules/jt680x/ucode/65c02.yaml defines the Rockwell-only RMB/SMB/BBR/BBS bit instructions (36 opcodes) on top of the standard 65C02 set. accuracy_id omitted: no fidelity claim in the repo."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "jt65c02",
+      "chip_id": "m65c02"
+    },
+    {
+      "implementation_id": "jt65c02",
+      "chip_id": "r65c02"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jt65c02",
+      "path": "modules/jt680x/hdl"
+    },
+    {
+      "implementation_id": "jt65c02",
+      "path": "modules/jt680x/hdl/jt65c02.v",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "jt65c02",
+      "path": "modules/jt680x/ucode/65c02.yaml"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jt65c02",
+      "platform_id": "generic"
+    }
+  ]
+}

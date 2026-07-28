@@ -1,0 +1,11 @@
+{
+  "project": [
+    {
+      "project_id": "jotego",
+      "name": "JTFPGA",
+      "url": "https://github.com/jotego",
+      "author": "Jose Tejada Gomez (@topapate)",
+      "notes": "Umbrella for the jt* chip IP family, the JTFRAME framework and the JTCORES arcade cores. Licensing is not uniform across the repos: most are GPL-3.0-or-later, jt8255 is MIT and jtkcpu carries no license file."
+    }
+  ]
+}

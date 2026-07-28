@@ -1,0 +1,38 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jt51",
+      "name": "JT51",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jt51",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: LICENSE at https://github.com/jotego/jt51/blob/master/LICENSE is the verbatim GPLv3 text, and the per-file grant at https://github.com/jotego/jt51/blob/master/hdl/jt51.v reads \"either version 3 of the License, or (at your option) any later version\" -- hence GPL-3.0-or-later. accuracy_id omitted: the README says only \"YM2151 clone in verilog. FPGA proven.\" and makes no timing-fidelity claim."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "jt51",
+      "chip_id": "ym2151"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jt51",
+      "path": "hdl"
+    },
+    {
+      "implementation_id": "jt51",
+      "path": "hdl/jt51.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jt51",
+      "platform_id": "generic"
+    }
+  ]
+}

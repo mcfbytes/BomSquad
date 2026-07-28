@@ -1,0 +1,38 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtx1010",
+      "name": "JTX1010",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtcores",
+      "hdl_language_id": "systemverilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Lives inside the jtcores monorepo at modules/jtx1010 (a plain directory, not a submodule). License: https://github.com/jotego/jtcores/blob/master/LICENSE (GPLv3 text) plus the \"or (at your option) any later version\" grant in https://github.com/jotego/jtcores/blob/master/modules/jtx1010/hdl/jtx1010.sv. accuracy_id omitted: no fidelity claim in the repo."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "jtx1010",
+      "chip_id": "x1-010"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jtx1010",
+      "path": "modules/jtx1010/hdl"
+    },
+    {
+      "implementation_id": "jtx1010",
+      "path": "modules/jtx1010/hdl/jtx1010.sv",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtx1010",
+      "platform_id": "generic"
+    }
+  ]
+}

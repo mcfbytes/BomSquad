@@ -1,0 +1,38 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jt6295",
+      "name": "JT6295",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jt6295",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: https://github.com/jotego/jt6295/blob/master/LICENSE (GPLv3 text) plus the \"or (at your option) any later version\" grant in https://github.com/jotego/jt6295/blob/master/hdl/jt6295.v. accuracy_id omitted: the README states the original chip behaviour on a repeated phrase command \"has not been verified\", so no fidelity level is claimed."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "jt6295",
+      "chip_id": "msm6295"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jt6295",
+      "path": "hdl"
+    },
+    {
+      "implementation_id": "jt6295",
+      "path": "hdl/jt6295.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jt6295",
+      "platform_id": "generic"
+    }
+  ]
+}

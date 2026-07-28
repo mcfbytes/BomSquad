@@ -1,0 +1,53 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "a-z80",
+      "name": "A-Z80",
+      "kind_id": "fpga_hdl",
+      "project_id": "gdevic",
+      "repo_url": "https://github.com/gdevic/A-Z80",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-2.0-only",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: GPL-2.0-only. https://github.com/gdevic/A-Z80/blob/master/license.txt is the verbatim GPLv2 text and https://github.com/gdevic/A-Z80/blob/master/readme.txt states \"This project and each file therein is covered under the GNU GPL2.0 license\" with no \"or later\" option, so GPL-2.0-only rather than -or-later. hdl_language_id is mixed: hand-written SystemVerilog testbenches alongside Quartus-generated Verilog from .bdf schematics. No single is_top path is marked because the top level is assembled by the repo's export.py script rather than being one checked-in file. accuracy_id omitted: the readme calls it \"A conceptual implementation of the Z80 CPU\" and makes no timing claim."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "a-z80",
+      "chip_id": "z80"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "a-z80",
+      "path": "cpu"
+    },
+    {
+      "implementation_id": "a-z80",
+      "path": "cpu/alu"
+    },
+    {
+      "implementation_id": "a-z80",
+      "path": "cpu/bus"
+    },
+    {
+      "implementation_id": "a-z80",
+      "path": "cpu/control"
+    },
+    {
+      "implementation_id": "a-z80",
+      "path": "cpu/registers"
+    },
+    {
+      "implementation_id": "a-z80",
+      "path": "cpu/toplevel"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "a-z80",
+      "platform_id": "generic"
+    }
+  ]
+}

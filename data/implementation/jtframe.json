@@ -1,0 +1,73 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtframe",
+      "name": "JTFRAME",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtcores",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "JTFRAME is jotego's core framework; since the standalone jotego/jtframe repository was retired it lives at modules/jtframe inside jtcores. The CPU wrapper layer (modules/jtframe/hdl/cpu/jtframe_z80.v, jtframe_mos6502.v, jtframe_8751mcu.v, jtframe_i8742.v, jtframe_m68k.v, jtframe_sys6809.v, jtframe_6801mcu.v) adapts third-party CPU cores vendored in sibling directories, which is what the implementation_dependency rows record. License: https://github.com/jotego/jtcores/blob/master/modules/jtframe/LICENSE (GPLv3 text) plus the \"or (at your option) any later version\" grant in https://github.com/jotego/jtcores/blob/master/modules/jtframe/hdl/cpu/jtframe_z80.v. That license covers JTFRAME's own sources only; each vendored CPU directory carries its own terms (see the linked provider records). Platforms read from the directory listing of modules/jtframe/target: mist, mister, neptuno, pocket, sidi and sidi128 -- the last two map to the \"other\" platform row. accuracy_id omitted: a framework, not a chip model. No implementation_chip rows for the same reason."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jtframe",
+      "provider_id": "mc6502-toyoshim",
+      "note": "vendored at modules/jtframe/hdl/cpu/mc6502; wrapped by jtframe_mos6502.v"
+    },
+    {
+      "consumer_id": "jtframe",
+      "provider_id": "mc8051-oregano",
+      "note": "vendored at modules/jtframe/hdl/cpu/8051; wrapped by jtframe_8751mcu.v"
+    },
+    {
+      "consumer_id": "jtframe",
+      "provider_id": "t48",
+      "note": "vendored at modules/jtframe/hdl/cpu/t48; wrapped by jtframe_i8742.v"
+    },
+    {
+      "consumer_id": "jtframe",
+      "provider_id": "t80",
+      "note": "vendored at modules/jtframe/hdl/cpu/t80; wrapped by jtframe_z80.v"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jtframe",
+      "path": "modules/jtframe"
+    },
+    {
+      "implementation_id": "jtframe",
+      "path": "modules/jtframe/hdl"
+    },
+    {
+      "implementation_id": "jtframe",
+      "path": "modules/jtframe/hdl/cpu"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtframe",
+      "platform_id": "mist"
+    },
+    {
+      "implementation_id": "jtframe",
+      "platform_id": "mister"
+    },
+    {
+      "implementation_id": "jtframe",
+      "platform_id": "neptuno"
+    },
+    {
+      "implementation_id": "jtframe",
+      "platform_id": "other"
+    },
+    {
+      "implementation_id": "jtframe",
+      "platform_id": "pocket"
+    }
+  ]
+}

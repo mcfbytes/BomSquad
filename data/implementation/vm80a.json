@@ -1,0 +1,34 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "vm80a",
+      "name": "vm80a",
+      "kind_id": "fpga_hdl",
+      "project_id": "1801bm1",
+      "repo_url": "https://github.com/1801BM1/vm80a",
+      "hdl_language_id": "verilog",
+      "accuracy_id": "gate-level",
+      "last_reviewed": "2026-07-28",
+      "notes": "license_id deliberately omitted: https://github.com/1801BM1/vm80a/blob/master/license.md is the Creative Commons Attribution 3.0 (CC-BY-3.0) licence text. CC-BY-3.0 has an SPDX identifier but is not present in data/lookup/license.json, and this task may not edit that file, so the field is left empty rather than mapped onto the CC-BY-4.0 row (a different licence version). accuracy_id gate-level per the README, which documents decapsulation of a 580VM80A die, layer-by-layer photography, vectorising the topology, back-annotating it to schematics and then \"writing the Verilog code on the precise schematics base\"; i8080 is linked because the 580VM80A is the Soviet replica of the Intel i8080A and the README states the two are \"very close topologically\". The core was patched to remove the original's asynchronous circuits for FPGA use."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "vm80a",
+      "chip_id": "i8080"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "vm80a",
+      "path": "org/rtl/vm80a.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "vm80a",
+      "platform_id": "generic"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jt-sfg01",
+      "name": "JT-SFG01",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jt-sfg01",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: https://github.com/jotego/jt-sfg01/blob/master/LICENSE (GPLv3 text); the \"or (at your option) any later version\" grant appears in the jt* source headers of the same author. Dependency verified by reading hdl/jt-sfg01.v, which instantiates jt51 directly. No implementation_chip row: this reproduces the Yamaha SFG-01 MSX module (a board, not a chip) and its YM2148 keyboard controller is not catalogued under data/chip/. accuracy_id omitted."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jt-sfg01",
+      "provider_id": "jt51",
+      "note": "instantiates jt51 for the YM2151 in the SFG-01 module"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jt-sfg01",
+      "path": "hdl"
+    },
+    {
+      "implementation_id": "jt-sfg01",
+      "path": "hdl/jt-sfg01.v",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "jt-sfg01",
+      "path": "hdl/jt2148.v"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jt-sfg01",
+      "platform_id": "generic"
+    }
+  ]
+}

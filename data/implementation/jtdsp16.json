@@ -1,0 +1,33 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtdsp16",
+      "name": "JTDSP16",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtdsp16",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "accuracy_id": "partial",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: https://github.com/jotego/jtdsp16/blob/master/LICENSE (GPLv3 text) plus the \"or (at your option) any later version\" grant in https://github.com/jotego/jtdsp16/blob/master/hdl/jtdsp16.v. accuracy_id partial per the README: \"All the instructions needed by QSound firmware are supported. The instructions not used by QSound are listed below.\" No implementation_chip row: the AT&T/WE DSP16 is not catalogued under data/chip/."
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jtdsp16",
+      "path": "hdl"
+    },
+    {
+      "implementation_id": "jtdsp16",
+      "path": "hdl/jtdsp16.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtdsp16",
+      "platform_id": "generic"
+    }
+  ]
+}

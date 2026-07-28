@@ -1,0 +1,11 @@
+{
+  "project": [
+    {
+      "project_id": "oregano-systems",
+      "name": "Oregano Systems",
+      "url": "https://www.oregano.at/",
+      "author": "Oregano Systems Design & Consulting",
+      "notes": "Publisher of the MC8051 VHDL IP core (LGPL-2.1-or-later), widely vendored into arcade FPGA cores."
+    }
+  ]
+}

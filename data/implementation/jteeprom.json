@@ -1,0 +1,46 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jteeprom",
+      "name": "JTEEPROM",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jteeprom",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: https://github.com/jotego/jteeprom/blob/master/LICENSE (GPLv3 text) plus the \"or (at your option) any later version\" grant in https://github.com/jotego/jteeprom/blob/master/hdl/jt5911.sv. hdl_language_id is mixed: jt9346.v is Verilog, jt5911.sv is SystemVerilog. jt5911 targets the Microchip ER5911, which is not catalogued under data/chip/. accuracy_id omitted: no fidelity claim in the repo."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "jteeprom",
+      "chip_id": "93c46"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jteeprom",
+      "path": "hdl"
+    },
+    {
+      "implementation_id": "jteeprom",
+      "path": "hdl/jt5911.sv"
+    },
+    {
+      "implementation_id": "jteeprom",
+      "path": "hdl/jt9346.v",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "jteeprom",
+      "path": "hdl/jt9346_16b8b.v"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jteeprom",
+      "platform_id": "generic"
+    }
+  ]
+}

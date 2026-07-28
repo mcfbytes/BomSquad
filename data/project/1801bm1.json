@@ -1,0 +1,10 @@
+{
+  "project": [
+    {
+      "project_id": "1801bm1",
+      "name": "1801BM1",
+      "url": "https://github.com/1801BM1",
+      "notes": "Soviet/Russian microprocessor die reverse-engineering project; publishes Verilog replicas derived from decapped dies."
+    }
+  ]
+}

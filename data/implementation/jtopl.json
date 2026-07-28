@@ -1,0 +1,51 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtopl",
+      "name": "JTOPL",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtopl",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "accuracy_id": "cycle-approximate",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: https://github.com/jotego/jtopl/blob/master/LICENSE (GPLv3 text) plus the \"or (at your option) any later version\" grant in https://github.com/jotego/jtopl/blob/master/hdl/jt2413.v. accuracy_id from the README Accuracy section: \"Accurate at sample level, and at internal cycle clock where reasonable\"; the same README lists CSM and keyboard split as not implemented. The README chip table marks YM3526 (jtopl.v, the is_top module) and YM3812 (jtopl2.v) implemented and YM2413 (jt2413.v) WIP; YM3526 is not catalogued under data/chip/ so it carries no implementation_chip row."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "jtopl",
+      "chip_id": "ym2413"
+    },
+    {
+      "implementation_id": "jtopl",
+      "chip_id": "ym3812"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jtopl",
+      "path": "hdl"
+    },
+    {
+      "implementation_id": "jtopl",
+      "path": "hdl/jt2413.v"
+    },
+    {
+      "implementation_id": "jtopl",
+      "path": "hdl/jtopl.v",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "jtopl",
+      "path": "hdl/jtopl2.v"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtopl",
+      "platform_id": "generic"
+    }
+  ]
+}

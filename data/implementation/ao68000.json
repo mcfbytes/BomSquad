@@ -1,0 +1,40 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "ao68000",
+      "name": "ao68000",
+      "kind_id": "fpga_hdl",
+      "project_id": "alfikpl",
+      "repo_url": "https://github.com/alfikpl/ao68000",
+      "hdl_language_id": "verilog",
+      "license_id": "BSD-2-Clause",
+      "accuracy_id": "cycle-approximate",
+      "resource_notes": "About 4750 LE on Altera Cyclone II plus about 45600 bits of RAM for microcode, per the README.",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: BSD-2-Clause. https://github.com/alfikpl/ao68000/blob/master/LICENSE opens \"The OpenCores ao68000 IP Core is licensed under the Simplified BSD License\" and carries the two-condition BSD text (Copyright 2010, Aleksander Osman); the README License section repeats it. accuracy_id from the README feature list: \"Not cycle exact with the MC68000, some instructions take more cycles to complete, some less\". The README also records verification against the WinUAE M68000 software emulator, not against hardware, so verified_against_hardware is left unset."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "ao68000",
+      "chip_id": "m68000"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "ao68000",
+      "path": "rtl/ao68000.v",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "ao68000",
+      "path": "rtl/ao68000_microcode.mif"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "ao68000",
+      "platform_id": "generic"
+    }
+  ]
+}

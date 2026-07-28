@@ -1,0 +1,10 @@
+{
+  "project": [
+    {
+      "project_id": "mist-devel",
+      "name": "MiST board project",
+      "url": "https://github.com/mist-devel",
+      "notes": "Home of the MiST FPGA platform. Its T80 repository is the community collection point for fixes to Daniel Wallner's Z80 core and is what most MiST/MiSTer cores vendor."
+    }
+  ]
+}

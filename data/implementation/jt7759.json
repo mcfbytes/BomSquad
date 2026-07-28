@@ -1,0 +1,38 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jt7759",
+      "name": "JT7759",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jt7759",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: https://github.com/jotego/jt7759/blob/master/LICENSE (GPLv3 text) plus the \"or (at your option) any later version\" grant in https://github.com/jotego/jt7759/blob/master/hdl/jt7759.v. The README device table covers the uPD775x family but only the externally-ROM-driven uPD7759 is targeted. accuracy_id omitted: no fidelity claim in the repo."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "jt7759",
+      "chip_id": "upd7759"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jt7759",
+      "path": "hdl"
+    },
+    {
+      "implementation_id": "jt7759",
+      "path": "hdl/jt7759.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jt7759",
+      "platform_id": "generic"
+    }
+  ]
+}

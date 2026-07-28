@@ -1,0 +1,36 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jttms",
+      "name": "JTTMS",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jttms",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: https://github.com/jotego/jttms/blob/main/LICENSE (GPLv3 text); the \"or (at your option) any later version\" grant appears in the jt* source headers of the same author. No implementation_chip row: the README lists TMS34070 (colour DAC) as the supported device and neither TMS34070 nor TMS34061 is catalogued under data/chip/ (tms34010 is a different part). accuracy_id omitted."
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jttms",
+      "path": "hdl"
+    },
+    {
+      "implementation_id": "jttms",
+      "path": "hdl/jt34061.v"
+    },
+    {
+      "implementation_id": "jttms",
+      "path": "hdl/jt34070.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jttms",
+      "platform_id": "generic"
+    }
+  ]
+}

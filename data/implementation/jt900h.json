@@ -1,0 +1,36 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jt900h",
+      "name": "JT900H",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jt900h",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: https://github.com/jotego/jt900h/blob/master/LICENSE (GPLv3 text) plus the \"or (at your option) any later version\" grant in https://github.com/jotego/jt900h/blob/master/hdl/jt900h.v. No implementation_chip row: the Toshiba TLCS-900/H core and the TMP95C061 it is wrapped into are not catalogued under data/chip/. accuracy_id omitted: no fidelity claim in the repo."
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jt900h",
+      "path": "hdl"
+    },
+    {
+      "implementation_id": "jt900h",
+      "path": "hdl/jt900h.v",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "jt900h",
+      "path": "hdl/jt95c061.v"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jt900h",
+      "platform_id": "generic"
+    }
+  ]
+}

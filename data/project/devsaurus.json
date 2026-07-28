@@ -1,0 +1,11 @@
+{
+  "project": [
+    {
+      "project_id": "devsaurus",
+      "name": "Arnim Laeuger (devsaurus)",
+      "url": "https://github.com/devsaurus",
+      "author": "Arnim Laeuger",
+      "notes": "Maintains the T48 MCS-48 core originally published on OpenCores."
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "redip-sid",
+      "name": "reDIP SID gateware",
+      "kind_id": "fpga_hdl",
+      "project_id": "daglem",
+      "repo_url": "https://github.com/daglem/reDIP-SID",
+      "hdl_language_id": "systemverilog",
+      "license_id": "CERN-OHL-S-2.0",
+      "accuracy_id": "cycle-accurate",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: CERN-OHL-S-2.0, read from https://github.com/daglem/reDIP-SID/blob/master/LICENSE (the verbatim \"CERN Open Hardware Licence Version 2 - Strongly Reciprocal\" text); the same identifier appears in each gateware source header. accuracy_id from the README: \"Cycle accurate emulation of the SID chip has been implemented in gateware/.\" No implementation_chip row: the MOS 6581/8580 SID is not catalogued under data/chip/. Platform is \"other\" because the target is the project's own DIP-28 Lattice iCE40UP5K board, not one of the named retro platforms. This gateware is also the upstream of the SID filter and DAC used by MiSTer-devel/C64_MiSTer."
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "redip-sid",
+      "path": "gateware"
+    },
+    {
+      "implementation_id": "redip-sid",
+      "path": "gateware/redip_sid.sv",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "redip-sid",
+      "path": "gateware/sid_api.sv"
+    },
+    {
+      "implementation_id": "redip-sid",
+      "path": "gateware/sid_filter.sv"
+    },
+    {
+      "implementation_id": "redip-sid",
+      "path": "gateware/sid_voice.sv"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "redip-sid",
+      "platform_id": "other"
+    }
+  ]
+}

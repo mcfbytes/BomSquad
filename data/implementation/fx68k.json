@@ -1,0 +1,44 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "fx68k",
+      "name": "FX68K",
+      "kind_id": "fpga_hdl",
+      "project_id": "ijor",
+      "repo_url": "https://github.com/ijor/fx68k",
+      "hdl_language_id": "systemverilog",
+      "license_id": "GPL-3.0-or-later",
+      "accuracy_id": "cycle-accurate",
+      "resource_notes": "Just over 5,100 LEs and about 5 KB internal RAM on Cyclone, per the README.",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: https://github.com/ijor/fx68k/blob/master/LICENSE is the verbatim GPLv3 text and https://github.com/ijor/fx68k/blob/master/fx68k.txt carries the grant \"either version 3 of the License, or (at your option) any later version\" -- hence GPL-3.0-or-later. accuracy_id from the README: \"FX68K is a 68000 cycle exact compatible core ... The timing of the external bus signals is exactly as the original processor.\" The same README notes bus retry via HALT is not yet implemented. verified_against_hardware left unset: the README says the core \"was designed to replace an actual chip on a real board. This wasn't yet tested however\"."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "fx68k",
+      "chip_id": "m68000"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "fx68k",
+      "path": "fx68k.sv",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "fx68k",
+      "path": "fx68kAlu.sv"
+    },
+    {
+      "implementation_id": "fx68k",
+      "path": "uaddrPla.sv"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "fx68k",
+      "platform_id": "generic"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "t48",
+      "name": "T48",
+      "kind_id": "fpga_hdl",
+      "project_id": "devsaurus",
+      "repo_url": "https://github.com/devsaurus/t48",
+      "hdl_language_id": "vhdl",
+      "accuracy_id": "cycle-accurate",
+      "last_reviewed": "2026-07-28",
+      "notes": "license_id deliberately omitted because the repository contradicts itself. https://github.com/devsaurus/t48/blob/master/COPYING is the verbatim GPLv2 text (and GitHub reports GPL-2.0 on that basis), but every RTL file, e.g. https://github.com/devsaurus/t48/blob/master/rtl/vhdl/t48_core.vhd, carries Arnim Laeuger's three-condition BSD-style notice permitting \"use in source and synthezised forms\" -- which is neither GPL-2.0 nor a verbatim SPDX BSD-3-Clause. Resolving that conflict needs the author, not a guess. accuracy_id from the README: the core \"aims for code-compatability and cycle-accuracy so that it can be used as a drop-in replacement for any MCS-48 controller\". Chips linked from the testbench/variant set (8035/8039/8048 core plus the UPI-41A/42 variants); the catalogued i8041a and i8042ah correspond to the T8041A/T8042AH variants."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "t48",
+      "chip_id": "i8035"
+    },
+    {
+      "implementation_id": "t48",
+      "chip_id": "i8041a"
+    },
+    {
+      "implementation_id": "t48",
+      "chip_id": "i8042ah"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "t48",
+      "path": "rtl/vhdl"
+    },
+    {
+      "implementation_id": "t48",
+      "path": "rtl/vhdl/t48_core.vhd",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "t48",
+      "path": "rtl/vhdl/upi41_core.vhd"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "t48",
+      "platform_id": "generic"
+    }
+  ]
+}

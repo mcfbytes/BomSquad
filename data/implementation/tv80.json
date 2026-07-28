@@ -1,0 +1,55 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "tv80",
+      "name": "TV80",
+      "kind_id": "fpga_hdl",
+      "project_id": "hutch31",
+      "repo_url": "https://github.com/hutch31/tv80",
+      "hdl_language_id": "verilog",
+      "license_id": "MIT",
+      "accuracy_id": "cycle-approximate",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: MIT, read from https://github.com/hutch31/tv80/blob/master/LICENSE, which is the verbatim MIT permission and warranty text (as comment lines, with no separate copyright line). accuracy_id from the README: the core \"aims to be an area efficient core which closely mimics the original operation and cycle timing of the Zilog Z80\". is_top is rtl/core/tv80s.v per the README (\"The top level wrapper is the tv80s\"). Originally an OpenCores project, ported from the T80 VHDL sources."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "tv80",
+      "chip_id": "z80"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "tv80",
+      "path": "rtl/core"
+    },
+    {
+      "implementation_id": "tv80",
+      "path": "rtl/core/tv80_alu.v"
+    },
+    {
+      "implementation_id": "tv80",
+      "path": "rtl/core/tv80_core.v"
+    },
+    {
+      "implementation_id": "tv80",
+      "path": "rtl/core/tv80_mcode.v"
+    },
+    {
+      "implementation_id": "tv80",
+      "path": "rtl/core/tv80_reg.v"
+    },
+    {
+      "implementation_id": "tv80",
+      "path": "rtl/core/tv80s.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "tv80",
+      "platform_id": "generic"
+    }
+  ]
+}

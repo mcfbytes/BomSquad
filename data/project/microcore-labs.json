@@ -1,0 +1,11 @@
+{
+  "project": [
+    {
+      "project_id": "microcore-labs",
+      "name": "MicroCore Labs",
+      "url": "https://github.com/MicroCoreLabs",
+      "author": "Ted Fried",
+      "notes": "Microsequencer-based processor cores (MCL65, MCL51, MCL86) plus Teensy-based drop-in CPU emulators. Only the synthesizable microsequencer cores are catalogued here as fpga_hdl."
+    }
+  ]
+}

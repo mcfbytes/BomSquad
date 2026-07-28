@@ -1,0 +1,50 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "t65",
+      "name": "T65",
+      "kind_id": "fpga_hdl",
+      "project_id": "freecores",
+      "repo_url": "https://github.com/freecores/t65",
+      "hdl_language_id": "vhdl",
+      "accuracy_id": "partial",
+      "last_reviewed": "2026-07-28",
+      "notes": "license_id deliberately omitted. No LICENSE or COPYING file in the repository; the terms are in the per-file header, e.g. https://github.com/freecores/t65/blob/master/rtl/vhdl/T65.vhd -- Daniel Wallner's three-condition BSD-style notice permitting \"use in source and synthezised forms\". Substituting \"synthesized\" for BSD-3-Clause's \"binary\" means it does not match the SPDX BSD-3-Clause template, so no SPDX id is asserted. accuracy_id partial, from the header's Limitations section: \"65C02 and 65C816 modes are incomplete\" -- the core is a 65xx family model whose 65C02 mode the author flags as unfinished. 65C816 is not catalogued under data/chip/ and is not linked. freecores is a GitHub mirror of the original OpenCores project."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "t65",
+      "chip_id": "m6502"
+    },
+    {
+      "implementation_id": "t65",
+      "chip_id": "m65c02"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "t65",
+      "path": "rtl/vhdl/T65.vhd",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "t65",
+      "path": "rtl/vhdl/T65_ALU.vhd"
+    },
+    {
+      "implementation_id": "t65",
+      "path": "rtl/vhdl/T65_MCode.vhd"
+    },
+    {
+      "implementation_id": "t65",
+      "path": "rtl/vhdl/T65_Pack.vhd"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "t65",
+      "platform_id": "generic"
+    }
+  ]
+}

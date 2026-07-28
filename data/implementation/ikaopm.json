@@ -1,0 +1,39 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "ikaopm",
+      "name": "IKAOPM",
+      "kind_id": "fpga_hdl",
+      "project_id": "ika-musume",
+      "repo_url": "https://github.com/ika-musume/IKAOPM",
+      "hdl_language_id": "verilog",
+      "license_id": "BSD-2-Clause",
+      "accuracy_id": "cycle-accurate",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: BSD-2-Clause, read from https://github.com/ika-musume/IKAOPM/blob/main/LICENSE (\"BSD 2-Clause License, Copyright (c) 2022, Raki\"). accuracy_id from the README feature list: \"A cycle-accurate, die shot based, BSD2 licensed core ... Accurately emulates most signals of the actual chip ... All LSI test bits are implemented.\" The README also states it was reverse-engineered from Yamaha datasheets and the siliconpr0n YM2151 die shot and \"does not reference any existing hard/soft core\". verified_against_hardware is left unset: the README says the core is FPGA proven but cites no hardware comparison test."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "ikaopm",
+      "chip_id": "ym2151"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "ikaopm",
+      "path": "src/IKAOPM.v",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "ikaopm",
+      "path": "src/IKAOPM_modules"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "ikaopm",
+      "platform_id": "generic"
+    }
+  ]
+}

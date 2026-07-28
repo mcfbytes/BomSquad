@@ -1,0 +1,39 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "ikaopll",
+      "name": "IKAOPLL",
+      "kind_id": "fpga_hdl",
+      "project_id": "ika-musume",
+      "repo_url": "https://github.com/ika-musume/IKAOPLL",
+      "hdl_language_id": "verilog",
+      "license_id": "BSD-2-Clause",
+      "accuracy_id": "cycle-accurate",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: BSD-2-Clause, read from https://github.com/ika-musume/IKAOPLL/blob/main/LICENSE (\"BSD 2-Clause License, Copyright (c) 2023, Raki\"). accuracy_id from the README: \"A cycle-accurate, die shot based, BSD2 licensed core\". The README credits die shots from Madov and Travis Goodspeed, and notes the 9-bit digital output design and the VRC7 patch set were copied from nukeykt's Nuked-SMS-FPGA ym2413.v."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "ikaopll",
+      "chip_id": "ym2413"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "ikaopll",
+      "path": "src/IKAOPLL.v",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "ikaopll",
+      "path": "src/IKAOPLL_modules"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "ikaopll",
+      "platform_id": "generic"
+    }
+  ]
+}

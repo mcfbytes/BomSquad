@@ -1,0 +1,57 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "sh7604-srg320",
+      "name": "SH7604 (srg320)",
+      "kind_id": "fpga_hdl",
+      "project_id": "srg320",
+      "repo_url": "https://github.com/srg320/SH",
+      "hdl_language_id": "systemverilog",
+      "last_reviewed": "2026-07-28",
+      "notes": "license_id deliberately omitted: the repository contains no LICENSE or COPYING file and the sources carry no licence header -- https://github.com/srg320/SH/blob/master/SH7604/SH7604.sv begins directly with the module declaration. Nothing can be asserted about the terms. The same repository also holds an SH7034 core, which is not catalogued here because that part is absent from data/chip/. accuracy_id omitted: the repository has no README and makes no fidelity claim."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "sh7604-srg320",
+      "chip_id": "sh7604"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "sh7604-srg320",
+      "path": "SH7604"
+    },
+    {
+      "implementation_id": "sh7604-srg320",
+      "path": "SH7604/BSC.sv"
+    },
+    {
+      "implementation_id": "sh7604-srg320",
+      "path": "SH7604/CACHE.sv"
+    },
+    {
+      "implementation_id": "sh7604-srg320",
+      "path": "SH7604/DMAC.sv"
+    },
+    {
+      "implementation_id": "sh7604-srg320",
+      "path": "SH7604/INTC.sv"
+    },
+    {
+      "implementation_id": "sh7604-srg320",
+      "path": "SH7604/SH7604.sv",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "sh7604-srg320",
+      "path": "SH7604/SH_core.sv"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "sh7604-srg320",
+      "platform_id": "generic"
+    }
+  ]
+}

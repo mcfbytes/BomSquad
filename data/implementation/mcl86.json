@@ -1,0 +1,49 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mcl86",
+      "name": "MCL86",
+      "kind_id": "fpga_hdl",
+      "project_id": "microcore-labs",
+      "repo_url": "https://github.com/MicroCoreLabs/Projects",
+      "hdl_language_id": "verilog",
+      "license_id": "MIT",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: MIT, from the per-file header of https://github.com/MicroCoreLabs/Projects/blob/master/MCL86/Core/biu_max.v (\"Copyright (c) 2020 Ted Fried\" + verbatim MIT text); the monorepo has no root LICENSE file. No is_top path: the core ships as a bus interface unit (biu_max.v for maximum mode, biu_min.v for minimum mode) plus an execution unit (eu.v) with no single checked-in top-level wrapper. The repo README describes MCL86 as an \"Intel 8086/8088\" microsequencer core, hence both parts are linked; biu_max.v and biu_min.v correspond to the 8086/8088 MX pin modes. accuracy_id omitted: no fidelity claim in the repository."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "mcl86",
+      "chip_id": "i8086"
+    },
+    {
+      "implementation_id": "mcl86",
+      "chip_id": "i8088"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mcl86",
+      "path": "MCL86/Core"
+    },
+    {
+      "implementation_id": "mcl86",
+      "path": "MCL86/Core/biu_max.v"
+    },
+    {
+      "implementation_id": "mcl86",
+      "path": "MCL86/Core/biu_min.v"
+    },
+    {
+      "implementation_id": "mcl86",
+      "path": "MCL86/Core/eu.v"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mcl86",
+      "platform_id": "generic"
+    }
+  ]
+}

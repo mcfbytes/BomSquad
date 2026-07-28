@@ -1,0 +1,58 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "t80",
+      "name": "T80",
+      "kind_id": "fpga_hdl",
+      "project_id": "mist-devel",
+      "repo_url": "https://github.com/mist-devel/T80",
+      "hdl_language_id": "vhdl",
+      "accuracy_id": "cycle-approximate",
+      "last_reviewed": "2026-07-28",
+      "notes": "license_id deliberately omitted. The repository has no LICENSE or COPYING file; the terms live in the per-file header, e.g. https://github.com/mist-devel/T80/blob/master/T80.vhd: Daniel Wallner's notice permits \"use in source and synthezised forms\" under three BSD-style conditions. Because it substitutes \"synthesized\" for BSD-3-Clause's \"binary\", it does not match the SPDX BSD-3-Clause template and no SPDX id can be asserted honestly. accuracy_id from the same header, which describes T80(c) as an \"Attempt to finish all undocumented features and provide accurate timings\" and records ZEXDOC/ZEXALL/Z80Full/Z80memptr passes with SCF/CCF X/Y flags still unresolved. i8080 is linked because the repo ships T8080se.vhd, an 8080 mode wrapper (a Game Boy mode, GBse.vhd, is also present but that CPU is not catalogued)."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "t80",
+      "chip_id": "i8080"
+    },
+    {
+      "implementation_id": "t80",
+      "chip_id": "z80"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "t80",
+      "path": "T80.vhd"
+    },
+    {
+      "implementation_id": "t80",
+      "path": "T8080se.vhd"
+    },
+    {
+      "implementation_id": "t80",
+      "path": "T80_ALU.vhd"
+    },
+    {
+      "implementation_id": "t80",
+      "path": "T80_MCode.vhd"
+    },
+    {
+      "implementation_id": "t80",
+      "path": "T80_Reg.vhd"
+    },
+    {
+      "implementation_id": "t80",
+      "path": "T80s.vhd",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "t80",
+      "platform_id": "generic"
+    }
+  ]
+}

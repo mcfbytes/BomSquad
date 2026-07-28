@@ -1,0 +1,10 @@
+{
+  "project": [
+    {
+      "project_id": "mister-devel",
+      "name": "MiSTer-devel",
+      "url": "https://github.com/MiSTer-devel",
+      "notes": "Organization hosting the MiSTer FPGA platform and its cores. Individual core repos vendor third-party IP whose licensing is stated per file, not per repository."
+    }
+  ]
+}

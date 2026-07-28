@@ -1,0 +1,10 @@
+{
+  "project": [
+    {
+      "project_id": "freecores",
+      "name": "FreeCores",
+      "url": "https://github.com/freecores",
+      "notes": "GitHub organization mirroring OpenCores projects; used here as the reachable home of cores whose original OpenCores pages have gone offline."
+    }
+  ]
+}

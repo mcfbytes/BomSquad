@@ -1,0 +1,45 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "atari800-pokey",
+      "name": "POKEY (Atari800 / MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/Atari800_MiSTer",
+      "hdl_language_id": "vhdl",
+      "last_reviewed": "2026-07-28",
+      "notes": "license_id deliberately omitted, and this one matters: the repository has no LICENSE file, and the header of https://github.com/MiSTer-devel/Atari800_MiSTer/blob/master/rtl/common/a8core/pokey.vhdl reads \"(c) 2013 mark watson / I am happy for anyone to use this for non-commercial use. If my vhdl files are used commercially or otherwise sold, please contact me for explicit permission at scrameta (gmail). This applies for source and binary form and derived works.\" That is a non-commercial custom grant, not an open-source licence, and it has no SPDX equivalent -- do not treat this core as freely redistributable. Recorded because it is the POKEY implementation the MiSTer Atari 800 core actually ships. accuracy_id omitted: no fidelity claim in the source."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "atari800-pokey",
+      "chip_id": "pokey"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "atari800-pokey",
+      "path": "rtl/common/a8core/pokey.vhdl",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "atari800-pokey",
+      "path": "rtl/common/a8core/pokey_countdown_timer.vhdl"
+    },
+    {
+      "implementation_id": "atari800-pokey",
+      "path": "rtl/common/a8core/pokey_noise_filter.vhdl"
+    },
+    {
+      "implementation_id": "atari800-pokey",
+      "path": "rtl/common/a8core/pokey_poly_17_9.vhdl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "atari800-pokey",
+      "platform_id": "mister"
+    }
+  ]
+}

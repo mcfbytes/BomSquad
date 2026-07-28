@@ -1,0 +1,70 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jt12",
+      "name": "JT12",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jt12",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: https://github.com/jotego/jt12/blob/master/LICENSE (GPLv3 text) plus the \"or (at your option) any later version\" grant in https://github.com/jotego/jt12/blob/master/hdl/jt12.v. Chip coverage and top-level files from the README usage table: YM2612 -> jt12.v, YM2610 -> jt10.v, YM2203 -> jt03.v; YM3438 per the README opening line \"fully compatible with YM2612/YM3438 (Megadrive), YM2610 (NeoGeo) and YM2203\". Dependencies read from .gitmodules. accuracy_id omitted: the README claims an exact replica only for the operator section (jt12_op), not for the whole chip."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "jt12",
+      "chip_id": "ym2203"
+    },
+    {
+      "implementation_id": "jt12",
+      "chip_id": "ym2610"
+    },
+    {
+      "implementation_id": "jt12",
+      "chip_id": "ym2612"
+    },
+    {
+      "implementation_id": "jt12",
+      "chip_id": "ym3438"
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jt12",
+      "provider_id": "jt49",
+      "note": "git submodule jt49/; supplies the SSG (AY-3-8910 compatible) section of the YM2203/YM2610"
+    },
+    {
+      "consumer_id": "jt12",
+      "provider_id": "jt89",
+      "note": "git submodule jt89/"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jt12",
+      "path": "hdl"
+    },
+    {
+      "implementation_id": "jt12",
+      "path": "hdl/jt03.v"
+    },
+    {
+      "implementation_id": "jt12",
+      "path": "hdl/jt10.v"
+    },
+    {
+      "implementation_id": "jt12",
+      "path": "hdl/jt12.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jt12",
+      "platform_id": "generic"
+    }
+  ]
+}

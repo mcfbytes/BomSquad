@@ -1,0 +1,38 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jt5205",
+      "name": "JT5205",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jt5205",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: https://github.com/jotego/jt5205/blob/master/LICENSE (GPLv3 text) plus the \"or (at your option) any later version\" grant in https://github.com/jotego/jt5205/blob/master/hdl/jt5205.v. accuracy_id omitted: the README claims pin-to-pin compatibility with the OKI MSM5205, which is a pinout claim, not a timing-fidelity claim."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "jt5205",
+      "chip_id": "msm5205"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jt5205",
+      "path": "hdl"
+    },
+    {
+      "implementation_id": "jt5205",
+      "path": "hdl/jt5205.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jt5205",
+      "platform_id": "generic"
+    }
+  ]
+}

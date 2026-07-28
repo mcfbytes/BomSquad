@@ -1,0 +1,46 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jt49",
+      "name": "JT49",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jt49",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: https://github.com/jotego/jt49/blob/master/LICENSE (GPLv3 text) plus the \"or (at your option) any later version\" grant in https://github.com/jotego/jt49/blob/master/hdl/jt49.v. Chips from the README: \"YM2149 compatible Verilog core\", and the jt49_bus top level \"presents the expected AY-3-8910 interface\". accuracy_id omitted: no fidelity claim in the repo."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "jt49",
+      "chip_id": "ay8910"
+    },
+    {
+      "implementation_id": "jt49",
+      "chip_id": "ym2149"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jt49",
+      "path": "hdl"
+    },
+    {
+      "implementation_id": "jt49",
+      "path": "hdl/jt49.v",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "jt49",
+      "path": "hdl/jt49_bus.v"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jt49",
+      "platform_id": "generic"
+    }
+  ]
+}

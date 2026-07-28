@@ -1,0 +1,38 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jt89",
+      "name": "JT89",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jt89",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: https://github.com/jotego/jt89/blob/master/LICENSE (GPLv3 text) plus the \"or (at your option) any later version\" grant in https://github.com/jotego/jt89/blob/master/hdl/jt89.v. The README claims \"sn76489an compatible\", so only sn76489a is linked; compatibility with the earlier non-A SN76489 is not claimed by the author and is not asserted here. accuracy_id omitted: the README lists behavioural goals (volume limiting, noise length) rather than a timing-fidelity level."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "jt89",
+      "chip_id": "sn76489a"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jt89",
+      "path": "hdl"
+    },
+    {
+      "implementation_id": "jt89",
+      "path": "hdl/jt89.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jt89",
+      "platform_id": "generic"
+    }
+  ]
+}

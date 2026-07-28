@@ -1,0 +1,11 @@
+{
+  "project": [
+    {
+      "project_id": "daglem",
+      "name": "Dag Lem (daglem)",
+      "url": "https://github.com/daglem",
+      "author": "Dag Lem",
+      "notes": "Author of reSID and of the reDIP SID open-hardware platform and gateware."
+    }
+  ]
+}

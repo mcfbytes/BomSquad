@@ -1,0 +1,11 @@
+{
+  "project": [
+    {
+      "project_id": "alfikpl",
+      "name": "Aleksander Osman (alfik)",
+      "url": "https://github.com/alfikpl",
+      "author": "Aleksander Osman",
+      "notes": "Author of the OpenCores ao68000 and ao486 processor cores."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "ikascc",
+      "name": "IKASCC",
+      "kind_id": "fpga_hdl",
+      "project_id": "ika-musume",
+      "repo_url": "https://github.com/ika-musume/IKASCC",
+      "hdl_language_id": "verilog",
+      "license_id": "BSD-2-Clause",
+      "accuracy_id": "cycle-accurate",
+      "last_reviewed": "2026-07-28",
+      "notes": "License: BSD-2-Clause, read from https://github.com/ika-musume/IKASCC/blob/main/LICENSE (\"BSD 2-Clause License, Copyright (c) 2023, Raki\"). accuracy_id from the README: \"A cycle-accurate, die shot based, BSD2 licensed core\", \"Based on schematics extracted from a die shot.\" No implementation_chip row: the Konami SCC (K051649 / K052539) is not catalogued under data/chip/."
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "ikascc",
+      "path": "src/IKASCC.v",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "ikascc",
+      "path": "src/IKASCC_modules"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "ikascc",
+      "platform_id": "generic"
+    }
+  ]
+}

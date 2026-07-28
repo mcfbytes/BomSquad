@@ -1,0 +1,11 @@
+{
+  "project": [
+    {
+      "project_id": "ika-musume",
+      "name": "IKA cores",
+      "url": "https://github.com/ika-musume",
+      "author": "Sehyeon Kim (Raki)",
+      "notes": "Die-shot-derived, BSD-2-Clause sound chip cores (IKAOPM, IKAOPLL, IKASCC)."
+    }
+  ]
+}

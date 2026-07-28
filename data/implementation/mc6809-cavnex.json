@@ -1,0 +1,50 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mc6809-cavnex",
+      "name": "MC6809 / MC6809E (Greg Miller)",
+      "kind_id": "fpga_hdl",
+      "project_id": "cavnex",
+      "repo_url": "https://github.com/cavnex/mc6809",
+      "hdl_language_id": "verilog",
+      "accuracy_id": "cycle-accurate",
+      "last_reviewed": "2026-07-28",
+      "notes": "license_id deliberately omitted: the work is dual-licensed and the author requires the user to choose. https://github.com/cavnex/mc6809/blob/master/documentation/LICENSE.md offers either a \"stock BSD license\" (Copyright (c) 2016, Greg Miller; three conditions, but with a non-endorsement clause worded differently from the SPDX BSD-3-Clause template) or a binary-only modified licence, and says \"You must select one.\" A single-valued license_id cannot express that offer without picking for the user, so it is left empty. accuracy_id from the README title \"Cycle Accurate MC6809 Core\" and the text \"Beyond merely cycle-accurate, the goal was to attempt to preserve as much of the actual bus signals and protocols as possible\" (DMABREQ, TSC, MRDY, LIC). The README describes matching bus traffic against a logic analyser on real MC6809/MC6809E parts, but verified_against_hardware is left unset because no specific test result is cited."
+    }
+  ],
+  "implementation_chip": [
+    {
+      "implementation_id": "mc6809-cavnex",
+      "chip_id": "mc6809"
+    },
+    {
+      "implementation_id": "mc6809-cavnex",
+      "chip_id": "mc6809e"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mc6809-cavnex",
+      "path": "mc6809.v",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "mc6809-cavnex",
+      "path": "mc6809e.v"
+    },
+    {
+      "implementation_id": "mc6809-cavnex",
+      "path": "mc6809i.v"
+    },
+    {
+      "implementation_id": "mc6809-cavnex",
+      "path": "mc6809s.v"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mc6809-cavnex",
+      "platform_id": "generic"
+    }
+  ]
+}
