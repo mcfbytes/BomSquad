@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "m68030",
+      "display_name": "MC68030",
+      "function_id": "cpu",
+      "manufacturer_id": "motorola",
+      "family_id": "m68k",
+      "description": "32-bit 68000-family CPU with an on-chip MMU plus instruction and data caches.",
+      "year_introduced": 1987
+    }
+  ]
+}

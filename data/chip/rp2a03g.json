@@ -7,7 +7,7 @@
       "manufacturer_id": "ricoh",
       "family_id": "m6502",
       "description": "NES/Famicom CPU (RP2A03G revision): 6502 core without decimal mode plus the on-die APU; taxonomy TB1 files it as cpu.",
-      "notes": "Deliberate manufacturer/family mismatch: a Ricoh part built around a 6502-family core, filed under the m6502 family as a derivative rather than a straight second source."
+      "notes": "Deliberate manufacturer/family mismatch: a Ricoh part built around a 6502-family core, filed under the m6502 family as a derivative rather than a straight second source. Deliberately no chip_equivalence edge to m6502 in either direction (coverage.md §1.6): this part lacks the 6502's decimal (BCD) mode, so substitution into a 6502 socket depends on whether the machine's software uses BCD — a fact no table in the schema holds — and a plain 6502 supplies none of this part's on-die APU."
     }
   ]
 }

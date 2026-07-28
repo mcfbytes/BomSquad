@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "lh0080",
+      "display_name": "LH0080",
+      "function_id": "cpu",
+      "manufacturer_id": "sharp",
+      "family_id": "z80",
+      "description": "Sharp's licensed manufacture of the Zilog Z80 (LH0080/LH0080A), fitted in Sharp's own computers and widely used as a Z80 substitute elsewhere.",
+      "notes": "Deliberate manufacturer/family mismatch: a licensed second source of the Zilog Z80 design, filed in the Z80 family."
+    }
+  ]
+}

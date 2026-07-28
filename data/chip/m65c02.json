@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "m65c02",
+      "display_name": "65C02",
+      "function_id": "cpu",
+      "manufacturer_id": "western-design-center",
+      "family_id": "m6502",
+      "description": "CMOS 6502 successor with additional instructions and addressing modes, developed by the Western Design Center (W65C02) and produced by several licensees.",
+      "notes": "Deliberate manufacturer/family mismatch: the m6502 family description itself names WDC among the second sources. This row is the base 65C02 line; r65c02 is Rockwell's licensed variant with additional bit-manipulation instructions."
+    }
+  ]
+}

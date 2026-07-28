@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "hd6309",
+      "display_name": "HD6309",
+      "function_id": "cpu",
+      "manufacturer_id": "hitachi",
+      "family_id": "m6809",
+      "description": "CMOS 6809-compatible CPU: fully compatible in emulation mode, with an undocumented native mode adding registers, instructions and faster cycle timings.",
+      "notes": "Deliberate manufacturer/family mismatch: Hitachi's CMOS implementation of the Motorola 6809 architecture, filed in the 6809 family."
+    }
+  ]
+}

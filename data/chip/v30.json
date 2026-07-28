@@ -5,6 +5,7 @@
       "display_name": "V30",
       "function_id": "cpu",
       "manufacturer_id": "nec",
+      "model": "µPD70116",
       "description": "NEC 8086-pin-compatible 16-bit CPU with a faster microarchitecture and an 8080 emulation mode."
     }
   ]

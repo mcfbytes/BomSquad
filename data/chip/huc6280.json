@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "huc6280",
+      "display_name": "HuC6280",
+      "function_id": "cpu",
+      "family_id": "m6502",
+      "description": "PC Engine CPU: 65C02-derived core with added instructions, integrated PSG, memory-mapping unit and timer; taxonomy TB1 files it as cpu.",
+      "notes": "Designed by Hudson Soft — manufacturer_id deliberately omitted until a Hudson Soft row exists in the lookup vocabulary. Filed in the m6502 family as a 65C02 derivative. coverage.md §2.1 treats 'huc6280 provides m65c02' (superset CPU core) as the defensible equivalence direction."
+    }
+  ]
+}

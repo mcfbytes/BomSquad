@@ -8,7 +8,8 @@
       "family_id": "m6502",
       "description": "Low-cost 8-bit CPU, widely second-sourced; common as a main or sound CPU.",
       "package": "DIP-40",
-      "year_introduced": 1975
+      "year_introduced": 1975,
+      "notes": "Deliberately no chip_equivalence edge to the Ricoh RP2A03 (rp2a03g) in either direction (coverage.md §1.6): a 6502 supplies none of the 2A03's on-die APU, and the 2A03 lacks the 6502's decimal (BCD) mode, so a 2A03 standing in for a 6502 is valid only when the machine's software never uses BCD — a machine-dependent condition this schema does not hold."
     }
   ]
 }

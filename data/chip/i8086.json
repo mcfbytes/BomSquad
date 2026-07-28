@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "i8086",
+      "display_name": "Intel 8086",
+      "function_id": "cpu",
+      "manufacturer_id": "intel",
+      "description": "16-bit CPU; the origin of the x86 architecture.",
+      "package": "DIP-40",
+      "year_introduced": 1978
+    }
+  ]
+}

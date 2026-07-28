@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "upd780",
+      "display_name": "µPD780",
+      "function_id": "cpu",
+      "manufacturer_id": "nec",
+      "family_id": "z80",
+      "description": "NEC's Z80-compatible CPU (µPD780C), ubiquitous as a Z80 substitute in Japanese arcade and home hardware.",
+      "notes": "Deliberate manufacturer/family mismatch: a NEC-manufactured Z80-compatible part, filed in the Z80 family."
+    }
+  ]
+}

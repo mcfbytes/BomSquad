@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "m68020",
+      "display_name": "MC68020",
+      "function_id": "cpu",
+      "manufacturer_id": "motorola",
+      "family_id": "m68k",
+      "description": "First fully 32-bit 68000-family CPU: 32-bit ALU with 32-bit address and data buses and an on-chip instruction cache.",
+      "year_introduced": 1984
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "m68010",
+      "display_name": "MC68010",
+      "function_id": "cpu",
+      "manufacturer_id": "motorola",
+      "family_id": "m68k",
+      "description": "68000 successor adding virtual-memory support (bus-error recovery, loop mode); executes the 68000 user ISA upward-compatibly, though MOVE from SR becomes privileged.",
+      "year_introduced": 1982
+    }
+  ]
+}
