@@ -145,7 +145,8 @@ count), per-machine coverage confidence, and top unmapped devices by impact.
 | **jotego/jtcores + jt\* repos**                       | high-quality sound/CPU implementations + arcade cores           | GitHub API + curation                                                                                                                      | Weekly                       |
 | **OpenCores**                                         | long-tail CPU/sound implementations                             | Manual curation (no useful API)                                                                                                            | As needed                    |
 | **Analogue Pocket openFPGA, MiST, FPGAArcade Replay** | cores on other platforms                                        | Mix of API + curation                                                                                                                      | Monthly                      |
-| **system16.com, VGChartz-style board references**     | platform family groupings, board photos context                 | **Reference only** — inform curation by hand; do not scrape (respect their content)                                                        | As needed                    |
+| **system16.com, VGChartz-style board references**     | platform family groupings, board photos context                 | **Reference only, human-directed** — cite as a `source_url` on a hand-authored row; **never fetched by any tool here.** system16.com's `robots.txt` sets `ClaudeBot → Disallow: /` and `Content-Signal: ai-train=no, use=reference`, and the origin 403s non-browser clients behind a Cloudflare challenge. CI enforces the no-fetch rule (TASKS T3.8) | As needed                    |
+| **MAME driver `.cpp` source, Wikidata (CC0), Wikipedia (CC-BY-SA), MRA files** | an **independent second witness** to board↔chipset, for reconciliation against MAME `-listxml` | Automated, rate-limited, cached — terms permit reuse. Emits a diff report, never writes `data/` (TASKS T3.8) | Monthly                      |
 | **Community PRs**                                     | everything above, corrections                                   | JSON + schema validation in CI                                                                                                             | Continuous                   |
 
 **Key extraction detail:** MAME's XML gives each machine `<chip type="cpu" tag="maincpu" name="M68000" clock="10000000"/>` entries plus `<device_ref>` elements — that's the entire board→chip half of the join, machine-readable, for ~40k machines. The pipeline's job is filtering (parents vs. clones, exclude gambling/mechanical if desired) and normalizing names through the device map.
@@ -184,6 +185,10 @@ count), per-machine coverage confidence, and top unmapped devices by impact.
 - Global search box across all entity types.
 - Coverage badges (e.g., `9/11 chips · 82%`) rendered consistently everywhere.
 - Dark mode default (know the audience 🙂).
+- **8-bit arcade-cabinet visual theme** (TASKS T7.12): pixel display face for chrome, CRT-phosphor palette,
+  scanline texture on the masthead only. Applied as a token layer over the existing CSS custom properties —
+  decoration on chrome, never on data. WCAG AA in both themes, and `prefers-reduced-motion` /
+  `prefers-contrast: more` strip the effects entirely.
 
 ---
 

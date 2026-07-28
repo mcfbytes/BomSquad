@@ -8,10 +8,12 @@ Companion to [PLAN.md](PLAN.md), structured for **ultracode** multi-agent execut
 | ------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------- |
 | **Haiku 4.5** | `claude-haiku-4-5` | Mechanical: scaffolding, templates, config, boilerplate docs                                                              |
 | **Sonnet 5**  | `claude-sonnet-5`  | Standard engineering: well-specified scripts, UI components, CI, docs                                                     |
-| **Opus 4.8**  | `claude-opus-4-8`  | Complex engineering or research-heavy curation: parsers, joiners, search, bulk chip metadata                              |
+| **Opus 5**  | `claude-opus-5`  | Complex engineering or research-heavy curation: parsers, joiners, search, bulk chip metadata                              |
 | **Fable 5**   | `claude-fable-5`   | Architecture-critical or domain-judgment-heavy: data model, coverage/ranking algorithms, identity mapping, quality audits |
 
-Distribution: 9 Haiku · 28 Sonnet · 16 Opus · 8 Fable (61 tasks). Tasks marked **(human)** need the maintainer (credentials, announcements) and cannot be fully delegated.
+Distribution: 9 Haiku · 28 Sonnet · 18 Opus · 8 Fable (63 tasks). Tasks marked **(human)** need the maintainer (credentials, announcements) and cannot be fully delegated.
+
+**Opus means Opus 5 (`claude-opus-5`)** — the current generation — wherever this document says `Opus`.
 
 ## Standing rules (apply to every task)
 
@@ -82,7 +84,7 @@ merge algebra is gone — three narrow tables (`machine_correction`, `machine_ch
 **Done when:** the spec is unambiguous enough that T1.2 (schemas) and T6.1 (loader) can be implemented from
 it without design questions coming back. Delivered: `docs/data-model.md` spec 2.0.0.
 
-### T1.2 · JSON Schemas — `Opus 4.8`
+### T1.2 · JSON Schemas — `Opus 5`
 
 **Depends:** T1.1
 `schemas/schema.sql` (the normative SQLite DDL) plus one `schemas/*.schema.json` (JSON Schema 2020-12) per
@@ -93,7 +95,7 @@ against the live DDL so the two cannot silently disagree. See `schemas/README.md
 **Done when:** an ajv-based test suite with valid + invalid fixtures per entity passes/fails exactly as
 expected, and `diffRowSchemas()` fails the suite on any schema/DDL disagreement.
 
-### T1.3 · Chip function taxonomy — `Opus 4.8`
+### T1.3 · Chip function taxonomy — `Opus 5`
 
 **Depends:** T1.1
 Enumerate and define the `chip_function` taxonomy in `docs/taxonomy.md` with a decision guide and worked
@@ -133,7 +135,7 @@ as a required check.
 **Done when:** a PR with a seeded broken fixture fails with an actionable message naming file, field, and
 rule. Delivered: `pipeline/src/validate/`.
 
-### T1.7 · Data quality spec — `Opus 4.8`
+### T1.7 · Data quality spec — `Opus 5`
 
 **Depends:** T1.1
 Specify the quality model (schema + doc): the FAIL vs WARN conditions, the **mapped-instance-share** metric
@@ -155,7 +157,7 @@ Delivered: `docs/data-quality.md` spec 2.0.0, `pipeline/config/quality-threshold
 Fetch the pinned MAME release's published listxml artifact (`mame0xxxlx.zip` from the official GitHub release), verify checksum, cache in `.cache/`. Pinned version lives in one config file.
 **Done when:** `npm run mame:fetch` produces the verified XML; a second run is a cache hit; changing the pin fetches the new version.
 
-### T2.2 · XML stream parser — `Opus 4.8`
+### T2.2 · XML stream parser — `Opus 5`
 
 **Depends:** T2.1, T1.2
 SAX stream-parse the ~300 MB XML → `extract/machines.raw.json`: machine attrs (name, description, year, manufacturer, sourcefile, cloneof/romof, `isdevice`/`ismechanical`/`runnable`), `<chip>` entries (type/tag/name/clock), `<device_ref>`s, driver status. Single pass, memory-bounded (< 1 GB RSS).
@@ -206,13 +208,13 @@ Map the top ~150 MAME device names by impact as `mame_device` row files (`data/m
 Implement in the extraction/load pipeline: a MAME device with no `mame_device` row (mapped or ignored) becomes a `machine_unmapped_device` row, never a synthetic chip. There is no `unknown:*` stub anywhere in the schema — taxonomy.md TB8: unresolvable means no `chip` row, not a guess. Unmapped devices surface as `v_mame_device_worklist`, the curation queue.
 **Done when:** unit tests show an unmapped device flowing through to `machine_unmapped_device` and counted in `v_mame_device_worklist` and `v_system_coverage_by_kind.unmapped_device_count`.
 
-### T3.3 · Seed chip catalog — `Opus 4.8`
+### T3.3 · Seed chip catalog — `Opus 5`
 
 **Depends:** T3.1, T1.3
 Author `data/chip/*.json` row files (one per chip, per `chip.schema.json`) for every mapped chip: `manufacturer_id`, `model`, `family_id`, `function_id` (the taxonomy value, `docs/taxonomy.md`), `description`, `typical_clock_hz`, `package`, `year_introduced`, plus `chip_datasheet` rows for datasheet links. `mame_devices[]` isn't a chip field any more — it's the reverse of `mame_device.chip_id`, populated by T3.1. Research each; omit unknowns rather than guess.
 **Done when:** all entries validate; a second-agent spot-check of 15 random chips finds zero factual errors in function/manufacturer.
 
-### T3.4 · Systems — `Opus 4.8`
+### T3.4 · Systems — `Opus 5`
 
 **Depends:** T2.3, T1.2
 Curate `system` row files for major arcade systems (Sega System 1/16A/16B/18/24/X/Y, Out Run hw, CPS-1/2/3, Neo Geo MVS, Taito F2/F3, Konami GX + classics, Namco System 1/2, Irem M72/M92, Toaplan, Cave 68000, …) and consoles/handhelds — there is no separate `platform_family` concept; `system` **is** it (data-model.md §1.9). Bulk membership by driver sourcefile is `system_driver` (e.g. `outrun.cpp` → `sega-outrun-hw`); per-machine exceptions are `machine_system` rows, to avoid enumerating clones by hand.
@@ -236,17 +238,61 @@ Populate `chip_equivalence` row files: YM2612/YM3438 (`kind = 'equivalent'`), 68
 Sample 20 machines across families; verify normalized BOMs against MAME driver source and reference sites (reference-only — no scraping). File overlay corrections where MAME abstracts chips away (common for consoles).
 **Done when:** audit report committed; error rate < 5% or corrections filed as overlays for the rest.
 
+### T3.8 · Independent board↔chipset reconciliation source — `Opus 5`
+
+**Depends:** T3.4, T6.1
+
+MAME is currently the _only_ witness to the board→chip half of the join. A single source cannot
+disagree with itself, so nothing in the dataset can presently detect a MAME abstraction, a mis-attributed
+custom part, or a system whose curated `system_chip` BOM has drifted from reality. This task adds a
+**second, independent witness** and reconciles the two.
+
+**On system16.com specifically.** The maintainer asked for system16.com "or equivalent information." It
+cannot be crawled, and the constraint is theirs, not ours to weigh:
+
+- `https://www.system16.com/robots.txt` carries `User-agent: ClaudeBot → Disallow: /`, and the
+  Cloudflare-managed block sets `Content-Signal: search=yes, ai-train=no, use=reference`.
+- The origin returns **HTTP 403 (`cf-mitigated: challenge`)** to any non-browser client, so automated
+  retrieval is refused in practice as well as in policy.
+- PLAN §4 already classified it **reference-only**, and PLAN §8 lists source ToS as a named project risk.
+
+system16.com therefore stays a **human-directed reference**: a curator may read a page and cite it as a
+`source_url` on a `machine_correction` / `machine_chip_correction` / `system` row they author by hand.
+**No automated fetch of that host is permitted anywhere in this repository**, and CI enforces it (below).
+
+**What to build instead** — `pipeline reconcile`, over sources whose terms permit automated use:
+
+| Source                                        | Yields                                                | Terms                                    |
+| --------------------------------------------- | ----------------------------------------------------- | ---------------------------------------- |
+| **MAME driver `.cpp` source** (mamedev/mame)  | board/chipset prose comments, PCB part lists, `// Sega System 16B` banners | BSD-3-Clause / GPL-2.0, public repo      |
+| **Wikidata SPARQL** (`query.wikidata.org`)    | arcade system ↔ CPU/sound-chip statements (P880, P2560) | CC0 — explicitly reusable                |
+| **Wikipedia** arcade-system articles          | chipset tables for the major boards                    | CC-BY-SA-4.0, matches `LICENSE-DATA`     |
+| **jotego/jtcores + MiSTer MRA files**         | per-board chipset as an FPGA implementer read it       | GPL, public repos                        |
+
+Emit `extract/reconciliation.raw.json` — for every `system_id`, the chip set each witness asserts —
+then a diff report `dist/reconciliation-report.json` classifying every disagreement as
+`mame-only` / `reference-only` / `agreed`. **Never writes to `data/`**: a disagreement is a curation
+prompt, resolved by a human authoring a correction row with a citation, exactly like T3.1's worklist.
+
+**Done when:**
+
+- `pipeline reconcile` is deterministic given a cached snapshot, rate-limited, and response-cached in `.cache/`;
+- ≥ 20 systems carry an independent witness, and every disagreement is classified with a source URL;
+- a CI check greps the repo for `system16.com` and fails on any fetch call, allowing it only as a
+  `source_url` string in curated row files and as prose in Markdown;
+- the report is wired into `v_quality_warning`'s inputs as an advisory, never a build FAIL.
+
 ---
 
 ## Phase 4 — Implementation catalog
 
-### T4.1 · Ingest jotego jt\* family — `Opus 4.8`
+### T4.1 · Ingest jotego jt\* family — `Opus 5`
 
 **Depends:** T1.2, T3.3
 Records for JT51, JT12, JTOPL, JT49, JT89, JT5205, JT6295, JT7759, JTFRAME CPU wrappers, …: repo, paths, language, license (verified from the repo's LICENSE file), accuracy, target platforms.
 **Done when:** ≥ 12 records validate and every `chip_id` resolves.
 
-### T4.2 · Ingest canonical CPU cores — `Opus 4.8`
+### T4.2 · Ingest canonical CPU cores — `Opus 5`
 
 **Depends:** T1.2, T3.3
 T80/TV80, fx68k, TG68K.C, ao68000, T65, Arlet 6502, MicroCore Labs set, ao486, plus non-jotego sound staples (POKEY, SID, …).
@@ -258,7 +304,7 @@ T80/TV80, fx68k, TG68K.C, ao68000, T65, Arlet 6502, MicroCore Labs set, ao486, p
 Script: GitHub API over MiSTer-devel core repos; parse `.gitmodules` + `rtl/` listings; match against known implementation repos and heuristics; emit `extract/mister-ip-candidates.json` **for human review** — never straight into `data/`. Rate-limited, response-cached, deterministic given a cached snapshot.
 **Done when:** a run surfaces known-true positives (e.g. jt51 inside CPS-1 core) and validates.
 
-### T4.4 · Implementation metadata curation — `Opus 4.8`
+### T4.4 · Implementation metadata curation — `Opus 5`
 
 **Depends:** T4.1–T4.3
 Review candidates → promote to `data/implementations/`; fill accuracy enum and platforms; `verified_against_hardware: true` only with a citation.
@@ -286,13 +332,13 @@ Monthly job: HEAD-check every repo/datasheet URL in `data/`; open a single summa
 Script: enumerate MiSTer-devel org repos → core records (name, repo, arcade/console classification from repo naming).
 **Done when:** all `Arcade-*` and console core repos are captured and validate.
 
-### T5.2 · Core → machine mapping — `Opus 4.8`
+### T5.2 · Core → machine mapping — `Opus 5`
 
 **Depends:** T5.1, T2.3
 High-precision join: parse MRA files from the MiSTer distribution (`<setname>` = MAME shortname) to map arcade cores to machines automatically; hand-map or flag the remainder and console cores.
 **Done when:** ≥ 90% of arcade cores machine-mapped via setnames; the rest carry an explicit `unmapped` flag with reason.
 
-### T5.3 · Other platforms — `Opus 4.8`
+### T5.3 · Other platforms — `Opus 5`
 
 **Depends:** T5.1
 Add jotego JTBIN targets (MRA-based too), Analogue Pocket openFPGA cores (core `data.json` manifests), MiST, FPGAArcade Replay.
@@ -317,7 +363,7 @@ Set `open_source` per core by checking for HDL sources vs releases-only (`.rbf`-
 > originally scoped: turning `extract/` into row files via the device map, and a `pipeline build` command that
 > assembles, VACUUMs and verifies `dist/bomsquad.sqlite`. Task descriptions below are corrected accordingly.
 
-### T6.1 · Extraction → row files — `Opus 4.8`
+### T6.1 · Extraction → row files — `Opus 5`
 
 **Depends:** T1.2, T2.3, T3.1, T3.2
 Apply the MAME device map (the `mame_device` table, including ignore rows) to `extract/machines.raw.json`,
@@ -361,7 +407,7 @@ summary — per `docs/data-quality.md` §8.
 **Done when:** each gate demonstrably trips on a seeded bad fixture; the report validates against its
 schema; every scalar in it traces to a query against a shipped view, not a re-derivation.
 
-### T6.5 · SQLite database build — `Opus 4.8`
+### T6.5 · SQLite database build — `Opus 5`
 
 **Depends:** T6.1–T6.4
 Orchestrate the one build artifact: run the loader (`pipeline/src/db/load.ts`) over `data/` plus T6.1's
@@ -395,13 +441,13 @@ views as the stable query surface, and versioning (`dataset_meta`).
 Angular 21+ (standalone components, signals, built-in control flow), strict TS, ESLint/Prettier, lazy routes for every view in PLAN §5, base layout + nav, dark theme default with toggle.
 **Done when:** `ng build` is clean; all routes render placeholders; deployed skeleton scores ≥ 90 Lighthouse performance.
 
-### T7.2 · Data access layer — `Opus 4.8`
+### T7.2 · Data access layer — `Opus 5`
 
 **Depends:** T6.5, T7.1
 Per [ADR 0001](docs/adr/0001-browser-database.md): load `@sqlite.org/sqlite-wasm`, `fetch` `dist/bomsquad.sqlite` once at boot, open it in memory with `sqlite3_deserialize`, and expose typed query functions over the shipped views and tables — no manifest, no chunk cache. TS row types are still **generated from the JSON Schemas** (single source of truth — no hand-drift). Signal-based stores wrap query results; loading/error states cover the one fetch that can fail.
 **Done when:** types are codegen'd in the build; unit tests run against a fixture database (not fixture chunks); a failed database fetch or a query against a missing view surfaces a user-visible error state, not a blank page.
 
-### T7.3 · Global search — `Opus 4.8`
+### T7.3 · Global search — `Opus 5`
 
 **Depends:** T7.2
 Unified search across chips/machines/implementations/systems runs as SQL against the same in-browser database T7.2 opened — no separate index to lazy-load. Keyboard driven (`/` to focus, arrows, enter).
@@ -425,7 +471,7 @@ Browser: filter by kind, manufacturer, year range, family, coverage %, has-core.
 Family page: shared chipset, member machines, family-level coverage.
 **Done when:** matches PLAN §5 spec with working cross-links.
 
-### T7.7 · The Prospector view — `Opus 4.8`
+### T7.7 · The Prospector view — `Opus 5`
 
 **Depends:** T7.2, T6.3
 The flagship — polish this most. Ranked list with coverage badges and what's-missing inline; filters (target platform, kind, manufacturer) reflected in the URL for shareable permalinks; expandable score breakdown per board.
@@ -454,6 +500,42 @@ Mobile layouts, keyboard navigation, WCAG AA contrast in both themes.
 **Depends:** T7.1, T6.5
 Finalize `staticwebapp.config.json` per [ADR 0001](docs/adr/0001-browser-database.md)'s consequences: `Content-Security-Policy` `script-src` needs `'wasm-unsafe-eval'` for the wasm module to compile; `mimeTypes` needs `.wasm` → `application/wasm` and a type for `bomsquad.sqlite`; `navigationFallback` must exclude the (content-hashed, immutably-cached) database path from the SPA rewrite, same as the placeholder `/site-data/*` rule it replaces.
 **Done when:** headers verified with curl against the deployed site; a dataset redeploy invalidates only the database's hashed path, not the whole app shell.
+
+### T7.12 · 8-bit arcade visual theme — `Opus 5`
+
+**Depends:** T7.1
+
+The site is a catalogue of 1980s arcade silicon and currently looks like a generic dashboard. Give it a
+period-appropriate **8-bit arcade cabinet** identity, applied as a theme layer over the existing token
+set in `site/src/styles.scss` — not a rewrite of every component's styles.
+
+- **Type:** a pixel/bitmap display face (e.g. *Press Start 2P*, OFL-licensed) for headings, brand, badges
+  and stat readouts only; body copy and dense tables stay in a legible sans at readable sizes. Self-host
+  the font as a subset `woff2` under `site/public/` — the CSP is `font-src 'self' data:` and T7.11 keeps
+  it that way, so **no Google Fonts CDN link**.
+- **Palette:** CRT-phosphor dark default — near-black background, high-chroma accents drawn from a
+  period palette (NES/arcade marquee reds, cyans, ambers). The light theme stays a genuine light theme,
+  not an inverted dark one.
+- **Surface detail:** subtle scanline/CRT vignette on the masthead and hero only, at low opacity;
+  chunky 2–3 px hard-edged borders and offset "pixel" shadows instead of soft blur; stepped, non-eased
+  transitions. Sprite-styled coverage badges (the `9/11 chips · 82%` element from PLAN §5).
+- **Restraint is the acceptance bar.** This is a data reference site: the theme must never cost
+  legibility of a 40-row BOM table. Scanlines, glow and flicker are decoration on chrome, never on data.
+
+**Non-negotiable constraints:**
+
+- **WCAG AA contrast in both themes** — T7.10's axe-core check stays green; a pixel font at small sizes
+  is a contrast *and* legibility trap, so verify computed ratios rather than eyeballing them.
+- **`prefers-reduced-motion`** disables flicker, scanline animation and every non-essential transition.
+- **`prefers-contrast: more`** drops the CRT texture entirely.
+- Keep the existing CSS-custom-property contract (`--bg`, `--surface`, `--border`, `--fg`, `--muted`,
+  `--accent`, `--focus`) so component styles inherit the theme without edits; add new tokens, don't rename.
+- The font must not regress the `initial` bundle budget in `site/angular.json` (500 kB warn / 1 MB error);
+  subset to the glyphs actually used and `font-display: swap`.
+
+**Done when:** the theme reads unmistakably as an arcade cabinet at a glance; axe-core and the contrast
+check pass in both themes; reduced-motion and high-contrast users get a clean, static, legible site; the
+production bundle stays inside budget; and no component outside the theme layer had to change to get it.
 
 ---
 
@@ -531,8 +613,8 @@ Tasks within a wave can run concurrently; waves are ordered by hard dependencies
 | 5    | T2.6, T3.1, T4.1, T4.2, T5.2, T5.3, T5.4        |
 | 6    | T3.2, T3.3, T3.4, T3.6 · T4.4                   |
 | 7    | T3.5, T6.1 → T4.5, T6.2, T6.4                   |
-| 8    | T3.7, T6.3 → T6.5 → T6.6, T6.7, T7.2            |
-| 9    | T7.3–T7.9 in parallel, then T7.10, T7.11        |
+| 8    | T3.7, T3.8, T6.3 → T6.5 → T6.6, T6.7, T7.2      |
+| 9    | T7.3–T7.9 + T7.12 in parallel, then T7.10, T7.11 |
 | 10   | T8.1–T8.4 (can start any time after their deps) |
 | 11   | T9.1 → T9.2 → T8.5, T9.3, T9.4                  |
 
