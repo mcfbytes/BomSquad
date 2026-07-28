@@ -1,0 +1,339 @@
+// Shared chrome for the nine data views (T7.4–T7.9).
+//
+// Global rather than per-component for two reasons. A browser, a detail page and
+// the Prospector all want the same filter bar, the same meta list and the same
+// tag; nine private copies would drift, and `angular.json` caps any single
+// component stylesheet at 4 kB. Everything here reads the token contract, so it
+// inherits both themes and the `prefers-contrast` overrides for free.
+//
+// The T7.12 rule still holds and is the reason so little of this is decorated:
+// **decoration on chrome, never on data**. Filter bars and section headers may
+// carry the pixel face through `.eyebrow` / `h2`; nothing inside a table does.
+
+@use './mixins' as m;
+
+// --- page scaffold ----------------------------------------------------------
+
+.view__head {
+  max-width: 78ch;
+  margin-bottom: 1.75rem;
+}
+
+.view__head h1 {
+  margin-bottom: 0.5rem;
+}
+
+.view__lede {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 1.0625rem;
+}
+
+.view__id {
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.section {
+  margin-bottom: 2.5rem;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.section__head h2,
+.section__head h3 {
+  margin-bottom: 0;
+}
+
+// --- filters ----------------------------------------------------------------
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: flex-end;
+  margin: 0 0 1rem;
+  padding: 1rem;
+  border: var(--border-w-thin) solid var(--border);
+  background: var(--surface);
+}
+
+.filters__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  flex: 1 1 10rem;
+}
+
+.filters__field--wide {
+  flex-basis: 16rem;
+}
+
+.filters__field--narrow {
+  flex: 0 1 7rem;
+}
+
+.filters__label {
+  @include m.chrome-label;
+
+  font-size: var(--label-sm);
+  color: var(--muted);
+}
+
+.filters__control {
+  width: 100%;
+  padding: 0.4rem 0.5rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  color: var(--fg);
+  background: var(--bg);
+  border: var(--border-w-thin) solid var(--border);
+  border-radius: var(--radius);
+}
+
+.filters__actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+// The one-line honest summary every browser prints above its results.
+.result-count {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.result-count strong {
+  color: var(--fg);
+}
+
+// --- tags -------------------------------------------------------------------
+// Body sans at 12px, never the pixel face: these land inside tables.
+
+.tag {
+  @include m.chrome-label;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.15em 0.45em;
+  font-size: var(--label-sm);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+// Filled variants only for the tones. `--ok` / `--warn` / `--bad` as *text* is
+// verified against `--bg` and `--surface` but not against the `--surface-2` a
+// zebra-striped row paints behind it; `--accent-ink` on the tone is verified
+// outright, so a filled chip is legible wherever it lands.
+.tag--ok,
+.tag--warn,
+.tag--bad,
+.tag--accent {
+  color: var(--accent-ink);
+  border-color: transparent;
+}
+
+.tag--ok {
+  background: var(--ok);
+}
+
+.tag--warn {
+  background: var(--warn);
+}
+
+.tag--bad {
+  background: var(--bad);
+}
+
+.tag--accent {
+  background: var(--accent);
+}
+
+.tag--muted {
+  color: var(--muted);
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+// --- definition lists -------------------------------------------------------
+
+.meta {
+  display: grid;
+  grid-template-columns: minmax(8rem, max-content) 1fr;
+  gap: 0.35rem 1rem;
+  margin: 0;
+}
+
+.meta dt {
+  @include m.chrome-label;
+
+  font-size: var(--label-sm);
+  color: var(--muted);
+}
+
+.meta dd {
+  margin: 0;
+  font-size: 0.9375rem;
+  overflow-wrap: anywhere;
+}
+
+// --- lists and cards --------------------------------------------------------
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1rem;
+}
+
+.plain-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plain-list li + li {
+  margin-top: 0.4rem;
+}
+
+// --- honest empty / truncation states ---------------------------------------
+
+.empty {
+  margin: 0;
+  padding: 1rem;
+  color: var(--muted);
+  background: var(--surface);
+  border: var(--border-w-thin) dashed var(--border);
+}
+
+.note {
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+// --- tables -----------------------------------------------------------------
+
+// Controls that live *inside* the data zone — sortable column headers, row
+// disclosures. Real buttons, and deliberately not `.pixel-button`: T7.12's rule
+// is that the cabinet cap belongs on chrome, and a 40-row table full of them
+// would be exactly the decoration-on-data it forbids.
+.th-sort,
+.link-button {
+  @include m.chrome-label;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0;
+  font-size: var(--label-sm);
+  color: var(--muted);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.th-sort:hover,
+.link-button:hover {
+  color: var(--fg);
+  text-decoration: underline;
+}
+
+// `aria-sort` belongs on the column header, not on the control inside it, so the
+// styling hook is the header's state. The direction is also printed as an arrow
+// in the label — sort order is never carried by colour alone.
+[aria-sort='ascending'] .th-sort,
+[aria-sort='descending'] .th-sort {
+  color: var(--fg);
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+// --- proportion bars --------------------------------------------------------
+// Plain SVG-free bars for the dashboard's small coverage charts. The number is
+// always printed next to the bar: colour is never the only carrier.
+
+.bar {
+  display: block;
+  height: 0.6rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.bar__fill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.bar__fill--ok {
+  background: var(--ok);
+}
+
+.bar__fill--warn {
+  background: var(--warn);
+}
+
+.bar__fill--bad {
+  background: var(--bad);
+}
+
+// --- pagination -------------------------------------------------------------
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.pager__status {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+@media (width <= 40rem) {
+  .filters__field {
+    flex-basis: 100%;
+  }
+
+  .meta {
+    grid-template-columns: 1fr;
+    gap: 0 0;
+  }
+
+  .meta dd {
+    margin-bottom: 0.6rem;
+  }
+}

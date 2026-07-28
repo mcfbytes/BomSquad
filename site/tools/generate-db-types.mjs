@@ -3,12 +3,18 @@
  *
  *   node site/tools/generate-db-types.mjs [--check]
  *
- * Two outputs, two sources, one rule each:
+ * Three outputs, three sources, one rule each:
  *
- * | file                                       | comes from                                       |
- * | ------------------------------------------ | ------------------------------------------------ |
- * | `src/app/data/schema-types.generated.ts`   | `schemas/*.schema.json`, cross-checked vs the DDL |
- * | `src/app/data/view-types.generated.ts`     | the DDL's view columns + `view-column-types.mjs`  |
+ * | file                                              | comes from                                       |
+ * | ------------------------------------------------- | ------------------------------------------------ |
+ * | `src/app/data/schema-types.generated.ts`          | `schemas/*.schema.json`, cross-checked vs the DDL |
+ * | `src/app/data/view-types.generated.ts`            | the DDL's view columns + `view-column-types.mjs`  |
+ * | `src/app/prospector/prospector-config.generated.ts` | `pipeline/config/prospector.json`               |
+ *
+ * The third exists for the same reason as the first two. T7.7 reproduces T6.3's score
+ * in the browser, and a hand-copied band weight in `site/` would be a second, silently
+ * divergent ranking the first time somebody retunes the policy. `--check` makes that
+ * a failing test instead.
  *
  * The JSON Schemas are the single source of truth for table rows — TASKS.md T7.2
  * says so explicitly, and hand-written row interfaces on a 36-table schema drift
@@ -47,6 +53,8 @@ const SITE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const REPO_ROOT = resolve(SITE_ROOT, '..');
 const SCHEMA_DIR = join(REPO_ROOT, 'schemas');
 const OUT_DIR = join(SITE_ROOT, 'src/app/data');
+const PROSPECTOR_OUT_DIR = join(SITE_ROOT, 'src/app/prospector');
+const PROSPECTOR_CONFIG_PATH = join(REPO_ROOT, 'pipeline/config/prospector.json');
 
 /** JSON Schema files that describe something other than one table. */
 const NON_TABLE_SCHEMAS = new Set(['common', 'rowfile', 'quality-report']);
@@ -415,6 +423,98 @@ function emitViewTypes({ views }) {
   ].join('\n');
 }
 
+// --- the Prospector's scoring policy -------------------------------------------
+
+/**
+ * `pipeline/config/prospector.json`, retyped as the `ProspectorConfig` the browser
+ * ranking takes.
+ *
+ * Every field `pipeline/src/prospector/rank.ts`'s `loadProspectorConfig()` requires is
+ * required here too, with the same bounds, so a config the pipeline would reject can
+ * never reach the site as a silently-zeroed term.
+ */
+function emitProspectorConfig() {
+  const raw = JSON.parse(readFileSync(PROSPECTOR_CONFIG_PATH, 'utf8'));
+  const where = 'pipeline/config/prospector.json';
+
+  const object = (source, key) => {
+    const value = source[key];
+    if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+      fail(`${where}: '${key}' must be an object.`);
+    }
+    return value;
+  };
+  const number = (source, key, path, { min = -Infinity, max = Infinity, integer = false } = {}) => {
+    const value = source[key];
+    if (typeof value !== 'number' || !Number.isFinite(value)) {
+      fail(`${where}: '${path}' must be a finite number.`);
+    }
+    if (integer && !Number.isInteger(value)) {
+      fail(`${where}: '${path}' must be an integer.`);
+    }
+    if (value < min || value > max) {
+      fail(`${where}: '${path}' must be within [${min}, ${max}].`);
+    }
+    return value;
+  };
+
+  const version = raw.version;
+  if (typeof version !== 'string' || version.trim() === '') {
+    fail(`${where}: 'version' must be a non-empty string.`);
+  }
+
+  const band = object(raw, 'band_weight');
+  const credit = object(raw, 'route_credit');
+  const confidence = object(raw, 'confidence_factor');
+  const bonus = object(raw, 'bonus');
+  const weight = { min: 0 };
+  const fraction = { min: 0, max: 1 };
+
+  const config = {
+    version,
+    bandWeight: {
+      hard: number(band, 'hard', 'band_weight.hard', weight),
+      medium: number(band, 'medium', 'band_weight.medium', weight),
+      soft: number(band, 'soft', 'band_weight.soft', weight),
+    },
+    unmappedDeviceWeight: number(raw, 'unmapped_device_weight', 'unmapped_device_weight', weight),
+    routeCredit: {
+      equivalent: number(credit, 'equivalent', 'route_credit.equivalent', fraction),
+      provides: number(credit, 'provides', 'route_credit.provides', fraction),
+    },
+    confidenceFactor: {
+      high: number(confidence, 'high', 'confidence_factor.high', fraction),
+      medium: number(confidence, 'medium', 'confidence_factor.medium', fraction),
+      low: number(confidence, 'low', 'confidence_factor.low', fraction),
+    },
+    bonus: {
+      systemMateCore: number(bonus, 'system_mate_core', 'bonus.system_mate_core', weight),
+      cpuSoundComplete: number(bonus, 'cpu_sound_complete', 'bonus.cpu_sound_complete', weight),
+    },
+    systemMateMinSharedChips: number(
+      raw,
+      'system_mate_min_shared_chips',
+      'system_mate_min_shared_chips',
+      { min: 1, integer: true },
+    ),
+  };
+
+  return [
+    BANNER('pipeline/config/prospector.json'),
+    '',
+    "import type { ProspectorConfig } from './ranking';",
+    '',
+    '/*',
+    ' * T6.3 owns the ranking; T7.7 reproduces it in the browser. This file is the only',
+    ' * route by which a scoring weight reaches site/ — there is no second copy of a',
+    ' * number below anywhere in the app, and site/tools/verify-prospector-parity.mjs',
+    ' * runs both implementations over the same database to prove it.',
+    ' */',
+    `export const PROSPECTOR_CONFIG: ProspectorConfig = ${JSON.stringify(config, null, 2)};`,
+    '',
+  ].join('\n');
+}
+
 // --- entry point ---------------------------------------------------------------
 
 /**
@@ -428,11 +528,12 @@ export async function generate() {
   const options = { ...(await prettier.resolveConfig(OUT_DIR)), parser: 'typescript' };
 
   const files = new Map();
-  for (const [file, source] of [
-    ['schema-types.generated.ts', emitTableTypes(ddl, schemas)],
-    ['view-types.generated.ts', emitViewTypes(ddl)],
+  for (const [directory, file, source] of [
+    [OUT_DIR, 'schema-types.generated.ts', emitTableTypes(ddl, schemas)],
+    [OUT_DIR, 'view-types.generated.ts', emitViewTypes(ddl)],
+    [PROSPECTOR_OUT_DIR, 'prospector-config.generated.ts', emitProspectorConfig()],
   ]) {
-    files.set(join(OUT_DIR, file), await prettier.format(source, options));
+    files.set(join(directory, file), await prettier.format(source, options));
   }
   return files;
 }

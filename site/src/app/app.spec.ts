@@ -1,5 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { provideFixtureDatabase } from '../testing/database-testing';
 import { App } from './app';
 import { appConfig } from './app.config';
 
@@ -18,12 +19,16 @@ async function renderAt(url: string): Promise<ComponentFixture<App>> {
  * `withComponentInputBinding()`, so every detail route throws NG0950 under test
  * while working fine in production — which is exactly backwards from what a test
  * is for.
+ *
+ * The fixture database goes in for the same reason. Since T7.4–T7.9, every one of
+ * these routes issues SQL on render, so a shell test without a database is really a
+ * test of nine error states.
  */
 function configure(): Promise<unknown> {
   localStorage.clear();
   return TestBed.configureTestingModule({
     imports: [App],
-    providers: [...appConfig.providers],
+    providers: [...appConfig.providers, ...provideFixtureDatabase().providers],
   }).compileComponents();
 }
 

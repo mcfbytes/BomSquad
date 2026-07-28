@@ -6,7 +6,15 @@
  * | asset                                             | staged to                        |
  * | ------------------------------------------------- | -------------------------------- |
  * | `dist/bomsquad.sqlite` (built by the pipeline)     | `site/public/site-data/`         |
+ * | `dist/quality-report.json` (built by the pipeline) | `site/public/site-data/`        |
  * | `@sqlite.org/sqlite-wasm`'s `sqlite3.wasm`        | `site/public/site-data/`         |
+ *
+ * **Why the quality report is here too.** T7.9 puts the dataset's own scalars on the
+ * dashboard — `db_bytes`, the warning counts by code, the build's version stamps — and
+ * TASKS.md's acceptance criterion is that every figure traces to a query *or to the
+ * quality report*. The report is a build artifact next to the database and travels with
+ * it; the dashboard degrades to an honest "not published with this build" panel when it
+ * is absent, exactly as it does for a missing database.
  *
  * **Why a copy step at all.** `dist/bomsquad.sqlite` is a build artifact of a
  * different workspace, outside `site/`, and gitignored — so it is not in the source
@@ -38,6 +46,7 @@ const REPO_ROOT = resolve(SITE_ROOT, '..');
 const STAGE_DIR = join(SITE_ROOT, 'public/site-data');
 
 const DATABASE_SOURCE = join(REPO_ROOT, 'dist/bomsquad.sqlite');
+const QUALITY_REPORT_SOURCE = join(REPO_ROOT, 'dist/quality-report.json');
 const WASM_SOURCE = fileURLToPath(import.meta.resolve('@sqlite.org/sqlite-wasm/sqlite3.wasm'));
 
 function mib(bytes) {
@@ -73,6 +82,17 @@ function main(argv) {
     if (strict) {
       process.exitCode = 1;
     }
+  }
+
+  try {
+    stage(QUALITY_REPORT_SOURCE, 'quality-report.json');
+  } catch {
+    // Never fatal, even under --require-database: the report is one panel on the
+    // dashboard, which says so when it is absent, rather than nine broken views.
+    process.stderr.write(
+      `stage-data-assets: ${QUALITY_REPORT_SOURCE} is missing — the dashboard's dataset panel\n` +
+        '  will render its "not published with this build" state.\n',
+    );
   }
 }
 

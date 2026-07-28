@@ -13,19 +13,19 @@ See [PLAN.md §5](../PLAN.md#5-frontend-website) for the full page list and UX s
 One lazy route per PLAN §5 view, declared in [`src/app/app.routes.ts`](src/app/app.routes.ts). Detail
 routes take their identifier as a component `input()` via `withComponentInputBinding()`.
 
-| Path                  | View                           | Built for real by |
-| --------------------- | ------------------------------ | ----------------- |
-| `/`                   | Home / dashboard               | T7.9              |
-| `/chips`              | Chip browser                   | T7.4              |
-| `/chip/:chipId`       | Chip detail                    | T7.4              |
-| `/machines`           | Machine browser                | T7.5              |
-| `/machine/:machineId` | Machine detail (the BOM table) | T7.5              |
-| `/systems`            | Platform-family index          | T7.6              |
-| `/system/:systemId`   | Platform-family view           | T7.6              |
-| `/family/:systemId`   | Redirect → `/system/:systemId` | —                 |
-| `/prospector`         | The Prospector                 | T7.7              |
-| `/implementations`    | Implementation browser         | T7.8              |
-| `/contribute`         | Contribute                     | T8.1              |
+| Path                  | View                           | Built by           |
+| --------------------- | ------------------------------ | ------------------ |
+| `/`                   | Home / dashboard               | T7.9               |
+| `/chips`              | Chip browser                   | T7.4               |
+| `/chip/:chipId`       | Chip detail                    | T7.4               |
+| `/machines`           | Machine browser                | T7.5               |
+| `/machine/:machineId` | Machine detail (the BOM table) | T7.5               |
+| `/systems`            | Platform-family index          | T7.6               |
+| `/system/:systemId`   | Platform-family view           | T7.6               |
+| `/family/:systemId`   | Redirect → `/system/:systemId` | —                  |
+| `/prospector`         | The Prospector                 | T7.7               |
+| `/implementations`    | Implementation browser         | T7.8               |
+| `/contribute`         | Contribute                     | T8.1 (placeholder) |
 
 `system` rather than `family` is canonical because that is what the schema calls the entity
 (`schemas/schema.sql` → `CREATE TABLE system`); PLAN §5's `/family/…` shape redirects so older links
@@ -36,10 +36,12 @@ href: `index.html` sets `<base href="/">`, so a bare `#main` resolves against th
 navigates `/chip/ym2151` to `/#main` — a full reload onto the dashboard. Route changes also announce
 the new page title through the shell's polite live region.
 
-Everything except `/` currently renders an honest `app-placeholder-view`: it names the task that
-builds it and lists what will appear. **No placeholder invents data** — the dashboard's headline
-figures are em dashes and the BOM table has one "no BOM loaded" row, because a plausible-looking fake
-number on a data reference site is worse than an empty one.
+Every view except `/contribute` is built and reads the shipped database (T7.4–T7.9);
+`app-placeholder-view` survives for that one route only. The rule the placeholders established still
+governs the real views: **no view invents a number**. An unrecorded clock, manufacturer or year
+renders as an em dash, an uncovered socket as a red `missing` badge, and a filter that matches
+nothing as a sentence saying so — because a plausible-looking fake number on a data reference site is
+worse than an empty one.
 
 ## Theming
 
@@ -193,8 +195,14 @@ no system, an implementation with no licence. The engine under test is the **rea
 
 `dist/bomsquad.sqlite` is a build artifact of another workspace, outside `site/` and gitignored, so
 it is not in the tree the Angular builder walks. [`tools/stage-data-assets.mjs`](tools/stage-data-assets.mjs)
-copies it — and `sqlite3.wasm` out of the installed package — into `public/site-data/`, which
-`angular.json` already copies verbatim into the output. It runs from `prebuild`.
+copies it — and `sqlite3.wasm` out of the installed package, and `dist/quality-report.json` — into
+`public/site-data/`, which `angular.json` already copies verbatim into the output. It runs from
+`prebuild`.
+
+The quality report is there for the dashboard (T7.9), which reads the two scalars SQL cannot answer:
+how large the published artifact is, and which threshold policy produced it. Everything else on that
+page is a query. A missing report is never fatal — the panel says it was not published with this
+build, and the other twenty figures still render.
 
 **`/site-data/` is not decoration.** `public/staticwebapp.config.json` already excludes
 `/site-data/*` from the SPA navigation fallback; anything served from anywhere else would be
@@ -228,4 +236,50 @@ that keeps `Ctrl`/`Cmd`-click and middle-click working, which matters on a catal
 `:focus-visible` ring the theme already defines does the highlighting.
 
 Implementations have no detail route (PLAN §5 specifies a browser only), so an implementation hit
-links to `/implementations?implementation=<id>`. **T7.8 owns honouring that parameter.**
+links to `/implementations?implementation=<id>`. **T7.8 owns honouring that parameter.** It does:
+the browser expands that row in place, so the link is a real permalink without a tenth view.
+
+### The nine views (T7.4–T7.9)
+
+Every view is a lazy route issuing SQL against the shipped views — the schema's 21 views are the
+query surface, and nothing in `site/` re-derives a number that one of them already defines.
+
+| view                                 | reads                                                                                                                                                                 |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| dashboard `/`                        | entity counts, `v_chip_evidence`, `v_quality_instance`, `v_quality_device`, `v_quality_warning`, `v_mame_device_worklist`, `dataset_meta`, plus `quality-report.json` |
+| chips `/chips`, `/chip/:id`          | `chip` + `v_chip_implementation_count`, `v_chip_evidence`, `v_chip_satisfies`, `v_machine_bom`, `v_system_chip_effective`                                             |
+| machines `/machines`, `/machine/:id` | `v_machine`, `v_machine_bom`, `v_chip_evidence`, `machine_unmapped_device`, `implementation_machine`                                                                  |
+| systems `/systems`, `/system/:id`    | `v_system_coverage_by_kind`, `v_system_chip_effective`, `v_system_chip_coverage`, `v_system_core`, `v_system_instance`                                                |
+| Prospector `/prospector`             | `v_prospector` through [`ranking.ts`](src/app/prospector/ranking.ts)                                                                                                  |
+| implementations `/implementations`   | `implementation` and its junctions                                                                                                                                    |
+
+**The one number the schema could not answer.** There is no `v_machine_coverage`: coverage is defined
+per _system_ (coverage.md §3.4). The machine browser and machine detail re-derive a machine-level
+figure from `v_machine_bom` against `v_chip_evidence`, in the same shape as the system view's, and
+both pages caption it with the machine's uncatalogued-device count so it is never read as a claim
+about the whole board.
+
+**Filters are query parameters**, read through `withComponentInputBinding()` and written by
+[`url-filters.ts`](src/app/shared/url-filters.ts). Setting a filter to `''` removes it from the URL,
+so a reset leaves a clean path. An absent parameter arrives at an `input()` as `undefined`, which
+overwrites the declared default — hence the `transform: param` on every one of them.
+
+### The Prospector's ranking (T7.7)
+
+[`ranking.ts`](src/app/prospector/ranking.ts) is a **port** of `pipeline/src/prospector/rank.ts`, not
+a second ranking: the pipeline runs on `node:sqlite` and cannot be imported into a browser bundle.
+Three things keep the port honest, and all three are checkable:
+
+1. `prospector-config.generated.ts` is generated from `pipeline/config/prospector.json` by
+   `tools/generate-db-types.mjs`, so no scoring weight is ever typed twice — `schema-types.spec.ts`
+   runs the generator in `--check` mode;
+2. `ranking.spec.ts` compares the shared `detail` CTE and every computed line of `RANK_SQL` against
+   the pipeline's source _as text_, and asserts the arithmetic against hand-worked numbers on the
+   fixture database;
+3. `node tools/verify-prospector-parity.mjs` runs `pipeline prospector --json` and this module over
+   the real `dist/bomsquad.sqlite` and deep-compares every field of every entry on every platform.
+   Not part of `ng test` — it needs a built database and the pipeline workspace.
+
+The page shows `confidence` and `unmapped_device_count` on every row, in words, beside the coverage
+badge. The ranking already demotes a thinly-catalogued board; applying that demotion silently would
+leave the page telling the visitor exactly the lie PLAN §8 warns about.
