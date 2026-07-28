@@ -1,0 +1,23 @@
+{
+  "band_weight": {
+    "hard": 5,
+    "medium": 2,
+    "soft": 1
+  },
+  "bonus": {
+    "cpu_sound_complete": 0.15,
+    "system_mate_core": 0.1
+  },
+  "confidence_factor": {
+    "high": 1,
+    "low": 0.5,
+    "medium": 0.85
+  },
+  "route_credit": {
+    "equivalent": 0.9,
+    "provides": 0.5
+  },
+  "system_mate_min_shared_chips": 2,
+  "unmapped_device_weight": 4,
+  "version": "1.0.0"
+}

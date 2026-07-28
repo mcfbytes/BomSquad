@@ -10,12 +10,14 @@
  *   pipeline mame:bump-pin <release-tag>
  *   pipeline mame:refresh-summary <old-extract-dir> <new-extract-dir>
  *   pipeline build [--build-date <YYYY-MM-DD>] [--dataset-version <v>] [--out <dir>]
+ *   pipeline prospector [--platform <id>] [--top <n>] [--db <path>] [--json]
  *
  * Exit codes: 0 clean (or warnings only), 1 at least one ERROR (or any WARN under
  * `--strict`), 2 bad usage.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { DatabaseSync } from 'node:sqlite';
 
 import { failed, formatJson, formatReport, type ReportOptions } from './validate/report.js';
 import { validate } from './validate/index.js';
@@ -35,11 +37,13 @@ import {
   buildDatabase,
   BuildFailure,
   DATA_DIR,
+  DATABASE_FILE,
   DIST_DIR,
   EXTRACT_DIR,
   formatBuildLog,
   type BuildOptions,
 } from './build/index.js';
+import { formatProspectorReport, loadProspectorConfig, rankProspects } from './prospector/rank.js';
 import type { RawMachine } from './mame/parse.js';
 import type { WorklistEntry } from './mame/worklist.js';
 
@@ -51,6 +55,7 @@ const COMMANDS = [
   'mame:bump-pin',
   'mame:refresh-summary',
   'build',
+  'prospector',
 ] as const;
 type Command = (typeof COMMANDS)[number];
 
@@ -174,6 +179,70 @@ function runBuild(argv: readonly string[]): number {
   return 0;
 }
 
+const PROSPECTOR_VALUE_FLAGS = ['--platform', '--top', '--db'] as const;
+
+/**
+ * TASKS T6.3 — prints the weighted Prospector ranking from a built database.
+ *
+ * All scoring policy comes from `pipeline/config/prospector.json` via
+ * `prospector/rank.ts`; this shim only parses flags and opens the file read-only. The
+ * default database is the build artifact, so the ranking a reviewer sees is the ranking
+ * the dataset ships.
+ */
+function runProspector(argv: readonly string[]): number {
+  let platformId = 'mister';
+  let top = 25;
+  let dbPath = join(DIST_DIR, DATABASE_FILE);
+  let json = false;
+  for (let index = 0; index < argv.length; index += 1) {
+    const flag = argv[index];
+    if (flag === '--json') {
+      json = true;
+      continue;
+    }
+    const value = argv[index + 1];
+    if (
+      !PROSPECTOR_VALUE_FLAGS.includes(flag as (typeof PROSPECTOR_VALUE_FLAGS)[number]) ||
+      value === undefined
+    ) {
+      process.stderr.write(`pipeline prospector: bad option '${String(flag)}'\n`);
+      process.stderr.write(
+        `usage: pipeline prospector [${PROSPECTOR_VALUE_FLAGS.join(' <value>] [')} <value>] [--json]\n`,
+      );
+      return 2;
+    }
+    if (flag === '--platform') platformId = value;
+    else if (flag === '--db') dbPath = value;
+    else {
+      top = Number(value);
+      if (!Number.isInteger(top) || top < 1) {
+        process.stderr.write(
+          `pipeline prospector: --top must be a positive integer, got '${value}'\n`,
+        );
+        return 2;
+      }
+    }
+    index += 1;
+  }
+
+  if (!existsSync(dbPath)) {
+    process.stderr.write(
+      `pipeline prospector: '${dbPath}' not found — run 'npm run build:db --workspace @bomsquad/pipeline' first\n`,
+    );
+    return 1;
+  }
+  const db = new DatabaseSync(dbPath, { readOnly: true });
+  try {
+    const ranking = rankProspects(db, loadProspectorConfig(), platformId, { limit: top });
+    process.stdout.write(
+      json ? `${JSON.stringify(ranking, null, 2)}\n` : formatProspectorReport(ranking),
+    );
+  } finally {
+    db.close();
+  }
+  return 0;
+}
+
 /**
  * Bumps `pipeline/config/mame.json` to a new release tag (TASKS T2.6). The version and
  * asset name are derived, never typed by the caller — see `mame/config.ts`'s
@@ -264,6 +333,8 @@ async function main(argv: readonly string[]): Promise<number> {
       return runMameRefreshSummary(rest);
     case 'build':
       return runBuild(rest);
+    case 'prospector':
+      return runProspector(rest);
     default:
       return 2;
   }

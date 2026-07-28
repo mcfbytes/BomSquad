@@ -412,6 +412,210 @@ SELECT kind_id, system_id, chips_total, chips_direct, chips_equivalent, chips_pr
 FROM v_system_coverage_by_kind
 WHERE system_id = :system_id AND kind_id = :kind_id`;
 
+/**
+ * T6.2 — E1–E7 sliced by the two kinds §6 does not tabulate, so every worked example is
+ * asserted for **every** `implementation_kind` (§3.2: `kind_id` is a column, never a
+ * parameter). §6 publishes numbers for `fpga_hdl` (E1–E7) and all three kinds (E8,
+ * already in REGRESSION_TABLE above); the rows below are derived by hand from the same
+ * §6.0 fixture, not computed by code:
+ *
+ * - `software_emulation` implementations claim exactly `z80`, `ym2151` and
+ *   `sega-315-5011` (§6.0), all rank-1. No `chip_equivalence` edge can fire for this
+ *   kind — no endpoint of any edge has a software model — so its evidence set is those
+ *   three chips and nothing else, and each system's counts follow by lookup: count the
+ *   basis chips that are z80 / ym2151 / sega-315-5011.
+ * - `original_silicon` has no implementations at all, so every socket is unsatisfied and
+ *   every satisfied count is 0 while `chips_total`, `unmapped_device_count` and the §4.3
+ *   confidence ladder are unchanged — which is what proves the totals and the confidence
+ *   column are per-kind-invariant where the spec says they must be.
+ *
+ * `pct` follows §3.5's ROUND rule; confidence follows §4.3 top-down (E6 stays `medium`
+ * and E7 stays `low` under every kind, because unmapped silicon does not care which kind
+ * is being scored).
+ */
+const ALL_KINDS_TABLE: readonly CoverageRow[] = [
+  // E1 fx-symmetric: basis z80*, sn76489, ym2612, sega-315-5011* (*: software model).
+  {
+    kind_id: 'software_emulation',
+    system_id: 'fx-symmetric',
+    chips_total: 4,
+    chips_direct: 2,
+    chips_equivalent: 0,
+    chips_provided: 0,
+    chips_satisfied: 2,
+    pct: 50.0,
+    unmapped_device_count: 0,
+    confidence: 'high',
+  },
+  // E2 fx-68k-hit: m68010 has no software model and the m68020 edge cannot fire (no
+  // software m68020 either); only z80 is covered.
+  {
+    kind_id: 'software_emulation',
+    system_id: 'fx-68k-hit',
+    chips_total: 2,
+    chips_direct: 1,
+    chips_equivalent: 0,
+    chips_provided: 0,
+    chips_satisfied: 1,
+    pct: 50.0,
+    unmapped_device_count: 0,
+    confidence: 'high',
+  },
+  // E3 fx-68k-miss: z80 only; m68030 and sn76489 miss.
+  {
+    kind_id: 'software_emulation',
+    system_id: 'fx-68k-miss',
+    chips_total: 3,
+    chips_direct: 1,
+    chips_equivalent: 0,
+    chips_provided: 0,
+    chips_satisfied: 1,
+    pct: 33.3,
+    unmapped_device_count: 0,
+    confidence: 'high',
+  },
+  // E4 fx-68k-notrans: z80 only.
+  {
+    kind_id: 'software_emulation',
+    system_id: 'fx-68k-notrans',
+    chips_total: 2,
+    chips_direct: 1,
+    chips_equivalent: 0,
+    chips_provided: 0,
+    chips_satisfied: 1,
+    pct: 50.0,
+    unmapped_device_count: 0,
+    confidence: 'high',
+  },
+  // E5 fx-2a03: none of m6502 / rp2a03 / sn76489 has a software model.
+  {
+    kind_id: 'software_emulation',
+    system_id: 'fx-2a03',
+    chips_total: 3,
+    chips_direct: 0,
+    chips_equivalent: 0,
+    chips_provided: 0,
+    chips_satisfied: 0,
+    pct: 0.0,
+    unmapped_device_count: 0,
+    confidence: 'high',
+  },
+  // E6 fx-unmapped-med: of five chips only z80 has a software model; the unmapped device
+  // still degrades confidence to medium, exactly as it does at fpga_hdl.
+  {
+    kind_id: 'software_emulation',
+    system_id: 'fx-unmapped-med',
+    chips_total: 5,
+    chips_direct: 1,
+    chips_equivalent: 0,
+    chips_provided: 0,
+    chips_satisfied: 1,
+    pct: 20.0,
+    unmapped_device_count: 1,
+    confidence: 'medium',
+  },
+  // E7 fx-unmapped-low: 2u = 4 >= 4 chips, so `low` — the §4.4 threshold is a property
+  // of the system, not of the kind being scored.
+  {
+    kind_id: 'software_emulation',
+    system_id: 'fx-unmapped-low',
+    chips_total: 4,
+    chips_direct: 1,
+    chips_equivalent: 0,
+    chips_provided: 0,
+    chips_satisfied: 1,
+    pct: 25.0,
+    unmapped_device_count: 2,
+    confidence: 'low',
+  },
+  // original_silicon: a kind with zero implementations still yields one row per system
+  // (§3.2's CROSS JOIN totality, exhibited for E8 by §6.8), at exactly 0 satisfied.
+  {
+    kind_id: 'original_silicon',
+    system_id: 'fx-symmetric',
+    chips_total: 4,
+    chips_direct: 0,
+    chips_equivalent: 0,
+    chips_provided: 0,
+    chips_satisfied: 0,
+    pct: 0.0,
+    unmapped_device_count: 0,
+    confidence: 'high',
+  },
+  {
+    kind_id: 'original_silicon',
+    system_id: 'fx-68k-hit',
+    chips_total: 2,
+    chips_direct: 0,
+    chips_equivalent: 0,
+    chips_provided: 0,
+    chips_satisfied: 0,
+    pct: 0.0,
+    unmapped_device_count: 0,
+    confidence: 'high',
+  },
+  {
+    kind_id: 'original_silicon',
+    system_id: 'fx-68k-miss',
+    chips_total: 3,
+    chips_direct: 0,
+    chips_equivalent: 0,
+    chips_provided: 0,
+    chips_satisfied: 0,
+    pct: 0.0,
+    unmapped_device_count: 0,
+    confidence: 'high',
+  },
+  {
+    kind_id: 'original_silicon',
+    system_id: 'fx-68k-notrans',
+    chips_total: 2,
+    chips_direct: 0,
+    chips_equivalent: 0,
+    chips_provided: 0,
+    chips_satisfied: 0,
+    pct: 0.0,
+    unmapped_device_count: 0,
+    confidence: 'high',
+  },
+  {
+    kind_id: 'original_silicon',
+    system_id: 'fx-2a03',
+    chips_total: 3,
+    chips_direct: 0,
+    chips_equivalent: 0,
+    chips_provided: 0,
+    chips_satisfied: 0,
+    pct: 0.0,
+    unmapped_device_count: 0,
+    confidence: 'high',
+  },
+  {
+    kind_id: 'original_silicon',
+    system_id: 'fx-unmapped-med',
+    chips_total: 5,
+    chips_direct: 0,
+    chips_equivalent: 0,
+    chips_provided: 0,
+    chips_satisfied: 0,
+    pct: 0.0,
+    unmapped_device_count: 1,
+    confidence: 'medium',
+  },
+  {
+    kind_id: 'original_silicon',
+    system_id: 'fx-unmapped-low',
+    chips_total: 4,
+    chips_direct: 0,
+    chips_equivalent: 0,
+    chips_provided: 0,
+    chips_satisfied: 0,
+    pct: 0.0,
+    unmapped_device_count: 2,
+    confidence: 'low',
+  },
+];
+
 describe('coverage.md §6 — the worked examples', () => {
   let db: DatabaseSync;
 
@@ -489,6 +693,64 @@ describe('coverage.md §6 — the worked examples', () => {
       ).toEqual([expected]);
     });
   }
+
+  for (const expected of ALL_KINDS_TABLE) {
+    it(`T6.2 every kind — ${expected.system_id} @ ${expected.kind_id} is ${expected.chips_satisfied}/${expected.chips_total} = ${expected.pct}% at ${expected.confidence}`, () => {
+      expect(
+        rows(db, COVERAGE_SQL, { system_id: expected.system_id, kind_id: expected.kind_id }),
+      ).toEqual([expected]);
+    });
+  }
+
+  it('T6.2 every kind — software_emulation evidence is exactly its own three claims', () => {
+    expect(
+      rows(
+        db,
+        `SELECT chip_id, evidence_rank, best_via, confidence, provider_chip_id
+         FROM v_chip_evidence WHERE kind_id = 'software_emulation' ORDER BY chip_id`,
+      ),
+    ).toEqual([
+      {
+        chip_id: 'sega-315-5011',
+        evidence_rank: 1,
+        best_via: 'self',
+        confidence: 'high',
+        provider_chip_id: 'sega-315-5011',
+      },
+      {
+        chip_id: 'ym2151',
+        evidence_rank: 1,
+        best_via: 'self',
+        confidence: 'high',
+        provider_chip_id: 'ym2151',
+      },
+      {
+        chip_id: 'z80',
+        evidence_rank: 1,
+        best_via: 'self',
+        confidence: 'high',
+        provider_chip_id: 'z80',
+      },
+    ]);
+  });
+
+  it('T6.2 every kind — original_silicon has no implementations, so no evidence rows', () => {
+    expect(
+      rows(db, `SELECT chip_id FROM v_chip_evidence WHERE kind_id = 'original_silicon'`),
+    ).toEqual([]);
+  });
+
+  it('T6.2 every kind — an edge never crosses kinds: no software OPN2 model, so ym2612 misses', () => {
+    // At fpga_hdl the same socket reads `equivalent` via ym3438 (E1). The edge is real in
+    // both cases; what differs is whether a provider implementation of *this kind* exists.
+    expect(
+      rows(
+        db,
+        `SELECT satisfied_via FROM v_system_chip_coverage
+         WHERE kind_id = 'software_emulation' AND system_id = 'fx-symmetric' AND chip_id = 'ym2612'`,
+      ),
+    ).toEqual([{ satisfied_via: 'unsatisfied' }]);
+  });
 
   it('the invariants of §3.5 hold for every row', () => {
     const all = db
@@ -588,6 +850,67 @@ describe('coverage.md §6 — the worked examples', () => {
          WHERE kind_id = 'fpga_hdl' AND system_id = 'fx-68k-notrans' AND chip_id = 'm68000'`,
       ),
     ).toEqual([{ satisfied_via: 'unsatisfied' }]);
+  });
+
+  it('E2 — the per-chip explanation matches §6.2 verbatim', () => {
+    expect(
+      rows(
+        db,
+        `SELECT chip_id, satisfied_via, evidence_rank, provider_chip_id, chip_confidence
+         FROM v_system_chip_coverage
+         WHERE kind_id = 'fpga_hdl' AND system_id = 'fx-68k-hit'
+         ORDER BY chip_id`,
+      ),
+    ).toEqual([
+      {
+        chip_id: 'm68010',
+        satisfied_via: 'provides',
+        evidence_rank: 3,
+        provider_chip_id: 'm68020',
+        chip_confidence: 'low',
+      },
+      {
+        chip_id: 'z80',
+        satisfied_via: 'self',
+        evidence_rank: 1,
+        provider_chip_id: 'z80',
+        chip_confidence: 'high',
+      },
+    ]);
+  });
+
+  it('E8 — the per-chip slice at fpga_hdl matches §6.8 verbatim', () => {
+    expect(
+      rows(
+        db,
+        `SELECT chip_id, satisfied_via, evidence_rank, provider_chip_id, chip_confidence
+         FROM v_system_chip_coverage
+         WHERE kind_id = 'fpga_hdl' AND system_id = 'fx-kind'
+         ORDER BY chip_id`,
+      ),
+    ).toEqual([
+      {
+        chip_id: 'sega-315-5011',
+        satisfied_via: 'unsatisfied',
+        evidence_rank: 4,
+        provider_chip_id: null,
+        chip_confidence: null,
+      },
+      {
+        chip_id: 'ym2151',
+        satisfied_via: 'unsatisfied',
+        evidence_rank: 4,
+        provider_chip_id: null,
+        chip_confidence: null,
+      },
+      {
+        chip_id: 'z80',
+        satisfied_via: 'self',
+        evidence_rank: 1,
+        provider_chip_id: 'z80',
+        chip_confidence: 'high',
+      },
+    ]);
   });
 
   it('E5 — the 2A03 is covered and the 6502 beside it is not', () => {

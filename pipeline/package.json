@@ -19,7 +19,8 @@
     "mame:rows": "tsx src/cli.ts mame:rows",
     "mame:bump-pin": "tsx src/cli.ts mame:bump-pin",
     "mame:refresh-summary": "tsx src/cli.ts mame:refresh-summary",
-    "build:db": "tsx src/cli.ts build"
+    "build:db": "tsx src/cli.ts build",
+    "prospector": "tsx src/cli.ts prospector"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
