@@ -33,6 +33,18 @@
           },
           "configurations": {
             "production": {
+              "optimization": {
+                "scripts": true,
+                "fonts": true,
+                "styles": {
+                  "minify": true,
+                  // MUST STAY FALSE — inlining breaks the site under the production CSP.
+                  // Full rationale in site/README.md, "Build notes": `ng update` rewrites
+                  // this file and can drop comments, so the README is the copy that has to
+                  // survive, and src/app/theme/theme-assets.spec.ts asserts the setting.
+                  "inlineCritical": false
+                }
+              },
               "budgets": [
                 {
                   "type": "initial",

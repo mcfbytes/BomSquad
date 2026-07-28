@@ -1,0 +1,57 @@
+// Element defaults. Everything reads from the token contract, so a theme swap
+// is a token swap and no rule below has to know which theme is active.
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--link);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  text-decoration-thickness: 3px;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+hr {
+  height: var(--border-w-thin);
+  margin: 1.5rem 0;
+  background: var(--border);
+  border: 0;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+ul,
+ol {
+  padding-left: 1.25rem;
+}
+
+li + li {
+  margin-top: 0.25rem;
+}

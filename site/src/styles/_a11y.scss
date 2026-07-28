@@ -1,0 +1,75 @@
+// Loaded LAST, and — just as importantly — REPEATING THE THEME'S OWN SELECTOR
+// SPECIFICITY.
+//
+// Source order alone is not enough and an earlier revision of this file got that
+// wrong. _themes.scss declares its tokens on `:root[data-theme='dark']`,
+// `:root[data-theme='light']` and `:root:not([data-theme])` — all (0,2,0),
+// because `:not()` takes the specificity of its argument. A bare `:root` here is
+// (0,1,0), and specificity beats source order, so every token override below was
+// silently dead for every real visitor (theme-init.js always stamps
+// `data-theme`, so the attribute is never absent). The class-selector rules —
+// `.crt::before`, the box-shadow removals — did fire, which made the failure
+// look like a half-working feature rather than a broken one.
+//
+// Hence the four-selector list on each `:root` block. `theme-assets.spec.ts`
+// compiles this stylesheet and resolves the cascade for real, rather than
+// grepping for the rule text, so the mistake cannot come back.
+
+// Focus is a hard, 3px, high-contrast ring in both themes — the theme makes it
+// chunkier, never quieter. `--focus` is verified against every surface in
+// site/src/app/theme/contrast.spec.ts.
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+// `<main>` is focused programmatically by the skip link and on every route
+// change. It needs a cue — an earlier revision suppressed the outline outright,
+// which left the skip link with no visible effect at all — but the default
+// 2px *outward* offset would draw off the edge of the viewport, so this one
+// sits inside. Mouse-driven focus still gets nothing, via `:focus-visible`.
+main:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: -3px;
+}
+
+main:focus:not(:focus-visible) {
+  outline: none;
+}
+
+// `prefers-contrast: more` drops the CRT texture entirely (T7.12) and swaps
+// every boundary and secondary text colour to its strongest variant.
+@media (prefers-contrast: more) {
+  :root,
+  :root:not([data-theme]),
+  :root[data-theme='dark'],
+  :root[data-theme='light'] {
+    --border: var(--border-strong);
+    --muted: var(--fg);
+    --crt-scanline: transparent;
+    --crt-vignette: transparent;
+  }
+
+  .crt::before {
+    display: none;
+  }
+
+  .panel,
+  .pixel-button {
+    box-shadow: none;
+  }
+}
+
+// `prefers-reduced-motion` kills the scanline drift, the button press travel and
+// every other non-essential transition, wherever it was declared — including in
+// component styles written by later tasks.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}

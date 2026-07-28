@@ -1,11 +1,17 @@
+/* Shell layout. Colour, type and texture all come from the global token layer
+   (src/styles/), so this file never names a colour. */
+
+@use '../styles/mixins' as m;
+
 .skip-link {
   position: absolute;
   left: -9999px;
   top: 0;
+  z-index: 10;
   padding: 0.5rem 1rem;
   background: var(--surface);
   color: var(--fg);
-  z-index: 10;
+  border: var(--border-w) solid var(--focus);
 
   &:focus {
     left: 0;
@@ -13,30 +19,130 @@
 }
 
 .masthead {
+  padding: 1rem 1.5rem 0;
+  background: var(--surface);
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+.masthead__bar {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.25rem 1rem;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
 }
 
 .brand {
   display: inline-flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  font-size: 1.25rem;
-  font-weight: 700;
+  align-items: center;
+  gap: 0.6rem;
   color: var(--fg);
   text-decoration: none;
 }
 
+.brand__mark {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  /* Whole-pixel edges: the mark is an 8x8 sprite, not an icon. */
+  shape-rendering: crispEdges;
+}
+
+.brand__mark-body {
+  fill: var(--muted);
+}
+
+.brand__mark-lens {
+  fill: var(--fg);
+}
+
+.brand__mark-beam {
+  fill: var(--accent);
+}
+
+.brand__mark-beam--far {
+  opacity: 0.45;
+}
+
+.brand__name {
+  font-family: var(--font-display);
+  /* 24px: three whole device pixels per font pixel, so the bitmap stays crisp. */
+  font-size: var(--display-md);
+  line-height: 1.4;
+  -webkit-font-smoothing: none;
+}
+
 .tagline {
+  margin: 0.5rem 0 0;
   color: var(--muted);
   font-size: 0.875rem;
 }
 
+.nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.25rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav__list li + li {
+  margin-top: 0;
+}
+
+/* Navigation is chrome, but it is also dense and read at a glance, so it keeps
+   the body sans. The pixel face is reserved for the brand and headings. */
+.nav__link {
+  @include m.chrome-label;
+
+  display: inline-block;
+  padding: 0.5rem 0;
+  border-bottom: var(--border-w) solid transparent;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: color var(--dur) var(--step);
+
+  &:hover {
+    color: var(--fg);
+    border-bottom-color: var(--border);
+  }
+
+  &.is-active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+}
+
 main {
   padding: 1.5rem;
+}
+
+.site-footer {
+  padding: 1.5rem;
+  margin-top: 3rem;
+  border-top: var(--border-w) solid var(--border);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+@media (width <= 30rem) {
+  .masthead {
+    padding: 1rem 1rem 0;
+  }
+
+  main,
+  .site-footer {
+    padding: 1rem;
+  }
+
+  .nav__list {
+    gap: 0 1rem;
+  }
 }

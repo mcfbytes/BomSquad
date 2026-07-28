@@ -1,0 +1,44 @@
+// Shared helpers for the theme layer. Mixins rather than `@extend` placeholders
+// because placeholders are not exported across `@use` module boundaries.
+
+// The pixel display face.
+//
+// ONLY LEGAL AT >= 16px. Press Start 2P draws on an 8-unit grid inside a
+// 1000-unit em, so one font "pixel" is font-size / 8. At 12px that is 1.5 device
+// pixels at DPR 1, and the rasteriser drops strokes out of `W`, `M` and `%` — it
+// looks fine on a retina display and mangled on any 1080p monitor. The type
+// scale in _typography.scss therefore only offers 16 / 24 / 32px, all whole
+// multiples of 8. Chrome that has to be smaller uses `chrome-label` instead.
+@mixin display-face {
+  font-family: var(--font-display);
+  font-weight: 400;
+  // The face carries no descent metrics of its own, so leading has to be
+  // explicit or ascenders collide with the line above.
+  line-height: 1.5;
+  letter-spacing: 0;
+  // Bitmap outlines: smoothing them is the one thing that makes them look wrong.
+  -webkit-font-smoothing: none;
+}
+
+// Small chrome — table-density badges, buttons, eyebrows, nav, column headers.
+// Reads as arcade signage through weight, tracking and case rather than through
+// a bitmap face that cannot survive the size.
+@mixin chrome-label {
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+// Visually hidden but still announced. Used for the polite live region.
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

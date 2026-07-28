@@ -1,13 +1,55 @@
-<a class="skip-link" href="#main">Skip to content</a>
+<!-- The href is kept for the in-page-link semantics assistive tech reads off it,
+     but activation is handled in TypeScript: `<base href="/">` makes a bare
+     `#main` resolve against the base URL, which reloads the app onto the
+     dashboard from any other route. See App.skipToContent. -->
+<a class="skip-link" href="#main" (click)="skipToContent($event)">Skip to content</a>
 
-<header class="masthead">
-  <a class="brand" routerLink="/">
-    <span aria-hidden="true">🔦</span>
-    <span>BOM Squad</span>
-  </a>
-  <span class="tagline">Arcade &amp; console BOMs → open FPGA implementations</span>
+<header class="masthead crt">
+  <div class="masthead__bar">
+    <a class="brand" routerLink="/">
+      <!-- The prospector's torch, drawn on an 8x8 grid. An SVG rather than the 🔦
+           emoji: the mark is part of the brand, and it should not depend on
+           whether the visitor's OS ships an emoji font. -->
+      <svg class="brand__mark" viewBox="0 0 8 8" aria-hidden="true" focusable="false">
+        <rect class="brand__mark-body" x="0" y="3" width="4" height="2" />
+        <rect class="brand__mark-lens" x="4" y="2" width="1" height="4" />
+        <rect class="brand__mark-beam" x="5" y="1" width="1" height="6" />
+        <rect class="brand__mark-beam brand__mark-beam--far" x="6" y="0" width="2" height="8" />
+      </svg>
+      <span class="brand__name">BOM Squad</span>
+    </a>
+    <app-theme-toggle (themeChange)="announceTheme($event)" />
+  </div>
+
+  <p class="tagline">Arcade &amp; console BOMs → open FPGA implementations</p>
+
+  <nav class="nav" aria-label="Primary">
+    <ul class="nav__list">
+      @for (link of navLinks; track link.path) {
+      <li>
+        <a
+          class="nav__link"
+          [routerLink]="link.path"
+          routerLinkActive="is-active"
+          ariaCurrentWhenActive="page"
+          [routerLinkActiveOptions]="{ exact: link.exact }"
+          >{{ link.label }}</a
+        >
+      </li>
+      }
+    </ul>
+  </nav>
 </header>
 
-<main id="main">
+<main id="main" tabindex="-1">
   <router-outlet />
 </main>
+
+<footer class="site-footer">
+  <p>
+    Code MIT · data CC BY-SA 4.0 · every curated fact cites its source.
+    <a href="https://github.com/mcfbytes/BomSquad" rel="noopener">Source and issues on GitHub</a>.
+  </p>
+</footer>
+
+<p class="sr-only" role="status" aria-live="polite">{{ announcement() }}</p>

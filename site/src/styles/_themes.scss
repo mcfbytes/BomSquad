@@ -1,0 +1,32 @@
+// Theme selection.
+//
+// Dark is the default (PLAN §5). `prefers-color-scheme: light` wins over that
+// default when the visitor has expressed no explicit preference, and an
+// explicit preference — recorded by ThemeService in localStorage and stamped
+// onto <html data-theme> by public/theme-init.js before first paint — wins over
+// both. The `data-theme` attribute is set by that blocking script rather than
+// by Angular, which is what stops the flash of the wrong theme on load.
+
+@use './palette';
+
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  @include palette.dark;
+}
+
+// Only reachable before theme-init.js runs, or with JavaScript off entirely.
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+
+    @include palette.light;
+  }
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  @include palette.light;
+}

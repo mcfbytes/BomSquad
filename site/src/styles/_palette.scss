@@ -1,0 +1,62 @@
+// The single source of truth for both themes' colour values.
+//
+// Everything here is a plain CSS custom property so that component styles keep
+// working untouched: the seven tokens the original scaffold shipped (`--bg`,
+// `--surface`, `--border`, `--fg`, `--muted`, `--accent`, `--focus`) keep their
+// names and their meaning; T7.12 only adds to the set.
+//
+// `site/src/app/theme/contrast.spec.ts` PARSES THIS FILE and asserts every
+// foreground/background pair meets WCAG 2.2 AA numerically, including the pairs
+// that sit under the CRT texture. Keep the declarations one-per-line in
+// `--name: value;` form or the parser will not see them.
+
+// CRT phosphor: near-black glass, cool grey chassis, high-chroma phosphor
+// accents (arcade amber, cyan, marquee pink) that stay AA on every surface.
+@mixin dark {
+  --bg: #0a0c10;
+  --surface: #141922;
+  --surface-2: #1d2430;
+  --border: #65768e;
+  --border-strong: #93a4bb;
+  --fg: #e9edf4;
+  --muted: #9fb0c4;
+  --accent: #ffbe3d;
+  --accent-2: #58e8ff;
+  --accent-3: #ff6b8a;
+  --accent-ink: #0a0c10;
+  --ok: #5ddc7a;
+  --warn: #ffbe3d;
+  --bad: #ff6b6b;
+  --focus: #7ee6ff;
+  --link: #7ee6ff;
+  // Not black: a black offset shadow on a near-black page is invisible, and the
+  // hard offset is the whole point of the pixel-shadow idiom. This is the
+  // lifted chassis grey that reads as a second, deeper edge.
+  --shadow: #303b4a;
+  --crt-scanline: rgba(0, 0, 0, 0.35);
+  --crt-vignette: rgba(0, 0, 0, 0.4);
+}
+
+// A genuine light theme, not an inverted dark one: warm paper stock, ink-black
+// rules, and marquee-poster accents darkened until they carry body text.
+@mixin light {
+  --bg: #f7f4ec;
+  --surface: #ffffff;
+  --surface-2: #ece7da;
+  --border: #3b4250;
+  --border-strong: #1d2230;
+  --fg: #14181f;
+  --muted: #4e5867;
+  --accent: #853f00;
+  --accent-2: #005e7a;
+  --accent-3: #a71c3f;
+  --accent-ink: #ffffff;
+  --ok: #10682f;
+  --warn: #7a4b00;
+  --bad: #b3261e;
+  --focus: #0b52a1;
+  --link: #0b52a1;
+  --shadow: #262b36;
+  --crt-scanline: rgba(20, 24, 31, 0.07);
+  --crt-vignette: rgba(20, 24, 31, 0.05);
+}

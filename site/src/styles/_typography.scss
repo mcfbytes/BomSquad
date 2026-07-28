@@ -1,0 +1,112 @@
+// Type scale for the 8-bit theme (T7.12).
+//
+// The rule the whole thing hangs off: THE PIXEL FACE IS FOR CHROME ONLY —
+// brand, headings, badges, stat readouts. Body copy, tables and form controls
+// stay in the system sans at readable sizes, because a 40-row BOM table set in
+// a bitmap face is unreadable and this is a data reference site first.
+
+@use './mixins' as m;
+
+// Subset of Press Start 2P (SIL OFL 1.1). Renamed per OFL clause 3; provenance
+// is in site/public/fonts/README.md. Self-hosted because the production CSP is
+// `font-src 'self' data:` — there is deliberately no CDN link anywhere.
+@font-face {
+  font-family: 'BOM Squad Pixel';
+  src: url('/fonts/bom-squad-pixel.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  // Matches the subset exactly, so a glyph the file cannot draw falls straight
+  // through to the monospace fallback instead of rendering as tofu.
+  unicode-range:
+    U+0020-007e, U+00a0, U+00b0, U+00b7, U+00d7, U+2013-2014, U+2018-2019, U+201c-201d, U+2022,
+    U+2026, U+2192;
+}
+
+:root {
+  --font-display: 'BOM Squad Pixel', 'Courier New', Courier, monospace;
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  // THE PIXEL FACE HAS EXACTLY THREE SIZES, AND 16px IS THE FLOOR.
+  //
+  // Press Start 2P draws on an 8-unit grid inside a 1000-unit em, so one font
+  // "pixel" is font-size / 8. Only multiples of 8px land that on a whole device
+  // pixel at DPR 1. An earlier revision offered a 12px step and routed the
+  // badges, buttons and eyebrows through it — the three highest-traffic pieces
+  // of chrome on the site — which put every one of them on a 1.5-device-pixel
+  // grid: crisp on a retina display, visibly broken strokes on `W`, `M` and `%`
+  // on any 1080p monitor. That step is gone. Chrome smaller than 16px uses
+  // `m.chrome-label` (body sans, uppercase, tracked) instead.
+  --display-sm: 1rem; // 16px — h3, stat readouts, badges. The floor.
+  --display-md: 1.5rem; // 24px — h2, brand
+  --display-lg: 2rem; // 32px — h1
+
+  // The sans replacements for chrome below the pixel floor.
+  --label-sm: 0.75rem; // 12px — table-density badges, column headers
+  --label-md: 0.875rem; // 14px — buttons, eyebrows, nav
+}
+
+h1,
+h2,
+h3 {
+  @include m.display-face;
+
+  margin: 0 0 0.75em;
+  color: var(--fg);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+h1 {
+  font-size: var(--display-lg);
+}
+
+h2 {
+  font-size: var(--display-md);
+}
+
+h3 {
+  font-size: var(--display-sm);
+}
+
+// h4–h6 live deep inside content, where the bitmap face would be decoration on
+// data. They get the body sans with an arcade-ish uppercase treatment instead.
+h4,
+h5,
+h6 {
+  @include m.chrome-label;
+
+  margin: 0 0 0.5em;
+  font-size: 0.9375rem;
+  color: var(--muted);
+}
+
+// Opt-in helpers for chrome that is not a heading.
+.display {
+  @include m.display-face;
+}
+
+// A 12px kicker above a heading. Sans, not pixel — see the note on the type
+// scale above.
+.eyebrow {
+  @include m.chrome-label;
+
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: var(--label-md);
+  color: var(--accent);
+}
+
+.sr-only {
+  @include m.visually-hidden;
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.9375em;
+}

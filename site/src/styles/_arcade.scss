@@ -1,0 +1,199 @@
+// The 8-bit arcade-cabinet chrome (T7.12).
+//
+// Everything here is either (a) geometry tokens, (b) a class you opt into on a
+// piece of *chrome*, or (c) an element default for the *data* zone that is
+// deliberately plain. Decoration never lands on data: the CRT texture is
+// reachable only through `.crt`, which the masthead and the home hero use and
+// nothing else does.
+
+@use './mixins' as m;
+
+:root {
+  // Geometry. Theme-independent — a pixel grid does not have a light variant.
+  --px: 4px; // the pixel grid unit
+  --border-w: 3px; // chunky, hard-edged
+  --border-w-thin: 2px;
+  --radius: 0; // there are no rounded corners on a 1985 PCB
+  --shadow-pixel: var(--px) var(--px) 0 0 var(--shadow);
+  --shadow-pixel-sm: var(--border-w-thin) var(--border-w-thin) 0 0 var(--shadow);
+
+  // Stepped, non-eased motion: things snap between frames like a sprite.
+  --step: steps(4, end);
+  --dur: 120ms;
+  --dur-slow: 240ms;
+}
+
+// --- CRT surface texture ----------------------------------------------------
+// Scanlines + vignette, painted *behind* the content (z-index 0 vs 1) so it can
+// never dim the glyphs themselves — it only shifts the effective background,
+// which contrast.spec.ts composites and re-checks.
+
+.crt {
+  position: relative;
+  isolation: isolate;
+}
+
+.crt > * {
+  position: relative;
+  z-index: 1;
+}
+
+.crt::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(to bottom, var(--crt-scanline) 0 1px, transparent 1px 3px),
+    radial-gradient(120% 160% at 50% 45%, transparent 40%, var(--crt-vignette) 100%);
+}
+
+// Opt-in, not opt-out: reduced-motion users never get the animation declared at
+// all, rather than getting it and then having it cancelled.
+@media (prefers-reduced-motion: no-preference) {
+  .crt::before {
+    animation: crt-drift 6s var(--step) infinite;
+  }
+}
+
+@keyframes crt-drift {
+  from {
+    background-position:
+      0 0,
+      0 0;
+  }
+
+  to {
+    background-position:
+      0 3px,
+      0 0;
+  }
+}
+
+// --- Chrome components ------------------------------------------------------
+
+.panel {
+  background: var(--surface);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-pixel);
+  padding: 1.25rem;
+}
+
+.panel--flat {
+  box-shadow: none;
+}
+
+// Stat readout: the one place a big pixel number is the point.
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat__value {
+  @include m.display-face;
+
+  font-size: var(--display-md);
+  color: var(--accent);
+}
+
+.stat__label {
+  @include m.chrome-label;
+
+  font-size: var(--label-sm);
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+// OPT-IN ONLY. This used to style the bare `button` element, which meant every
+// control anywhere in the app inherited the arcade cap — including the sortable
+// column headers T7.5 is about to add and the score-breakdown toggles in T7.7.
+// That is decoration landing on data, which is the one thing T7.12 forbids. A
+// button has to ask for the cabinet look by name.
+.pixel-button {
+  @include m.chrome-label;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: var(--label-md);
+  text-decoration: none;
+  color: var(--fg);
+  background: var(--surface-2);
+  border: var(--border-w-thin) solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-pixel-sm);
+  cursor: pointer;
+  transition:
+    background-color var(--dur) var(--step),
+    color var(--dur) var(--step),
+    transform var(--dur) var(--step),
+    box-shadow var(--dur) var(--step);
+}
+
+.pixel-button:hover {
+  background: var(--surface);
+  border-color: var(--border-strong);
+}
+
+// The cabinet-button press: the cap travels into its own shadow.
+.pixel-button:active {
+  transform: translate(var(--border-w-thin), var(--border-w-thin));
+  box-shadow: none;
+}
+
+// --- Data zone --------------------------------------------------------------
+// No pixel face, no shadows, no texture. A 40-row BOM table has to stay
+// perfectly legible, so the only thing the theme contributes here is one chunky
+// rule under the header and a zebra that is verified for contrast.
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+caption {
+  @include m.chrome-label;
+
+  margin-bottom: 0.5rem;
+  font-size: var(--label-sm);
+  letter-spacing: 0.06em;
+  text-align: left;
+  color: var(--muted);
+}
+
+th {
+  @include m.chrome-label;
+
+  padding: 0.5rem 0.75rem;
+  font-size: var(--label-sm);
+  text-align: left;
+  color: var(--muted);
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+  background: var(--surface-2);
+}
+
+// Tables are the thing most likely to overflow on a phone; scroll the table,
+// never the page.
+.table-scroll {
+  overflow-x: auto;
+}
+
+// The accessibility overrides that switch this file's decoration off live in
+// _a11y.scss, which is loaded last and repeats the theme's own selector
+// specificity so its token overrides actually win.

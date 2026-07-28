@@ -2,10 +2,35 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>BomSquadSite</title>
+    <title>BOM Squad</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="An open database mapping arcade boards and consoles to their chip bills-of-materials, and those chips to open-source FPGA implementations."
+    />
+    <meta name="color-scheme" content="dark light" />
+    <!-- Seeded with the dark default; ThemeService rewrites `content` from the
+         computed `--bg` on every theme change. Deliberately NOT a pair of metas
+         keyed on prefers-color-scheme — those describe the OS preference, so they
+         go stale as soon as the visitor uses the toggle. -->
+    <meta name="theme-color" content="#0a0c10" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <!-- 2.3 kB pixel display face, self-hosted because the CSP is `font-src 'self' data:`.
+         Preloaded so the chrome does not visibly reflow out of the fallback monospace. -->
+    <link
+      rel="preload"
+      href="fonts/bom-squad-pixel.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- Render-blocking on purpose and external on purpose: it stamps the resolved
+         theme onto <html> before first paint (no flash of the wrong theme), and the
+         CSP is `script-src 'self'` with no 'unsafe-inline', so it cannot be inline. -->
+    <script src="theme-init.js"></script>
   </head>
   <body>
     <app-root></app-root>

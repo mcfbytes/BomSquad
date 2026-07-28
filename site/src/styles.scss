@@ -1,58 +1,20 @@
-/* Baseline tokens and element defaults. Dark is the default theme (PLAN §5);
-   the full theming pass with a user toggle lands in T7.1. */
+/* BOM Squad global stylesheet.
+ *
+ * The 8-bit arcade-cabinet theme (TASKS T7.12) is a token layer, not a rewrite:
+ * component styles keep addressing `--bg`, `--surface`, `--border`, `--fg`,
+ * `--muted`, `--accent` and `--focus` exactly as the original scaffold did and
+ * inherit the theme for free. New tokens were added; none were renamed.
+ *
+ * Load order is load-bearing — `_a11y.scss` must come last. Source order is only
+ * half of what makes its `prefers-contrast` overrides win, though: they also have
+ * to repeat the theme's own selector specificity, because `:root[data-theme=…]`
+ * (0,2,0) beats a bare `:root` (0,1,0) regardless of order. See the header of
+ * `_a11y.scss`; `src/app/theme/theme-cascade.spec.ts` resolves the real cascade
+ * so the two cannot drift apart again.
+ */
 
-:root {
-  color-scheme: dark light;
-
-  --bg: #0f1115;
-  --surface: #171a21;
-  --border: #2a2f3a;
-  --fg: #e6e8ec;
-  --muted: #9aa3b2;
-  --accent: #ffb454;
-  --focus: #7cc4ff;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg: #ffffff;
-    --surface: #f5f6f8;
-    --border: #d8dce3;
-    --fg: #14171c;
-    --muted: #5b6472;
-    --accent: #a35b00;
-    --focus: #0b5fa5;
-  }
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family:
-    system-ui,
-    -apple-system,
-    'Segoe UI',
-    Roboto,
-    sans-serif;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-a {
-  color: var(--focus);
-}
-
-:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
-}
+@use './styles/themes';
+@use './styles/typography';
+@use './styles/base';
+@use './styles/arcade';
+@use './styles/a11y';
