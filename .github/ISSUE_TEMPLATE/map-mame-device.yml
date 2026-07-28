@@ -1,0 +1,70 @@
+name: Map a MAME device
+description: Propose mapping a MAME device/chip name to a chip_id, or mark it as not real silicon.
+title: '[Map device]: '
+labels:
+  - mapping
+  - good first issue
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every MAME `<chip>`/`<device_ref>` name either resolves to a `chip_id` in `data/mame_device.json`,
+        gets an `ignore_reason` there (it isn't real board silicon — `screen`, `speaker`, `palette`, ...), or
+        stays unmapped and shows up in the curation worklist. See `docs/data-model.md` §1.2 (`mame_device`) and
+        `docs/taxonomy.md` (how to pick a `chip_id`'s `function_id`) before filing this.
+
+        **Standing rule 3 applies:** if you aren't sure what the device actually is, say so below rather than
+        guessing — an honest "unsure" is more useful to the next person than a wrong mapping.
+  - type: input
+    id: mame_device
+    attributes:
+      label: MAME device name
+      description: The exact lookup key MAME uses — a `<chip name>` or `<device_ref tag>` value.
+      placeholder: e.g. ym2151, 315-5313, sega_315_5197
+    validations:
+      required: true
+  - type: dropdown
+    id: disposition
+    attributes:
+      label: Disposition
+      description: What should happen to this device in `data/mame_device.json`?
+      options:
+        - Maps to a real chip (give the chip_id below)
+        - Not real silicon — should be ignored (give a reason below)
+        - Uncertain — requesting help identifying it
+    validations:
+      required: true
+  - type: input
+    id: chip_id
+    attributes:
+      label: Proposed chip_id
+      description: Only if "maps to a real chip" above. Leave blank otherwise.
+      placeholder: e.g. ym2151
+    validations:
+      required: false
+  - type: input
+    id: ignore_reason
+    attributes:
+      label: Ignore reason
+      description: Only if "not real silicon" above. Leave blank otherwise.
+      placeholder: e.g. screen, speaker, palette, gfxdecode
+    validations:
+      required: false
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence / citation
+      description: >-
+        A datasheet, the MAME driver source, a manufacturer's part list, or another citable source. Standing
+        rule 3: no guesses — if you can't cite it, say what you tried and where you got stuck instead.
+      placeholder: "e.g. MAME's segas16b.cpp comments this tag as the Sega 315-5313 VDP; datasheet linked below"
+    validations:
+      required: true
+  - type: input
+    id: usage
+    attributes:
+      label: Usage stats, if known
+      description: Instance/machine counts, e.g. from `v_mame_device_worklist` once a database build exists.
+      placeholder: e.g. 1,240 instances across 38 machines
+    validations:
+      required: false

@@ -1,0 +1,88 @@
+name: Add an implementation
+description: Propose a new implementation record — an FPGA HDL core, a software emulator, or an original-silicon note.
+title: '[Implementation]: '
+labels:
+  - implementation
+body:
+  - type: markdown
+    attributes:
+      value: |
+        An `implementation` row is any realization of a chip and/or a system: an FPGA core (`kind_id =
+        'fpga_hdl'`), a software emulator (`software_emulation`), or the physical part itself
+        (`original_silicon`). **There is no separate "core" table** — a MiSTer core is just an `implementation`
+        with an `implementation_system` row (`docs/data-model.md` §1.4). See `CONTRIBUTING.md` §6.3 for the
+        worked JSON example this issue feeds into.
+
+        **License and accuracy must come from the repository itself**, never a guess. If you haven't verified
+        them yet, leave those fields blank below and say so — it's fine to file this issue before you've
+        finished the research.
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: The implementation's display name.
+      placeholder: e.g. JT51
+    validations:
+      required: true
+  - type: input
+    id: repo_url
+    attributes:
+      label: Repository URL
+      description: Leave blank only for kind = "Original silicon".
+      placeholder: https://github.com/jotego/jt51
+    validations:
+      required: false
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - FPGA (HDL)
+        - Software emulation
+        - Original silicon
+    validations:
+      required: true
+  - type: textarea
+    id: targets
+    attributes:
+      label: What does it implement?
+      description: List the chip_id(s) and/or system_id(s) this targets (see the catalog under `data/chip/` and `data/system/`, or name the real-world part/board if it isn't cataloged yet).
+      placeholder: |
+        chip_id: ym2151
+        system_id: sega-outrun-hw (if this is a full system core, not just one chip)
+    validations:
+      required: true
+  - type: input
+    id: hdl_language
+    attributes:
+      label: HDL language / implementation language
+      description: One of data/lookup/hdl_language.json (verilog, systemverilog, vhdl, chisel, c, cpp, mixed, other).
+      placeholder: verilog
+    validations:
+      required: false
+  - type: textarea
+    id: license
+    attributes:
+      label: License (verified from the repo's own LICENSE file)
+      description: >-
+        Open the actual LICENSE file in the repository and name the SPDX id here. Do not infer it from a
+        README, badge, or another implementation by the same author — different repos under one project can
+        carry different licenses. Leave this blank if you have not verified it yet.
+      placeholder: e.g. GPL-2.0-only (verified from LICENSE at commit abc1234)
+    validations:
+      required: false
+  - type: input
+    id: accuracy
+    attributes:
+      label: Accuracy assessment, if known
+      description: One of data/lookup/accuracy_level.json (gate-level, cycle-accurate, cycle-approximate, behavioral, partial). Leave blank if unassessed.
+      placeholder: cycle-accurate
+    validations:
+      required: false
+  - type: checkboxes
+    id: verified_against_hardware
+    attributes:
+      label: Hardware verification
+      options:
+        - label: This implementation has been verified against real hardware (a citation is required in the notes if checked)
+          required: false

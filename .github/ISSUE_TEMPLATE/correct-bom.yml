@@ -1,0 +1,62 @@
+name: Correct a machine or BOM row
+description: Report a mistake in a MAME-derived machine record or its per-chip BOM that needs a curated correction.
+title: '[Correction]: '
+labels:
+  - correction
+body:
+  - type: markdown
+    attributes:
+      value: |
+        MAME-derived data under `extract/` is never hand-edited — it's regenerated on every MAME release and a
+        direct edit would just be discarded. Fixes are curated rows in `data/correction/machine.json`
+        (`machine_correction` for name/year/manufacturer, `machine_system` for a per-machine system assignment)
+        or `data/correction/machine_chip.json` (`machine_chip_correction` for a BOM row). See `CONTRIBUTING.md`
+        §6.5 for the row shape and `docs/data-model.md` §5 for the mechanism.
+
+        A correction requires a stated reason — this issue collects that reason so a maintainer (or you, in a
+        follow-up PR) can write the row.
+  - type: input
+    id: machine_id
+    attributes:
+      label: MAME machine id
+      description: The MAME shortname (machine.machine_id), e.g. from the game's MAME identifier.
+      placeholder: e.g. outrun
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What needs correcting?
+      options:
+        - Machine-level fact (name, year, or manufacturer)
+        - A BOM row (a chip, its tag, clock, or quantity)
+        - System assignment (this machine belongs to a different system than the driver default)
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: What MAME / the current data says
+      description: The value as extracted today, or "not mapped" / "no system assigned" if that's the problem.
+      placeholder: e.g. machine.mame_year is "19??"; machine_chip has ymsnd -> ym2151 at 3579545 Hz
+    validations:
+      required: true
+  - type: textarea
+    id: corrected
+    attributes:
+      label: Proposed corrected value
+      description: What the row should say instead.
+      placeholder: e.g. year should be 1986; ymsnd -> ym2151 clock should be 4000000 Hz
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason and source
+      description: >-
+        Mandatory — this becomes the correction row's `reason` (and `source_url` if you have a link). Standing
+        rule 3: cite something checkable (a PCB photo, a reference schematic, the MAME driver source, a
+        manufacturer catalog), not "I think" or "probably."
+      placeholder: e.g. "PCB silkscreen and Sega's own catalog date this set 1986. https://example.org/photo"
+    validations:
+      required: true
