@@ -1,0 +1,23 @@
+{
+  "version": "fixture-1.0.0",
+  "limitations": {
+    "no_genre_field": "Fixture copy of the real limitation: MAME's XML has no genre field, so gambling exclusion is a curated list of driver paths."
+  },
+  "filter": {
+    "drop_devices": true,
+    "drop_mechanical": true,
+    "parents_only": true,
+    "drop_bios": false,
+    "exclude_sourcefile": {
+      "fruit/": "Fixture: a directory prefix where every driver is gambling hardware.",
+      "misc/goldnpkr.cpp": "Fixture: one gambling driver named exactly."
+    },
+    "keep_sourcefile": {
+      "fruit/notreally.cpp": "Fixture: the exception that wins over an excluded prefix."
+    }
+  },
+  "worklist": {
+    "sample_machine_ids": 3
+  },
+  "known_schema_violations": {}
+}

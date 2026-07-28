@@ -1,0 +1,14 @@
+{
+  "mame_release": "mame0288",
+  "mame_version": "0.288",
+  "mame_build": "0.288 (mame0288)",
+  "listxml_sha256": "fixture",
+  "extract_config_version": "fixture-1.0.0",
+  "machine_count": 4,
+  "machines": [
+    {"machine_id":"alpha","name":"Alpha & Omega (<prototype>, AB)","mame_sourcefile":"taito/taito_f2.cpp","mame_year":"19??","mame_manufacturer":"Taito & Co","clone_count":2,"driver_status":"imperfect","is_bios":0,"is_device":0,"is_mechanical":0,"runnable":1,"devices":[{"mame_tag":"maincpu","mame_device":"m68000","chip_types":["cpu"],"chip_name":"Motorola MC68000"},{"mame_tag":"pokey","mame_device":"pokey","chip_types":["audio","cpu"],"chip_name":"Atari C012294 POKEY","clock_hz":1789790},{"mame_tag":"speaker","mame_device":"speaker","chip_types":["audio"],"chip_name":"Speaker"}]},
+    {"machine_id":"biosset","name":"Neo Geo","mame_sourcefile":"neogeo/neogeo.cpp","mame_year":"1990","mame_manufacturer":"SNK","driver_status":"preliminary","is_bios":1,"is_device":0,"is_mechanical":0,"runnable":1,"devices":[{"mame_tag":"maincpu","mame_device":"m68000","chip_types":["cpu"],"chip_name":"Motorola MC68000","clock_hz":12000000},{"mame_tag":"speaker","mame_device":"speaker","chip_types":["audio"],"chip_name":"Speaker"}]},
+    {"machine_id":"keepme","name":"Not Really A Fruit Machine","mame_sourcefile":"fruit/notreally.cpp","mame_year":"1992","mame_manufacturer":"Nobody","is_bios":0,"is_device":0,"is_mechanical":0,"runnable":1,"devices":[{"mame_tag":"maincpu","mame_device":"z80","chip_types":["cpu"],"chip_name":"Zilog Z80","clock_hz":4000000},{"mame_tag":"sub","mame_device":"z80","chip_types":["cpu"],"chip_name":"Zilog Z80","clock_hz":4000000}]},
+    {"machine_id":"zeta","name":"Zeta & Sons (rev \"B\", it's fine)","mame_sourcefile":"sega/system16b.cpp","mame_year":"1987","mame_manufacturer":"Sega","driver_status":"good","is_bios":0,"is_device":0,"is_mechanical":0,"runnable":1,"devices":[{"mame_tag":"audiocpu","mame_device":"z80","chip_types":["cpu"],"chip_name":"Zilog Z80","clock_hz":4000000},{"mame_tag":"maincpu","mame_device":"m68000","chip_types":["cpu"],"chip_name":"Motorola MC68000","clock_hz":10000000},{"mame_tag":"speaker","mame_device":"speaker","chip_types":["audio"],"chip_name":"Speaker"},{"mame_tag":"ym2151","mame_device":"ym2151","chip_types":["audio"],"chip_name":"YM2151 OPM","clock_hz":4000000}]}
+  ]
+}

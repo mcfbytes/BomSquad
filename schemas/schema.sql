@@ -46,6 +46,17 @@
 --  D11 threshold — a typed table (REAL, NOT NULL, >= 0) replacing the untyped
 --      dataset_meta 'threshold.*' rows the quality views used to CAST. A malformed or
 --      missing threshold now fails the load instead of silently disabling a gate.
+--  D12 sourcefile admits '-'. The grammar was ^[a-z0-9_]+(?:/[a-z0-9_]+)*\.cpp$, which
+--      forbids a hyphen. MAME 0.288 ships 29 distinct driver paths containing one, and
+--      six of them (f32/f-32.cpp, huangyeh/hy-268a.cpp, huangyeh/hy-9802.cpp,
+--      konami/nwk-tr.cpp, samsung/dvd-n5xx.cpp, skeleton/lg-dvd.cpp) belong to ten
+--      machines that survive the T2.3 filter — so the old grammar rejected real, kept
+--      rows and would have failed T6.1 on first contact. A widening on a table with no
+--      published rows, so no migration. Found by the T2.2 extraction verifying itself by
+--      inserting into this DDL rather than against a hand-written second schema.
+--      NOTE: not every MAME driver is a .cpp (devices/sound/dac.h exists). Every machine
+--      sourced from one today is a device and is filtered out, so '.cpp' still holds for
+--      kept rows; if that changes, the extraction reports it rather than dropping it.
 --
 -- Deliberate NON-delta: implementation_kind.kind_id takes the underscore-permitting
 -- identifier grammar, not the strict slug. data-model §3.2 says slug applies to every
@@ -72,7 +83,7 @@
 --   mame_shortname  ^[a-z0-9_]{1,32}$
 --   mame_device_key ^[a-z0-9_]{1,64}$
 --   mame_tag        ^:device$|^[a-z0-9_]+(?:[.:][a-z0-9_]+)*$
---   sourcefile      ^[a-z0-9_]+(?:/[a-z0-9_]+)*\.cpp$
+--   sourcefile      ^[a-z0-9_][a-z0-9_-]*(?:/[a-z0-9_-]+)*\.cpp$   -- D12: '-' is real, see below
 --   repo_path       ^[A-Za-z0-9._+-]+(?:/[A-Za-z0-9._+-]+)*$   1–256 characters
 --   meta_key        ^[a-z][a-z0-9_]*(?:\.[a-z0-9_]+)*$         1–64 characters
 --   date            ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
@@ -344,7 +355,7 @@ CREATE TABLE system_driver (
   mame_sourcefile TEXT PRIMARY KEY  -- grammar: sourcefile
     CHECK (mame_sourcefile GLOB '*.cpp' AND length(mame_sourcefile) <= 128
            AND substr(mame_sourcefile, 1, length(mame_sourcefile) - 4) GLOB '[a-z0-9_]*'
-           AND substr(mame_sourcefile, 1, length(mame_sourcefile) - 4) NOT GLOB '*[^a-z0-9_/]*'
+           AND substr(mame_sourcefile, 1, length(mame_sourcefile) - 4) NOT GLOB '*[^a-z0-9_/-]*'
            AND substr(mame_sourcefile, 1, length(mame_sourcefile) - 4) NOT GLOB '*/'
            AND substr(mame_sourcefile, 1, length(mame_sourcefile) - 4) NOT GLOB '*//*'),
   system_id       TEXT NOT NULL REFERENCES system(system_id) ON DELETE CASCADE
@@ -367,7 +378,7 @@ CREATE TABLE machine (
   mame_sourcefile   TEXT NOT NULL  -- grammar: sourcefile
     CHECK (mame_sourcefile GLOB '*.cpp' AND length(mame_sourcefile) <= 128
            AND substr(mame_sourcefile, 1, length(mame_sourcefile) - 4) GLOB '[a-z0-9_]*'
-           AND substr(mame_sourcefile, 1, length(mame_sourcefile) - 4) NOT GLOB '*[^a-z0-9_/]*'
+           AND substr(mame_sourcefile, 1, length(mame_sourcefile) - 4) NOT GLOB '*[^a-z0-9_/-]*'
            AND substr(mame_sourcefile, 1, length(mame_sourcefile) - 4) NOT GLOB '*/'
            AND substr(mame_sourcefile, 1, length(mame_sourcefile) - 4) NOT GLOB '*//*'),
   mame_year         TEXT CHECK (mame_year IS NULL OR trim(mame_year) <> ''),

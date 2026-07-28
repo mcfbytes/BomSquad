@@ -7,13 +7,17 @@ import globals from 'globals';
 
 export default tseslint.config(
   {
-    // Generated or vendored trees are never linted.
+    // Generated or vendored trees are never linted. Patterns are relative to this file,
+    // so each workspace's own build output needs its own entry — 'dist/' covers the root
+    // one only, and `tsc -p pipeline` writes to pipeline/dist, whose emitted .d.ts files
+    // are in no tsconfig and so fail the typed-lint project service outright.
     ignores: [
       'node_modules/',
       'dist/',
       '.cache/',
       'extract/',
       'coverage/',
+      'pipeline/dist/',
       'site/.angular/',
       'site/dist/',
     ],

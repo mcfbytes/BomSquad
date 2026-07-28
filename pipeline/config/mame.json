@@ -1,0 +1,7 @@
+{
+  "release": "mame0288",
+  "version": "0.288",
+  "release_base_url": "https://github.com/mamedev/mame/releases/download",
+  "listxml_asset": "mame0288lx.zip",
+  "checksums_asset": "SHA256SUMS"
+}

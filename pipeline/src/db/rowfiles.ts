@@ -53,6 +53,17 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+/**
+ * Files that live under a scanned root but are not row files.
+ *
+ * `extract/*.raw.json` is the MAME parser's raw output (TASKS T2.2/T2.4): nested records
+ * with device arrays, not the flat `{table: [rows]}` bundle §4.1 defines. T6.1 reads it to
+ * *emit* `extract/machine.json` and friends, which are row files and are validated. The
+ * suffix is the whole convention — a file named `*.raw.json` is a pipeline intermediate —
+ * so this is one rule rather than a list of paths to keep in step.
+ */
+const RAW_EXTRACT_SUFFIX = '.raw.json';
+
 /** Every `*.json` under `roots`, recursively, sorted bytewise so a build is reproducible. */
 export function discoverRowFiles(roots: readonly string[]): string[] {
   const found: string[] = [];
@@ -66,7 +77,13 @@ export function discoverRowFiles(roots: readonly string[]): string[] {
     for (const entry of entries) {
       const path = join(dir, entry.name);
       if (entry.isDirectory()) walk(path);
-      else if (entry.isFile() && entry.name.endsWith('.json')) found.push(path);
+      else if (
+        entry.isFile() &&
+        entry.name.endsWith('.json') &&
+        !entry.name.endsWith(RAW_EXTRACT_SUFFIX)
+      ) {
+        found.push(path);
+      }
     }
   };
   for (const root of roots) walk(root);

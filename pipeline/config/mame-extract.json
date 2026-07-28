@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "limitations": {
+    "no_genre_field": "MAME's -listxml output has NO genre, category or 'is this gambling' field of any kind. The only signal the XML carries about what a machine IS is the driver source file it is implemented in, so the gambling/fruit-machine exclusion below is a hand-curated list of driver paths and nothing more. It is therefore incomplete by construction: a gambling title implemented in a shared or misc driver is not detectable here and will pass the filter. Category data lives in catver.ini, which is a separate community-maintained file with its own licence and cadence; ingesting it is a roadmap item, not part of this stage. Do not add a heuristic over machine descriptions to paper over this \u2014 'Poker' appears in the description of plenty of non-gambling arcade titles, and a false positive silently deletes a board from the dataset.",
+    "ismechanical_is_mame_s_word": "MAME sets ismechanical on machines whose primary output is a physical mechanism (pinball, redemption, slot cabinets). It overlaps the gambling exclusion but does not contain it: a video slot machine with no moving parts is not mechanical."
+  },
+  "filter": {
+    "drop_devices": true,
+    "drop_mechanical": true,
+    "parents_only": true,
+    "drop_bios": false,
+    "exclude_sourcefile": {
+      "acorn/aristmk5.cpp": "Aristocrat MK5 slot machines; filed under acorn/ because the hardware is Acorn Archimedes derived.",
+      "adp/adp.cpp": "adp Gauselmann German gambling hardware (Fashion Gambler, Funny Land de Luxe).",
+      "amcoe/": "Amcoe fruit / 8-liner gambling hardware; every driver in this directory is a gambling platform.",
+      "aristocrat/": "Aristocrat slot machines (MK4, MK6, MK7, Casino Winner).",
+      "astrocorp/": "Astro Corp gambling boards (Stone Age, Magic Bomb, Hummer, Astro PC).",
+      "barcrest/": "Barcrest MPU3 / MPU4 AWP fruit machines, including the MPU4 video add-on boards.",
+      "bfm/": "Bell-Fruit Manufacturing AWP fruit machines (System 85, Scorpion 1/2/4, Adder, Cobra).",
+      "bordun/att.cpp": "Bordun ATT gambling boards.",
+      "bordun/skylncr.cpp": "Bordun Sky Lancer / Butterfly gambling boards.",
+      "cirsa/cirsa2080606.cpp": "Cirsa Spanish slot machine.",
+      "cirsa/neptunp2.cpp": "Cirsa Neptune's Pearls slot machines.",
+      "funworld/4roses.cpp": "Funworld Four Roses gambling hardware.",
+      "funworld/funworld.cpp": "Funworld / TAB Austria gambling boards (Bonus Card, Jolly Card, Magic Card).",
+      "funworld/snookr10.cpp": "Funworld Snooker 10 / Apple 10 gambling boards.",
+      "funworld/supercrd.cpp": "Funworld Super Card / Fruit Star gambling boards.",
+      "igs/goldstar.cpp": "Cherry Master / Golden Star family gambling boards.",
+      "igt/": "IGT slot machines and video poker (Player's Edge Plus, S-Plus, Game King, Fortune I).",
+      "jpm/": "JPM AWP fruit machines and quiz-AWP video hardware (System 5, Impact, Pluto 6, GUAB).",
+      "maygay/": "Maygay AWP fruit machines (M1/M2, MV1 video).",
+      "merit/merit.cpp": "Merit countertop poker / blackjack gambling boards.",
+      "merit/merit3xx.cpp": "Merit Multi-Action countertop gambling boards.",
+      "merit/meritm.cpp": "Merit CRT-260 / Megatouch countertop gambling boards.",
+      "merit/mgames.cpp": "Merit Match Games countertop gambling board.",
+      "misc/atronic.cpp": "Atronic slot machines.",
+      "misc/calomega.cpp": "Cal Omega gaming / poker boards.",
+      "misc/gamtor.cpp": "Gaminator / Novomatic slot machines.",
+      "misc/goldnpkr.cpp": "Golden Poker family gambling boards.",
+      "misc/norautp.cpp": "Noraut poker gambling boards.",
+      "sealy/": "Sealy Chinese Dou Dizhu gambling boards.",
+      "sigma/sigma21.cpp": "Sigma 21 blackjack gambling board.",
+      "sigma/sigmab52.cpp": "Sigma B52 poker / fruit gambling boards.",
+      "sigma/sigmab88.cpp": "Sigma B88 poker gambling boards.",
+      "subsino/": "Subsino gambling boards.",
+      "wing/": "Wing Co. gambling boards (Lucky 74, Lucky Girl, Lucky 37, Slot Carnival, Pinkiri)."
+    },
+    "keep_sourcefile": {
+      "bfm/rastersp.cpp": "BFM RasterSpeed is a video game board \u2014 Rise of the Robots and a video quiz \u2014 not an AWP.",
+      "subsino/lastfght.cpp": "Last Fighting is a video fighting game that happens to run on Subsino hardware.",
+      "wing/superwng.cpp": "Super Wing is an arcade action game, not a gambling title."
+    }
+  },
+  "worklist": {
+    "sample_machine_ids": 10
+  },
+  "known_schema_violations": {},
+  "known_schema_violations_note": "Every entry above is one defect, stated ten times because the mechanism is per row. schemas/schema.sql's `sourcefile` grammar (docs/data-model.md \u00a73.2) is `^[a-z0-9_]+(?:/[a-z0-9_]+)*\\.cpp$`, which does not admit a hyphen. MAME 0.288 ships 29 distinct driver paths that contain one \u2014 konami/nwk-tr.cpp, sega/315-6154.cpp, devices/machine/pci-ide.cpp and so on \u2014 and ten of them belong to machines that survive this filter. The data is correct and the grammar is wrong; the fix is to admit '-' in the sourcefile grammar (and in schemas/common.schema.json's matching pattern), after which these ten entries become unused and the run says so. Until then they are acknowledged here so that a NEW disagreement between MAME and the DDL still fails the build. This list is not a mute button: anything not named here fails."
+}

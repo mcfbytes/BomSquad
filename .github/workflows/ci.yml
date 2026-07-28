@@ -22,6 +22,7 @@ jobs:
       # workflow_dispatch run everything rather than silently degrading to lint-only.
       site: ${{ steps.filter.outputs.site || 'true' }}
       pipeline: ${{ steps.filter.outputs.pipeline || 'true' }}
+      extract: ${{ steps.filter.outputs.extract || 'true' }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -47,6 +48,17 @@ jobs:
               - 'pipeline/**'
               - 'schemas/**'
               - 'data/**'
+            # The extract job downloads 20 MB and parses 309 MB, so it runs only when
+            # something that can change its output changed: the pin, the filter policy,
+            # the extractor itself, the DDL it verifies against, or the committed files.
+            extract:
+              - *shared
+              - 'pipeline/config/mame.json'
+              - 'pipeline/config/mame-extract.json'
+              - 'pipeline/src/mame/**'
+              - 'pipeline/src/db/**'
+              - 'schemas/schema.sql'
+              - 'extract/**'
 
   lint:
     name: Lint
@@ -77,6 +89,49 @@ jobs:
       - run: npm run test --workspace @bomsquad/pipeline
       - run: npm run build --workspace @bomsquad/pipeline
 
+  # TASKS T2.5. Two claims are checked here, and neither can be checked by the unit tests:
+  #
+  #   1. Determinism end to end — the extraction is run twice against the real 309 MB
+  #      listxml and the two outputs are compared byte for byte.
+  #   2. The committed extract is the extract — `git diff --exit-code` proves that what is
+  #      in the repository is what this code, this pin and this policy produce. That also
+  #      makes hand-editing `extract/` (standing rule 1) a build failure rather than a
+  #      convention, and makes a MAME bump a reviewable diff.
+  #
+  # The golden fixtures that make an unsorted map iteration fail live in the unit tests, in
+  # `pipeline/test/mame-extract.test.ts`; running twice cannot catch that on its own,
+  # because insertion order does not change between two runs over one document.
+  extract:
+    name: Extract determinism
+    needs: changes
+    if: needs.changes.outputs.extract == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      # Keyed on the pin: a new MAME release is a new key and a new download, and the old
+      # entry expires on its own.
+      - uses: actions/cache@v4
+        with:
+          path: .cache/mame
+          key: mame-listxml-${{ hashFiles('pipeline/config/mame.json') }}
+      - name: Fetch the pinned listxml
+        run: npm run mame:fetch --workspace @bomsquad/pipeline
+      - name: Extract (first run)
+        run: npm run mame:extract --workspace @bomsquad/pipeline
+      - name: Snapshot the first run
+        run: cp -r extract "${RUNNER_TEMP}/extract-run1"
+      - name: Extract (second run)
+        run: npm run mame:extract --workspace @bomsquad/pipeline
+      - name: Byte-compare the two runs
+        run: diff -r "${RUNNER_TEMP}/extract-run1" extract
+      - name: The committed extract must be the extract this code produces
+        run: git diff --exit-code -- extract/
+
   site:
     name: Site
     needs: changes
@@ -96,7 +151,7 @@ jobs:
   ci:
     name: CI
     if: always()
-    needs: [changes, lint, pipeline, site]
+    needs: [changes, lint, pipeline, extract, site]
     runs-on: ubuntu-latest
     steps:
       - name: Verify required jobs succeeded
@@ -105,6 +160,7 @@ jobs:
             [changes]="${{ needs.changes.result }}"
             [lint]="${{ needs.lint.result }}"
             [pipeline]="${{ needs.pipeline.result }}"
+            [extract]="${{ needs.extract.result }}"
             [site]="${{ needs.site.result }}"
           )
           failed=0

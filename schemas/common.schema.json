@@ -40,9 +40,9 @@
     },
     "sourcefile": {
       "type": "string",
-      "pattern": "^[a-z0-9_]+(?:/[a-z0-9_]+)*\\.cpp$",
+      "pattern": "^[a-z0-9_][a-z0-9_-]*(?:/[a-z0-9_-]+)*\\.cpp$",
       "maxLength": 128,
-      "description": "MAME driver source path, e.g. `sega/system16a.cpp`."
+      "description": "MAME driver source path, e.g. `sega/system16a.cpp`. Hyphens occur in real MAME paths (`konami/nwk-tr.cpp`, `sega/315-6154.cpp`); a segment may not begin the path with one."
     },
     "repoPath": {
       "type": "string",

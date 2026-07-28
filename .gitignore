@@ -2,10 +2,14 @@
 node_modules/
 
 # Build outputs — everything under dist/ is generated; only .gitkeep is tracked.
+# `dist/*` contains a slash, so it is anchored to this directory and covers the root
+# dist/ only; each workspace's own outDir needs its own line.
 dist/*
 !dist/.gitkeep
+pipeline/dist/
 
-# Download / extraction cache (large MAME artifacts)
+# Download / extraction cache (large MAME artifacts). `pipeline mame:fetch` writes the
+# verified listxml archive here, keyed by release; nothing in it is ever committed.
 .cache/
 
 # Angular

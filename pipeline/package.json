@@ -14,7 +14,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "validate": "tsx src/cli.ts validate",
-    "mame:fetch": "tsx src/cli.ts mame:fetch"
+    "mame:fetch": "tsx src/cli.ts mame:fetch",
+    "mame:extract": "tsx src/cli.ts mame:extract"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",

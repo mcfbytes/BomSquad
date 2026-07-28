@@ -8,7 +8,7 @@ Companion to [PLAN.md](PLAN.md), structured for **ultracode** multi-agent execut
 | ------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------- |
 | **Haiku 4.5** | `claude-haiku-4-5` | Mechanical: scaffolding, templates, config, boilerplate docs                                                              |
 | **Sonnet 5**  | `claude-sonnet-5`  | Standard engineering: well-specified scripts, UI components, CI, docs                                                     |
-| **Opus 5**  | `claude-opus-5`  | Complex engineering or research-heavy curation: parsers, joiners, search, bulk chip metadata                              |
+| **Opus 5**    | `claude-opus-5`    | Complex engineering or research-heavy curation: parsers, joiners, search, bulk chip metadata                              |
 | **Fable 5**   | `claude-fable-5`   | Architecture-critical or domain-judgment-heavy: data model, coverage/ranking algorithms, identity mapping, quality audits |
 
 Distribution: 9 Haiku · 28 Sonnet · 18 Opus · 8 Fable (63 tasks). Tasks marked **(human)** need the maintainer (credentials, announcements) and cannot be fully delegated.
@@ -262,12 +262,12 @@ system16.com therefore stays a **human-directed reference**: a curator may read 
 
 **What to build instead** — `pipeline reconcile`, over sources whose terms permit automated use:
 
-| Source                                        | Yields                                                | Terms                                    |
-| --------------------------------------------- | ----------------------------------------------------- | ---------------------------------------- |
-| **MAME driver `.cpp` source** (mamedev/mame)  | board/chipset prose comments, PCB part lists, `// Sega System 16B` banners | BSD-3-Clause / GPL-2.0, public repo      |
-| **Wikidata SPARQL** (`query.wikidata.org`)    | arcade system ↔ CPU/sound-chip statements (P880, P2560) | CC0 — explicitly reusable                |
-| **Wikipedia** arcade-system articles          | chipset tables for the major boards                    | CC-BY-SA-4.0, matches `LICENSE-DATA`     |
-| **jotego/jtcores + MiSTer MRA files**         | per-board chipset as an FPGA implementer read it       | GPL, public repos                        |
+| Source                                       | Yields                                                                     | Terms                                |
+| -------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------ |
+| **MAME driver `.cpp` source** (mamedev/mame) | board/chipset prose comments, PCB part lists, `// Sega System 16B` banners | BSD-3-Clause / GPL-2.0, public repo  |
+| **Wikidata SPARQL** (`query.wikidata.org`)   | arcade system ↔ CPU/sound-chip statements (P880, P2560)                    | CC0 — explicitly reusable            |
+| **Wikipedia** arcade-system articles         | chipset tables for the major boards                                        | CC-BY-SA-4.0, matches `LICENSE-DATA` |
+| **jotego/jtcores + MiSTer MRA files**        | per-board chipset as an FPGA implementer read it                           | GPL, public repos                    |
 
 Emit `extract/reconciliation.raw.json` — for every `system_id`, the chip set each witness asserts —
 then a diff report `dist/reconciliation-report.json` classifying every disagreement as
@@ -509,7 +509,7 @@ The site is a catalogue of 1980s arcade silicon and currently looks like a gener
 period-appropriate **8-bit arcade cabinet** identity, applied as a theme layer over the existing token
 set in `site/src/styles.scss` — not a rewrite of every component's styles.
 
-- **Type:** a pixel/bitmap display face (e.g. *Press Start 2P*, OFL-licensed) for headings, brand, badges
+- **Type:** a pixel/bitmap display face (e.g. _Press Start 2P_, OFL-licensed) for headings, brand, badges
   and stat readouts only; body copy and dense tables stay in a legible sans at readable sizes. Self-host
   the font as a subset `woff2` under `site/public/` — the CSP is `font-src 'self' data:` and T7.11 keeps
   it that way, so **no Google Fonts CDN link**.
@@ -525,7 +525,7 @@ set in `site/src/styles.scss` — not a rewrite of every component's styles.
 **Non-negotiable constraints:**
 
 - **WCAG AA contrast in both themes** — T7.10's axe-core check stays green; a pixel font at small sizes
-  is a contrast *and* legibility trap, so verify computed ratios rather than eyeballing them.
+  is a contrast _and_ legibility trap, so verify computed ratios rather than eyeballing them.
 - **`prefers-reduced-motion`** disables flicker, scanline animation and every non-essential transition.
 - **`prefers-contrast: more`** drops the CRT texture entirely.
 - Keep the existing CSS-custom-property contract (`--bg`, `--surface`, `--border`, `--fg`, `--muted`,
@@ -604,18 +604,18 @@ Confirm cron workflows enabled: monthly MAME refresh, weekly discovery scrape, m
 
 Tasks within a wave can run concurrently; waves are ordered by hard dependencies. Curation tracks (3/4/5) are mutually independent once Phase 1–2 land.
 
-| Wave | Tasks                                           |
-| ---- | ----------------------------------------------- |
-| 1    | T0.1 → then T0.2, T0.3, T0.4, T1.1 in parallel  |
-| 2    | T0.5, T1.2, T1.3, T1.4, T1.7, T2.1              |
-| 3    | T1.5, T1.6, T2.2, T7.1                          |
-| 4    | T2.3 → T2.4, T2.5 · T4.3, T5.1                  |
-| 5    | T2.6, T3.1, T4.1, T4.2, T5.2, T5.3, T5.4        |
-| 6    | T3.2, T3.3, T3.4, T3.6 · T4.4                   |
-| 7    | T3.5, T6.1 → T4.5, T6.2, T6.4                   |
-| 8    | T3.7, T3.8, T6.3 → T6.5 → T6.6, T6.7, T7.2      |
+| Wave | Tasks                                            |
+| ---- | ------------------------------------------------ |
+| 1    | T0.1 → then T0.2, T0.3, T0.4, T1.1 in parallel   |
+| 2    | T0.5, T1.2, T1.3, T1.4, T1.7, T2.1               |
+| 3    | T1.5, T1.6, T2.2, T7.1                           |
+| 4    | T2.3 → T2.4, T2.5 · T4.3, T5.1                   |
+| 5    | T2.6, T3.1, T4.1, T4.2, T5.2, T5.3, T5.4         |
+| 6    | T3.2, T3.3, T3.4, T3.6 · T4.4                    |
+| 7    | T3.5, T6.1 → T4.5, T6.2, T6.4                    |
+| 8    | T3.7, T3.8, T6.3 → T6.5 → T6.6, T6.7, T7.2       |
 | 9    | T7.3–T7.9 + T7.12 in parallel, then T7.10, T7.11 |
-| 10   | T8.1–T8.4 (can start any time after their deps) |
-| 11   | T9.1 → T9.2 → T8.5, T9.3, T9.4                  |
+| 10   | T8.1–T8.4 (can start any time after their deps)  |
+| 11   | T9.1 → T9.2 → T8.5, T9.3, T9.4                   |
 
 **Critical path:** T1.1 → T1.2 → T2.2 → T2.3 → T3.1 → T6.1 → T6.2 → T6.3 → T6.5 → T7.2 → T7.7 → T9.1.

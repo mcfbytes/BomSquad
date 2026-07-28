@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<!DOCTYPE mame [
+<!ELEMENT mame (machine+)>
+	<!ATTLIST mame build CDATA #IMPLIED>
+	<!ELEMENT machine (description, year?, manufacturer?, device_ref*, chip*, driver?)>
+		<!ATTLIST machine name CDATA #REQUIRED>
+		<!ATTLIST machine sourcefile CDATA #IMPLIED>
+		<!ATTLIST machine isbios (yes|no) "no">
+		<!ATTLIST machine isdevice (yes|no) "no">
+		<!ATTLIST machine ismechanical (yes|no) "no">
+		<!ATTLIST machine runnable (yes|no) "yes">
+		<!ATTLIST machine cloneof CDATA #IMPLIED>
+		<!ATTLIST machine romof CDATA #IMPLIED>
+]>
+
+<mame build="0.288 (mame0288)" debug="no" mameconfig="10">
+	<!-- Document order below is deliberately NOT the output order: machines are out of
+	     bytewise sequence, device_refs within a machine are out of tag sequence, and a
+	     clone precedes its parent. Anything that leaks an insertion order into an output
+	     therefore produces different bytes than the golden files. -->
+	<machine name="zeta" sourcefile="sega/system16b.cpp">
+		<description>Zeta &amp; Sons (rev &quot;B&quot;, it&apos;s fine)</description>
+		<year>1987</year>
+		<manufacturer>Sega</manufacturer>
+		<device_ref tag=":ym2151" name="ym2151"/>
+		<device_ref tag=":maincpu" name="m68000"/>
+		<device_ref tag=":audiocpu" name="z80"/>
+		<device_ref tag=":speaker" name="speaker"/>
+		<chip type="cpu" tag="maincpu" name="Motorola MC68000" clock="10000000"/>
+		<chip type="cpu" tag="audiocpu" name="Zilog Z80" clock="4000000"/>
+		<chip type="audio" tag="ym2151" name="YM2151 OPM" clock="4000000"/>
+		<chip type="audio" tag="speaker" name="Speaker"/>
+		<driver status="good" emulation="good" savestate="supported"/>
+	</machine>
+	<machine name="alphacl1" sourcefile="taito/taito_f2.cpp" cloneof="alpha" romof="alpha">
+		<description>Alpha (clone 1)</description>
+		<year>1989</year>
+		<manufacturer>Taito</manufacturer>
+		<device_ref tag=":maincpu" name="m68000"/>
+		<chip type="cpu" tag="maincpu" name="Motorola MC68000" clock="12000000"/>
+		<driver status="good" emulation="good" savestate="supported"/>
+	</machine>
+	<machine name="mech" sourcefile="pinball/bally.cpp" ismechanical="yes">
+		<description>Mechanical Thing</description>
+		<year>1978</year>
+		<manufacturer>Bally</manufacturer>
+		<device_ref tag=":maincpu" name="m6800"/>
+		<chip type="cpu" tag="maincpu" name="Motorola MC6800" clock="900000"/>
+	</machine>
+	<machine name="alpha" sourcefile="taito/taito_f2.cpp">
+		<description>Alpha &amp; Omega (&lt;prototype&gt;, &#65;&#x42;)</description>
+		<year>19??</year>
+		<manufacturer><![CDATA[Taito & Co]]></manufacturer>
+		<device_ref tag=":pokey" name="pokey"/>
+		<device_ref tag=":maincpu" name="m68000"/>
+		<device_ref tag=":speaker" name="speaker"/>
+		<chip type="cpu" tag="pokey" name="Atari C012294 POKEY" clock="1789790"/>
+		<chip type="audio" tag="pokey" name="Atari C012294 POKEY" clock="1789790"/>
+		<chip type="cpu" tag="maincpu" name="Motorola MC68000" clock="0"/>
+		<chip type="audio" tag="speaker" name="Speaker"/>
+		<driver status="imperfect" emulation="imperfect" savestate="unsupported"/>
+	</machine>
+	<machine name="pokerbox" sourcefile="misc/goldnpkr.cpp">
+		<description>Poker Box</description>
+		<year>1981</year>
+		<manufacturer>Bonanza Enterprises, Ltd</manufacturer>
+		<device_ref tag=":maincpu" name="m6502"/>
+		<chip type="cpu" tag="maincpu" name="MOS Technology 6502" clock="1000000"/>
+	</machine>
+	<machine name="alphacl2" sourcefile="taito/taito_f2.cpp" cloneof="alpha" romof="alpha">
+		<description>Alpha (clone 2)</description>
+		<year>1989</year>
+		<manufacturer>Taito</manufacturer>
+		<device_ref tag=":maincpu" name="m68000"/>
+		<chip type="cpu" tag="maincpu" name="Motorola MC68000" clock="12000000"/>
+		<driver status="preliminary" emulation="preliminary" savestate="unsupported"/>
+	</machine>
+	<machine name="devchip" sourcefile="devices/sound/ym2151.cpp" isdevice="yes" runnable="no">
+		<description>YM2151 OPM</description>
+		<chip type="audio" tag="ym" name="YM2151 OPM"/>
+	</machine>
+	<machine name="biosset" sourcefile="neogeo/neogeo.cpp" isbios="yes">
+		<description>Neo Geo</description>
+		<year>1990</year>
+		<manufacturer>SNK</manufacturer>
+		<device_ref tag=":speaker" name="speaker"/>
+		<device_ref tag=":maincpu" name="m68000"/>
+		<chip type="cpu" tag="maincpu" name="Motorola MC68000" clock="12000000"/>
+		<chip type="audio" tag="speaker" name="Speaker"/>
+		<driver status="preliminary" emulation="preliminary" savestate="unsupported"/>
+	</machine>
+	<machine name="keepme" sourcefile="fruit/notreally.cpp">
+		<description>Not Really A Fruit Machine</description>
+		<year>1992</year>
+		<manufacturer>Nobody</manufacturer>
+		<device_ref tag=":sub" name="z80"/>
+		<device_ref tag=":maincpu" name="z80"/>
+		<chip type="cpu" tag="sub" name="Zilog Z80" clock="4000000"/>
+		<chip type="cpu" tag="maincpu" name="Zilog Z80" clock="4000000"/>
+	</machine>
+	<machine name="fruitmc" sourcefile="fruit/fruity.cpp">
+		<description>Fruity Machine</description>
+		<year>1995</year>
+		<manufacturer>Fruit Co</manufacturer>
+		<device_ref tag=":maincpu" name="z80"/>
+		<chip type="cpu" tag="maincpu" name="Zilog Z80" clock="4000000"/>
+	</machine>
+</mame>

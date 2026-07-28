@@ -1,0 +1,15 @@
+{
+  "mame_release": "mame0288",
+  "mame_version": "0.288",
+  "mame_build": "0.288 (mame0288)",
+  "listxml_sha256": "fixture",
+  "extract_config_version": "fixture-1.0.0",
+  "device_count": 5,
+  "devices": [
+    {"mame_device":"m68000","instance_count":3,"machine_count":3,"chip_types":["cpu"],"chip_names":["Motorola MC68000"],"sample_machine_ids":["alpha","biosset","zeta"]},
+    {"mame_device":"speaker","instance_count":3,"machine_count":3,"chip_types":["audio"],"chip_names":["Speaker"],"sample_machine_ids":["alpha","biosset","zeta"]},
+    {"mame_device":"z80","instance_count":3,"machine_count":2,"chip_types":["cpu"],"chip_names":["Zilog Z80"],"sample_machine_ids":["keepme","zeta"]},
+    {"mame_device":"pokey","instance_count":1,"machine_count":1,"chip_types":["audio","cpu"],"chip_names":["Atari C012294 POKEY"],"sample_machine_ids":["alpha"]},
+    {"mame_device":"ym2151","instance_count":1,"machine_count":1,"chip_types":["audio"],"chip_names":["YM2151 OPM"],"sample_machine_ids":["zeta"]}
+  ]
+}
