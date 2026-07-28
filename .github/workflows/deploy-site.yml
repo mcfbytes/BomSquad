@@ -8,9 +8,17 @@ name: Deploy site
 on:
   push:
     branches: [master]
+    # `dist/bomsquad.sqlite` is a gitignored build output (see dist/README.md) — it can
+    # never appear in a commit diff, so listing it here (as a previous revision of this
+    # file did) is a trigger that can never fire. Watch the *inputs* the database is
+    # built from instead: the curated + extracted row files, the schema they load
+    # against, and the pipeline code that builds them — mirrors ci.yml's `build` filter.
     paths:
+      - 'data/**'
+      - 'extract/**'
+      - 'schemas/**'
+      - 'pipeline/**'
       - 'site/**'
-      - 'dist/bomsquad.sqlite'
       - '.github/workflows/deploy-site.yml'
   workflow_dispatch:
   pull_request:
@@ -44,8 +52,39 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Pin build_date (and therefore dataset_version's default) to the commit rather
+      # than to whenever this runner happened to start — docs/versioning.md §1.4,
+      # mirrored from ci.yml's `build` job, so a redeploy of the same commit reproduces
+      # the same dataset_meta facts.
+      - name: Pin build_date to the commit
+        run: echo "SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)" >> "$GITHUB_ENV"
+
+      # T6.5/T7.11 bugfix: this workflow never built the database, so every previous
+      # deploy shipped a site whose data layer could only show its "database is not on
+      # the server" error state (see site/src/app/data/database.ts). The row files this
+      # reads (data/**, extract/**) are already committed — no mame:fetch/mame:extract
+      # needed, exactly the flow docs/consuming-the-dataset.md §2.1 documents for an
+      # outside consumer.
+      - name: Build the dataset (T6.5)
+        run: npm run build:db --workspace @bomsquad/pipeline
+
+      # `npm run build` (not bare `ng build`) runs the site's `prebuild` hook, which
+      # regenerates the DB row types and stages dist/bomsquad.sqlite plus sqlite3.wasm
+      # into public/site-data/ (site/tools/stage-data-assets.mjs) before `ng build` — see
+      # site/README.md, "The database asset". That step only found a database to stage
+      # because the previous step just built one.
       - name: Build site
         run: npm run build --workspace @bomsquad/site
+
+      # Belt-and-suspenders: fail the deploy loudly here rather than silently ship a
+      # site with no queryable data. stage-data-assets.mjs treats a missing database as
+      # a soft warning (a site-only PR hasn't run the pipeline and still needs to
+      # build), so this workflow — which always builds the dataset above — asserts the
+      # two runtime assets actually landed in the build output before deploying it.
+      - name: Verify the database and wasm engine reached the site output
+        run: |
+          test -s site/dist/bom-squad-site/browser/site-data/bomsquad.sqlite
+          test -s site/dist/bom-squad-site/browser/site-data/sqlite3.wasm
 
       # AZURE_STATIC_WEB_APPS_API_TOKEN isn't available to workflow runs
       # triggered from a fork (e.g. a fork PR later merged via a maintainer's

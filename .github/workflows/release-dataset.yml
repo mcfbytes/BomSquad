@@ -1,0 +1,118 @@
+name: Release dataset
+
+# TASKS T6.6. On every push to master that touches the dataset's inputs, builds
+# dist/bomsquad.sqlite and dist/quality-report.json and publishes them as a
+# date-tagged GitHub Release, per docs/versioning.md §2:
+#
+#   "Format: a calendar date, YYYY-MM-DD ..., optionally suffixed .N for a second
+#    build cut on the same day (2026-08-01.2)."
+#
+# The tag is read from the build's own dataset_version (dist/quality-report.json),
+# not computed independently, so the release tag and the dataset_meta row inside the
+# published database can never disagree.
+#
+# Artifact shape follows dist/README.md exactly: bomsquad.sqlite and
+# quality-report.json attached standalone, plus a bomsquad-<tag>-release.tar.gz
+# bundling both. The standalone bomsquad.sqlite attachment is not optional —
+# docs/consuming-the-dataset.md's example script downloads
+# `releases/latest/download/bomsquad.sqlite`, a GitHub release-asset URL that only
+# resolves against a top-level asset of that exact name. Attaching only the tarball
+# would leave that documented URL a 404.
+#
+# This is independent of deploy-site.yml: a dataset release and a site deploy are two
+# different publications (docs/versioning.md's dataset_version is decoupled from any
+# site deploy), so this workflow does not build or touch site/.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.base.json'
+      - 'eslint.config.js'
+      - '.prettierrc.json'
+      - 'pipeline/**'
+      - 'schemas/**'
+      - 'data/**'
+      - 'extract/**'
+      - '.github/workflows/release-dataset.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+# One release publish at a time — two overlapping runs picking the same "next free
+# tag" would race to create the same release.
+concurrency:
+  group: release-dataset
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build and publish a dataset release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # docs/versioning.md §1.4: build_date (and dataset_version's default) is a
+      # property of the commit, not of whenever this runner happened to start — this
+      # is what makes rebuilding an old commit reproduce its dataset_version exactly.
+      - name: Pin build_date to the commit
+        run: echo "SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)" >> "$GITHUB_ENV"
+
+      - name: Validate the whole dataset
+        run: npm run validate --workspace @bomsquad/pipeline
+
+      - name: Build the dataset (T6.5)
+        run: npm run build:db --workspace @bomsquad/pipeline
+
+      - name: Read the dataset version (docs/versioning.md §2)
+        id: dataset
+        run: echo "version=$(jq -r .dataset_version dist/quality-report.json)" >> "$GITHUB_OUTPUT"
+
+      # A curation-only merge and a later merge on the same calendar day both build
+      # the same YYYY-MM-DD dataset_version; the second cut takes the .N suffix
+      # docs/versioning.md §2 names, starting at .2 (the first cut is the bare date).
+      - name: Find the next free release tag for today's dataset_version
+        id: tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE_VERSION: ${{ steps.dataset.outputs.version }}
+        run: |
+          tag="$BASE_VERSION"
+          suffix=2
+          while gh release view "$tag" >/dev/null 2>&1; do
+            tag="${BASE_VERSION}.${suffix}"
+            suffix=$((suffix + 1))
+          done
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      # dist/README.md's documented release bundle: the two files, plus a tarball of
+      # both under one name for a single-download consumer.
+      - name: Assemble the release bundle
+        env:
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: tar -czf "dist/bomsquad-${TAG}-release.tar.gz" -C dist bomsquad.sqlite quality-report.json
+
+      - name: Publish the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          gh release create "$TAG" \
+            "dist/bomsquad.sqlite" \
+            "dist/quality-report.json" \
+            "dist/bomsquad-${TAG}-release.tar.gz" \
+            --title "Dataset ${TAG}" \
+            --notes "Automated dataset release (TASKS T6.6). See docs/consuming-the-dataset.md for how to use these files and docs/versioning.md for what dataset_version ${TAG} means."

@@ -1,7 +1,13 @@
 {
   "routes": [
     {
-      "route": "/site-data/manifest.json",
+      "route": "/site-data/bomsquad.sqlite",
+      "headers": {
+        "Cache-Control": "public, max-age=60, must-revalidate"
+      }
+    },
+    {
+      "route": "/site-data/sqlite3.wasm",
       "headers": {
         "Cache-Control": "public, max-age=60, must-revalidate"
       }
@@ -21,12 +27,14 @@
     ]
   },
   "mimeTypes": {
-    ".json": "application/json"
+    ".json": "application/json",
+    ".wasm": "application/wasm",
+    ".sqlite": "application/vnd.sqlite3"
   },
   "globalHeaders": {
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "DENY",
     "Referrer-Policy": "strict-origin-when-cross-origin",
-    "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
   }
 }
