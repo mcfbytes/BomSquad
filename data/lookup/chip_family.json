@@ -1,0 +1,76 @@
+{
+  "chip_family": [
+    {
+      "family_id": "m6502",
+      "name": "MOS 6502",
+      "manufacturer_id": "mos-technology",
+      "description": "MOS Technology 6502: low-cost 8-bit CPU family, widely second-sourced (Rockwell, Synertek, WDC), common as a low-cost main or sound CPU."
+    },
+    {
+      "family_id": "m6800",
+      "name": "Motorola 6800",
+      "manufacturer_id": "motorola",
+      "description": "Motorola 6800: Motorola's first 8-bit microprocessor family, predecessor to the 6809."
+    },
+    {
+      "family_id": "m6809",
+      "name": "Motorola 6809",
+      "manufacturer_id": "motorola",
+      "description": "Motorola 6809: 8-bit CPU with a more orthogonal instruction set and hardware multiply than the 6800; common as an arcade main or sound CPU in the early-to-mid 1980s."
+    },
+    {
+      "family_id": "m68k",
+      "name": "Motorola 68000",
+      "manufacturer_id": "motorola",
+      "description": "16/32-bit CISC CPUs (68000, 68010, 68020, ...) used as arcade and console main CPUs from the early 1980s onward."
+    },
+    {
+      "family_id": "mcs-48",
+      "name": "Intel MCS-48",
+      "manufacturer_id": "intel",
+      "description": "8-bit single-chip microcomputer family (8048/8035/8039) with on-die program memory, typically used for I/O or protection duties rather than main game logic."
+    },
+    {
+      "family_id": "mcs-51",
+      "name": "Intel MCS-51",
+      "manufacturer_id": "intel",
+      "description": "8-bit microcontroller family (8051 and its many second-sourced derivatives), successor to MCS-48, common in protection and peripheral roles."
+    },
+    {
+      "family_id": "opl",
+      "name": "Yamaha OPL",
+      "manufacturer_id": "yamaha",
+      "description": "2-operator FM synthesis family (YM3526/YM3812 and successors), later extended to 4-operator OPL3."
+    },
+    {
+      "family_id": "opm",
+      "name": "Yamaha OPM",
+      "manufacturer_id": "yamaha",
+      "description": "Single-chip 4-operator/8-channel FM synthesizer family (YM2151) with no companion PSG or rhythm section."
+    },
+    {
+      "family_id": "opn",
+      "name": "Yamaha OPN",
+      "manufacturer_id": "yamaha",
+      "description": "FM synthesis family (YM2203 and successors) pairing FM operators with an AY-3-8910-style PSG section."
+    },
+    {
+      "family_id": "psg",
+      "name": "GI PSG",
+      "manufacturer_id": "general-instrument",
+      "description": "The AY-3-8910 programmable sound generator family: three square-wave tone channels plus noise, second-sourced widely and cloned by Yamaha as the YM2149."
+    },
+    {
+      "family_id": "tms320",
+      "name": "TMS320",
+      "manufacturer_id": "texas-instruments",
+      "description": "Programmable DSP family used in arcade hardware for audio synthesis and geometry/transform processing."
+    },
+    {
+      "family_id": "z80",
+      "name": "Zilog Z80",
+      "manufacturer_id": "zilog",
+      "description": "Zilog Z80: 8-bit CPU, a binary-compatible superset of the Intel 8080, ubiquitous as a sound or secondary CPU and common as a main CPU in lower-cost arcade boards."
+    }
+  ]
+}

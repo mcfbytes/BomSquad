@@ -1,0 +1,29 @@
+{
+  "accuracy_level": [
+    {
+      "accuracy_id": "behavioral",
+      "label": "Behavioral",
+      "description": "Reproduces the chip's documented functional behavior (registers, outputs) without modeling internal timing; timing is inferred or ignored."
+    },
+    {
+      "accuracy_id": "cycle-accurate",
+      "label": "Cycle-accurate",
+      "description": "Matches the original chip's externally observable timing cycle-for-cycle, without necessarily modeling its internal gate structure."
+    },
+    {
+      "accuracy_id": "cycle-approximate",
+      "label": "Cycle-approximate",
+      "description": "Approximates timing closely enough for correct operation in practice, without guaranteeing cycle-for-cycle fidelity to the original."
+    },
+    {
+      "accuracy_id": "gate-level",
+      "label": "Gate-level",
+      "description": "Modeled from a reverse-engineered netlist or die image at the logic-gate level; the highest-fidelity band, reproducing internal timing quirks and undocumented behavior."
+    },
+    {
+      "accuracy_id": "partial",
+      "label": "Partial",
+      "description": "A known-incomplete implementation covering only a subset of the chip's documented functionality or modes."
+    }
+  ]
+}

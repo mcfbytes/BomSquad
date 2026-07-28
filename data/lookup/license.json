@@ -1,0 +1,160 @@
+{
+  "license": [
+    {
+      "license_id": "AGPL-3.0-only",
+      "name": "GNU Affero General Public License v3.0 only",
+      "url": "https://spdx.org/licenses/AGPL-3.0-only.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "AGPL-3.0-or-later",
+      "name": "GNU Affero General Public License v3.0 or later",
+      "url": "https://spdx.org/licenses/AGPL-3.0-or-later.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "Apache-2.0",
+      "name": "Apache License 2.0",
+      "url": "https://spdx.org/licenses/Apache-2.0.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "BSD-2-Clause",
+      "name": "BSD 2-Clause \"Simplified\" License",
+      "url": "https://spdx.org/licenses/BSD-2-Clause.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "BSD-3-Clause",
+      "name": "BSD 3-Clause \"New\" or \"Revised\" License",
+      "url": "https://spdx.org/licenses/BSD-3-Clause.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "CC-BY-4.0",
+      "name": "Creative Commons Attribution 4.0 International",
+      "url": "https://spdx.org/licenses/CC-BY-4.0.html",
+      "is_osi_approved": 0
+    },
+    {
+      "license_id": "CC-BY-NC-SA-4.0",
+      "name": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+      "url": "https://spdx.org/licenses/CC-BY-NC-SA-4.0.html",
+      "is_osi_approved": 0
+    },
+    {
+      "license_id": "CC-BY-SA-4.0",
+      "name": "Creative Commons Attribution Share Alike 4.0 International",
+      "url": "https://spdx.org/licenses/CC-BY-SA-4.0.html",
+      "is_osi_approved": 0
+    },
+    {
+      "license_id": "CC0-1.0",
+      "name": "Creative Commons Zero v1.0 Universal",
+      "url": "https://spdx.org/licenses/CC0-1.0.html",
+      "is_osi_approved": 0
+    },
+    {
+      "license_id": "CERN-OHL-P-2.0",
+      "name": "CERN Open Hardware Licence Version 2 - Permissive",
+      "url": "https://spdx.org/licenses/CERN-OHL-P-2.0.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "CERN-OHL-S-2.0",
+      "name": "CERN Open Hardware Licence Version 2 - Strongly Reciprocal",
+      "url": "https://spdx.org/licenses/CERN-OHL-S-2.0.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "CERN-OHL-W-2.0",
+      "name": "CERN Open Hardware Licence Version 2 - Weakly Reciprocal",
+      "url": "https://spdx.org/licenses/CERN-OHL-W-2.0.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "GPL-2.0-only",
+      "name": "GNU General Public License v2.0 only",
+      "url": "https://spdx.org/licenses/GPL-2.0-only.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "GPL-2.0-or-later",
+      "name": "GNU General Public License v2.0 or later",
+      "url": "https://spdx.org/licenses/GPL-2.0-or-later.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "GPL-3.0-only",
+      "name": "GNU General Public License v3.0 only",
+      "url": "https://spdx.org/licenses/GPL-3.0-only.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "GPL-3.0-or-later",
+      "name": "GNU General Public License v3.0 or later",
+      "url": "https://spdx.org/licenses/GPL-3.0-or-later.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "ISC",
+      "name": "ISC License",
+      "url": "https://spdx.org/licenses/ISC.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "LGPL-2.1-only",
+      "name": "GNU Lesser General Public License v2.1 only",
+      "url": "https://spdx.org/licenses/LGPL-2.1-only.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "LGPL-2.1-or-later",
+      "name": "GNU Lesser General Public License v2.1 or later",
+      "url": "https://spdx.org/licenses/LGPL-2.1-or-later.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "LGPL-3.0-only",
+      "name": "GNU Lesser General Public License v3.0 only",
+      "url": "https://spdx.org/licenses/LGPL-3.0-only.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "LGPL-3.0-or-later",
+      "name": "GNU Lesser General Public License v3.0 or later",
+      "url": "https://spdx.org/licenses/LGPL-3.0-or-later.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "MIT",
+      "name": "MIT License",
+      "url": "https://spdx.org/licenses/MIT.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "MPL-2.0",
+      "name": "Mozilla Public License 2.0",
+      "url": "https://spdx.org/licenses/MPL-2.0.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "SHL-0.51",
+      "name": "Solderpad Hardware License, Version 0.51",
+      "url": "https://spdx.org/licenses/SHL-0.51.html",
+      "is_osi_approved": 0
+    },
+    {
+      "license_id": "Unlicense",
+      "name": "The Unlicense",
+      "url": "https://spdx.org/licenses/Unlicense.html",
+      "is_osi_approved": 1
+    },
+    {
+      "license_id": "Zlib",
+      "name": "zlib License",
+      "url": "https://spdx.org/licenses/Zlib.html",
+      "is_osi_approved": 1
+    }
+  ]
+}

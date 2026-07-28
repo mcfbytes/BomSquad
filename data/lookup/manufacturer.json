@@ -1,0 +1,270 @@
+{
+  "manufacturer": [
+    {
+      "manufacturer_id": "amd",
+      "name": "AMD",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "atari",
+      "name": "Atari",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "banpresto",
+      "name": "Banpresto",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "capcom",
+      "name": "Capcom",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "cave",
+      "name": "Cave",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "data-east",
+      "name": "Data East",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "ensoniq",
+      "name": "Ensoniq",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "exidy",
+      "name": "Exidy",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "fujitsu",
+      "name": "Fujitsu",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "general-instrument",
+      "name": "General Instrument",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "hitachi",
+      "name": "Hitachi",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "intel",
+      "name": "Intel",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "irem",
+      "name": "Irem",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "jaleco",
+      "name": "Jaleco",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "kaneko",
+      "name": "Kaneko",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "konami",
+      "name": "Konami",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "midway",
+      "name": "Midway",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "mitsubishi",
+      "name": "Mitsubishi Electric",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "mos-technology",
+      "name": "MOS Technology",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "motorola",
+      "name": "Motorola",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "namco",
+      "name": "Namco",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "national-semiconductor",
+      "name": "National Semiconductor",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "nec",
+      "name": "NEC",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "nichibutsu",
+      "name": "Nichibutsu",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "nintendo",
+      "name": "Nintendo",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "nmk",
+      "name": "NMK",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "oki",
+      "name": "OKI",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "philips",
+      "name": "Philips",
+      "country": "NL"
+    },
+    {
+      "manufacturer_id": "psikyo",
+      "name": "Psikyo",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "ricoh",
+      "name": "Ricoh",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "rockwell",
+      "name": "Rockwell",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "sega",
+      "name": "Sega",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "seibu-kaihatsu",
+      "name": "Seibu Kaihatsu",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "seiko-epson",
+      "name": "Seiko Epson",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "seta",
+      "name": "Seta",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "sharp",
+      "name": "Sharp",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "signetics",
+      "name": "Signetics",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "snk",
+      "name": "SNK",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "sunsoft",
+      "name": "Sunsoft",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "taito",
+      "name": "Taito",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "technos",
+      "name": "Technos Japan",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "tecmo",
+      "name": "Tecmo",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "texas-instruments",
+      "name": "Texas Instruments",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "toaplan",
+      "name": "Toaplan",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "toshiba",
+      "name": "Toshiba",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "universal",
+      "name": "Universal",
+      "country": "JP",
+      "notes": "Japanese arcade manufacturer (Universal Co., Ltd., maker of Mr. Do! and Cosmic Alien); distinct from the US film studio Universal Pictures."
+    },
+    {
+      "manufacturer_id": "upl",
+      "name": "UPL",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "video-system",
+      "name": "Video System",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "visco",
+      "name": "Visco",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "western-design-center",
+      "name": "Western Design Center",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "williams",
+      "name": "Williams Electronics",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "yamaha",
+      "name": "Yamaha",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "zilog",
+      "name": "Zilog",
+      "country": "US"
+    }
+  ]
+}

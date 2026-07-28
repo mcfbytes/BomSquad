@@ -1,0 +1,36 @@
+{
+  "hdl_language": [
+    {
+      "language_id": "c",
+      "label": "C"
+    },
+    {
+      "language_id": "chisel",
+      "label": "Chisel"
+    },
+    {
+      "language_id": "cpp",
+      "label": "C++"
+    },
+    {
+      "language_id": "mixed",
+      "label": "Mixed HDL"
+    },
+    {
+      "language_id": "other",
+      "label": "Other"
+    },
+    {
+      "language_id": "systemverilog",
+      "label": "SystemVerilog"
+    },
+    {
+      "language_id": "verilog",
+      "label": "Verilog"
+    },
+    {
+      "language_id": "vhdl",
+      "label": "VHDL"
+    }
+  ]
+}

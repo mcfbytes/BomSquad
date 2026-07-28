@@ -1,0 +1,19 @@
+{
+  "implementation_kind": [
+    {
+      "kind_id": "fpga_hdl",
+      "label": "FPGA (HDL)",
+      "description": "Reimplementation as synthesizable hardware description (Verilog, VHDL, etc.) run on an FPGA, reproducing the original chip's behavior in hardware logic rather than by interpreting or recompiling instructions."
+    },
+    {
+      "kind_id": "original_silicon",
+      "label": "Original silicon",
+      "description": "The genuine part itself, or a pin- and behavior-compatible respin fabricated as an ASIC, used in place of any emulation or reimplementation."
+    },
+    {
+      "kind_id": "software_emulation",
+      "label": "Software emulation",
+      "description": "Reproduction of the chip's behavior by software running on a general-purpose CPU (interpretation, dynamic recompilation, or a cycle model), with no dedicated hardware logic involved."
+    }
+  ]
+}

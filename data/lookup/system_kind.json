@@ -1,0 +1,28 @@
+{
+  "system_kind": [
+    {
+      "kind_id": "arcade",
+      "label": "Arcade"
+    },
+    {
+      "kind_id": "computer",
+      "label": "Computer"
+    },
+    {
+      "kind_id": "console",
+      "label": "Console"
+    },
+    {
+      "kind_id": "handheld",
+      "label": "Handheld"
+    },
+    {
+      "kind_id": "other",
+      "label": "Other"
+    },
+    {
+      "kind_id": "pinball",
+      "label": "Pinball"
+    }
+  ]
+}

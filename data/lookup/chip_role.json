@@ -1,0 +1,104 @@
+{
+  "chip_role": [
+    {
+      "role_id": "audiocpu",
+      "label": "Audio CPU",
+      "description": "A CPU dedicated to running the sound driver and controlling sound chips, kept separate from game logic even when the part itself is a general-purpose CPU."
+    },
+    {
+      "role_id": "crtc",
+      "label": "CRT controller",
+      "description": "Generates raster timing only — sync, blanking, display address counters — with no pixel content of its own; contrast with sprite/tilemap, which produce pixels."
+    },
+    {
+      "role_id": "dma",
+      "label": "DMA",
+      "description": "A bus-mastering transfer engine moving blocks between memory and devices on this board, freeing the CPU from per-word transfers."
+    },
+    {
+      "role_id": "dsp",
+      "label": "DSP / coprocessor",
+      "description": "A math or signal coprocessor assisting the main CPU with a specific computation (matrix transforms, compression, geometry), not running the game program itself."
+    },
+    {
+      "role_id": "glue",
+      "label": "Glue logic",
+      "description": "Catalog logic with no system-level identity on this board: 74-series parts, PAL/GAL decoders, buffers, clock generators."
+    },
+    {
+      "role_id": "io",
+      "label": "I/O",
+      "description": "Handles controller inputs, DIP switches, coin/service lines or other system I/O; not sound- or video-specific."
+    },
+    {
+      "role_id": "maincpu",
+      "label": "Main CPU",
+      "description": "The primary CPU driving game logic; the sole CPU on single-CPU boards."
+    },
+    {
+      "role_id": "mcu",
+      "label": "Microcontroller",
+      "description": "A microcontroller performing a bounded task — protection, I/O scanning, a small subsystem — rather than running the main game program."
+    },
+    {
+      "role_id": "memory",
+      "label": "Memory",
+      "description": "Governs memory mapping or bank switching on this board (MMU, mapper); not a storage medium itself."
+    },
+    {
+      "role_id": "mixer",
+      "label": "Mixer / palette",
+      "description": "Combines already-generated video layers into the final picture: priority resolution, palette lookup, blending."
+    },
+    {
+      "role_id": "protection",
+      "label": "Protection",
+      "description": "The board-level copy-protection or region-lockout part, regardless of what its die-level function otherwise is."
+    },
+    {
+      "role_id": "rtc",
+      "label": "Real-time clock",
+      "description": "A battery-backed clock/calendar chip tracking wall-clock time across power-off."
+    },
+    {
+      "role_id": "sound",
+      "label": "Sound",
+      "description": "A sound-generating chip (FM, PSG, sample playback, etc.) driven by audiocpu or maincpu; use a more specific role for the CPU that drives it, not this one."
+    },
+    {
+      "role_id": "sprite",
+      "label": "Sprite",
+      "description": "Fetches, positions, sizes and line-buffers movable objects; contrast with tilemap, which draws the scrolling background."
+    },
+    {
+      "role_id": "storage",
+      "label": "Storage",
+      "description": "Controls a mass-storage medium attached to this board: floppy, hard disk, CD/GD-ROM."
+    },
+    {
+      "role_id": "subcpu",
+      "label": "Sub CPU",
+      "description": "A second general-purpose CPU sharing game-logic duties with maincpu (e.g. dual-CPU boards), distinct from a CPU dedicated to sound."
+    },
+    {
+      "role_id": "tilemap",
+      "label": "Tilemap",
+      "description": "Generates scrolling tile or character background layers, including affine rotate/zoom layers."
+    },
+    {
+      "role_id": "timer",
+      "label": "Timer",
+      "description": "Supplies interval timing or periodic interrupts to the rest of the board."
+    },
+    {
+      "role_id": "unspecified",
+      "label": "Unspecified",
+      "description": "The chip's presence on the board is known but its role has not yet been curated — a placeholder, not a claim that it has no role."
+    },
+    {
+      "role_id": "video",
+      "label": "Video",
+      "description": "A video chip whose job does not fit a more specific role below; prefer sprite/tilemap/mixer/crtc when the part is dedicated to one of those jobs."
+    }
+  ]
+}

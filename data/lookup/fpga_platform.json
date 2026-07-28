@@ -1,0 +1,39 @@
+{
+  "fpga_platform": [
+    {
+      "platform_id": "generic",
+      "label": "Generic / unspecified",
+      "notes": "Used when an implementation targets an FPGA toolchain or netlist without one specific board."
+    },
+    {
+      "platform_id": "mist",
+      "label": "MiST",
+      "notes": "Altera Cyclone III board; MiSTer's predecessor, still targeted by some Amiga/Atari ST-oriented cores."
+    },
+    {
+      "platform_id": "mister",
+      "label": "MiSTer FPGA",
+      "notes": "Terasic DE10-Nano (Cyclone V) based open hardware platform; the most widely targeted platform for open-source arcade and console FPGA cores."
+    },
+    {
+      "platform_id": "neptuno",
+      "label": "Neptuno",
+      "notes": "Low-cost Cyclone IV board popular for ZX Spectrum and other 8-bit computer cores."
+    },
+    {
+      "platform_id": "other",
+      "label": "Other",
+      "notes": "A named platform not yet covered by this table; add a row rather than overload this one."
+    },
+    {
+      "platform_id": "pocket",
+      "label": "Analogue Pocket",
+      "notes": "Handheld device (Xilinx Artix-7) running user-loadable 'openFPGA' cores, a separate core ecosystem from MiSTer."
+    },
+    {
+      "platform_id": "replay",
+      "label": "ReplayFPGA",
+      "notes": "Xilinx Spartan-6 board from the Replay project, an early FPGA reimplementation platform that predates MiSTer."
+    }
+  ]
+}
