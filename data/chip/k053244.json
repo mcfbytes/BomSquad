@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k053244",
+      "display_name": "K053244",
+      "function_id": "video-sprite",
+      "manufacturer_id": "konami",
+      "description": "Sprite generator of the 053244/053245 pair: holds the global X/Y offsets, flip and buffer-copy controls and the graphics-ROM read window.",
+      "notes": "Register map from src/mame/konami/k053244_k053245.cpp in MAME 0.288, whose device full name is \"Konami 053244/053245 Sprite Generator\". konamiic.txt lists 053245+053244 in the sprites column for Surprise Attack, Parodius, Rollergames, Lightning Fighters, Sunset Riders, TMNT 2 and others."
+    }
+  ]
+}

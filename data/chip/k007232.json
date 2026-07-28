@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k007232",
+      "display_name": "K007232",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "konami",
+      "description": "Two-channel PCM sample player addressing up to 128 KB of sample ROM, with a per-voice bank output (taxonomy §4.14 example).",
+      "notes": "MAME 0.288 device k007232, full name \"Konami 007232 PCM Controller\" (src/devices/sound/k007232.cpp; 17-bit sample address bus, bank-switchable per voice)."
+    }
+  ]
+}

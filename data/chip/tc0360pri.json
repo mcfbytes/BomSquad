@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "tc0360pri",
+      "display_name": "TC0360PRI",
+      "function_id": "video-mixer",
+      "manufacturer_id": "taito",
+      "description": "Priority manager accepting three layer inputs, each declaring four priority levels, plus a blend-mode control and a ROZ palette bank (taxonomy §4.22 example).",
+      "notes": "src/mame/taito/tc0360pri.cpp in MAME 0.288."
+    }
+  ]
+}

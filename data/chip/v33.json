@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "v33",
+      "display_name": "V33",
+      "function_id": "cpu",
+      "manufacturer_id": "nec",
+      "description": "16-bit 8086-instruction-set processor (uPD70136) from the NEC V-series, roughly twice the throughput of the V30 at the same clock. Main CPU of the Irem M92 and M107 boards.",
+      "notes": "Part number from the V5x device table in src/devices/cpu/v5x.cpp (MAME 0.288), which lists \"V53 (uPD70236) -- V33 (uPD70136)\". Board usage from src/mame/irem/m107.cpp (\"V33(config, m_maincpu, XTAL(28'000'000) / 2); // NEC V33, 28MHz clock\") and src/mame/irem/m92.cpp."
+    }
+  ]
+}

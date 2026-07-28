@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k051733",
+      "display_name": "K051733",
+      "function_id": "dsp",
+      "manufacturer_id": "konami",
+      "description": "Fixed-function math coprocessor: unsigned divide, modulo and square root over 16-bit operands, an LFSR random-number source, a bounding-box collision test and a programmable NMI timer.",
+      "notes": "Register map and function from src/mame/konami/k051733.cpp in MAME 0.288, whose device full name is \"Konami 051733 math chip\" (00-05 W operands; 00-01 R quotient, 02-03 R remainder, 04-05 R sqrt, 06 R LFSR, 07 R collision flags; 10-13 W NMI timer). Filed dsp on taxonomy §4.3's discriminator that \"a documented math engine is dsp even when it is a board-specific part\"; Q2's microcode clause does not fit fixed-silicon arithmetic, so this is a judgement call flagged for review. konamiic.txt annotates it \"(protection)\", but TB6 reserves protection for parts designed to enforce security and MAME documents this one as arithmetic, so protection was rejected."
+    }
+  ]
+}

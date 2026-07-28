@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5248",
+      "display_name": "Sega 315-5248",
+      "function_id": "dsp",
+      "manufacturer_id": "sega",
+      "description": "Hardware multiplier coprocessor mapped into the 68000 address space.",
+      "package": "QFP100",
+      "notes": "Identified as \"hardware multiplier\" in the custom-parts table of src/mame/sega/segaic16.cpp (MAME 0.288), fitted to System 16B, Out Run (x2) and X-Board (x3); Guru notes in src/mame/sega/segas16b.cpp give \"315-5248 - Custom Sega IC (QFP100)\". Filed dsp on taxonomy §4.3's \"a documented math engine is dsp even when it is a board-specific part\"; flagged as a judgement call, since Q2 is written around microcoded engines and this is fixed silicon."
+    }
+  ]
+}

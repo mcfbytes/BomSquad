@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "namco-c219",
+      "display_name": "Namco C219",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "namco",
+      "description": "Sample player derived from the C140 with a different bank arrangement and compression, used on Namco NA-1/NA-2 and System 11 hardware.",
+      "notes": "src/devices/sound/c140.cpp in MAME 0.288 defines C219 as a subclass of c140_device with its own banking (\"ASIC219's banking is fairly simple\") and its own register handlers. The same source lists open questions about the C219 data bus and LFSR, so the differences from the C140 are not fully established."
+    }
+  ]
+}

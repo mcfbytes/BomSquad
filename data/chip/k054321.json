@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k054321",
+      "display_name": "K054321",
+      "function_id": "io",
+      "manufacturer_id": "konami",
+      "description": "Main-CPU/sound-CPU communication chip: three latches on two decoupled buses plus a global volume control and per-channel mute for two channels; integrated into the 054544 and 054986A hybrid modules.",
+      "notes": "src/devices/sound/k054321.cpp in MAME 0.288, device full name \"Konami 054321 Maincpu-Soundcpu interface\" (\"a sound communication latch/volume manager chip ... manages three latches ... and provides two independent busses\"). Filed io per taxonomy Q11 (sound latches and inter-CPU mailboxes), matching the existing tc0140syt row; it generates no audio itself."
+    }
+  ]
+}

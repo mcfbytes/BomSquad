@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k055673",
+      "display_name": "K055673",
+      "function_id": "video-sprite",
+      "manufacturer_id": "konami",
+      "description": "Sprite generator paired with the 053246 on Konami System GX and the Mystic Warriors family; the higher-colour-depth alternative to the 053247.",
+      "notes": "src/mame/konami/k053246_k053247_k055673.cpp in MAME 0.288 (\"053246 with 053247 or 055673\"; the source asks whether \"the 053247 / 055673 choice [is] just a BPP change like the tilemaps\"). konamiic.txt lists 055673 in the sprites column with 053246 for Gaiapolis, Mystic Warriors, Violent Storm, Monster Maulers, Metamorphic Force, Run and Gun and System GX."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "v70",
+      "display_name": "V70",
+      "function_id": "cpu",
+      "manufacturer_id": "nec",
+      "description": "32-bit CISC processor (uPD70632): the V60 architecture widened to a 32-bit address bus and 32-bit data bus.",
+      "notes": "src/devices/cpu/v60/v60.cpp in MAME 0.288 (\"Emulation for the NEC V60 (uPD70615) and V70 (uPD70632) CPUs\"), which quotes the NEC Semiconductor Selection Guide for the bus widths."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "tc0100scn",
+      "display_name": "TC0100SCN",
+      "function_id": "video-tilemap",
+      "manufacturer_id": "taito",
+      "description": "Tilemap generator: two ROM-sourced 8x8 background layers with rowscroll (one also with columnscroll) plus a RAM-sourced foreground text layer, mixed on-die into a 15-bit pixel stream, and emitting HSYNC/HBLANK/VSYNC/VBLANK (taxonomy §4.18 example).",
+      "notes": "src/mame/taito/tc0100scn.cpp in MAME 0.288, whose pin list is taken from the Operation Thunderbolt schematics."
+    }
+  ]
+}

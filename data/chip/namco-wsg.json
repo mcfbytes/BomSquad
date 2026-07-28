@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "namco-wsg",
+      "display_name": "Namco WSG",
+      "function_id": "sound-wavetable",
+      "manufacturer_id": "namco",
+      "description": "Three-voice mono wavetable sound generator reading 32-byte 4-bit waveforms from PROM; the sound of Pac-Man, Pengo, Dig Dug and their contemporaries (taxonomy §4.13 example).",
+      "notes": "src/devices/sound/namco.cpp in MAME 0.288 (\"NAMCO WSG sound driver ... 3-voice mono (PROM-based design: Pac-Man, Pengo, Dig Dug, etc)\")."
+    }
+  ]
+}

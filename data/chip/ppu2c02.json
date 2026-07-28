@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "ppu2c02",
+      "display_name": "Ricoh 2C02",
+      "function_id": "video-ppu",
+      "manufacturer_id": "ricoh",
+      "description": "NES picture processing unit: a scrolling background tile layer, 64 sprites, the palette and NTSC raster timing on one die (taxonomy §4.20 example).",
+      "notes": "src/devices/video/ppu2c0x.cpp in MAME 0.288 (\"Nintendo 2C0x PPU emulation\"), device full name \"2C02 PPU\". The repo already carries the RGB-output 2C03B relative used by PlayChoice-10."
+    }
+  ]
+}

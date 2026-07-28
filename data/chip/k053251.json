@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k053251",
+      "display_name": "K053251",
+      "function_id": "video-mixer",
+      "manufacturer_id": "konami",
+      "description": "Priority encoder taking five layer inputs (CI0-CI4) plus three external priority inputs and two shadow inputs, and emitting an 11-bit palette index with two shadow bits (taxonomy §4.22 example).",
+      "notes": "src/mame/konami/k053251.cpp in MAME 0.288."
+    }
+  ]
+}

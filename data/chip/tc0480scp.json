@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "tc0480scp",
+      "display_name": "TC0480SCP",
+      "function_id": "video-tilemap",
+      "manufacturer_id": "taito",
+      "description": "Tilemap generator: four ROM-sourced 16x16 background layers with zoom and rowscroll (two also with per-row zoom and column scroll) plus a RAM-sourced 8x8 text layer, mixed on-die into a 16-bit pixel stream (taxonomy §4.18 example).",
+      "notes": "src/mame/taito/tc0480scp.cpp in MAME 0.288, whose pin list is taken from the Gunbuster schematics."
+    }
+  ]
+}

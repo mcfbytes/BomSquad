@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k051960",
+      "display_name": "K051960",
+      "function_id": "video-sprite",
+      "manufacturer_id": "konami",
+      "description": "Sprite list processor and graphics-ROM address generator of the 051960/051937 pair, also generating IRQ, FIRQ and NMI for the main CPU; addresses 1 MB of sprite ROM directly (taxonomy §4.19 example).",
+      "notes": "src/mame/konami/k051960.cpp in MAME 0.288: \"The 051960 manages the sprite list and produces an address that is fed to the gfx ROMs ... can also generate IRQ, FIRQ and NMI signals.\""
+    }
+  ]
+}

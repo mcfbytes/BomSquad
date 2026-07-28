@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "toaplan-scu",
+      "display_name": "Toaplan SCU",
+      "function_id": "video-sprite",
+      "manufacturer_id": "toaplan",
+      "description": "Sprite controller of Twin Cobra, Wardner and Rally Bike: up to 512 fixed 16x16 sprites with flip, a 6-bit colour index and a 2-bit priority level.",
+      "notes": "src/mame/toaplan/toaplan_scu.cpp in MAME 0.288 (\"Toaplan Sprite Controller 'SCU'\"). Not to be confused with the separate Toaplan 1 video controller that the Out Zone schematics also label SCU, which MAME keeps in toaplan_video_controller.cpp."
+    }
+  ]
+}

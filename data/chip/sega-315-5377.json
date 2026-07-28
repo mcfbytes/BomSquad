@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5377",
+      "display_name": "Sega 315-5377",
+      "function_id": "video-ppu",
+      "manufacturer_id": "sega",
+      "description": "Game Gear VDP: the 315-5124/315-5246 line extended with the Game Gear 4096-colour CRAM and reduced active display.",
+      "notes": "MAME 0.288 device sega315_5377, full name \"Sega 315-5377 Gamegear VDP\", implemented in src/devices/video/315_5124.cpp as a derivative of the Master System VDP."
+    }
+  ]
+}

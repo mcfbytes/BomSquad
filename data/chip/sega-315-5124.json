@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5124",
+      "display_name": "Sega 315-5124",
+      "function_id": "video-ppu",
+      "manufacturer_id": "sega",
+      "description": "Master System VDP: tile layer, sprites, raster timing and palette on one die, with the TMS9918A legacy modes (taxonomy §4.20 example). Also used on Sega System E arcade hardware.",
+      "notes": "src/devices/video/315_5124.cpp in MAME 0.288 (\"Implementation of video hardware chips used by Sega System E, Master System, and Game Gear\"), device full name \"Sega 315-5124 SMS1 VDP\". The repo already carries the later 315-5246 (SMS2) revision."
+    }
+  ]
+}

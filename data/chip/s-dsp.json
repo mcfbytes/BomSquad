@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "s-dsp",
+      "display_name": "S-DSP",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "sony",
+      "description": "Eight-voice BRR-ADPCM sample player of the SNES with per-voice ADSR envelopes, pitch modulation, noise, an 8-tap FIR echo unit and stereo panning, reading samples from the S-SMP address space.",
+      "notes": "src/devices/sound/s_dsp.cpp in MAME 0.288, device full name \"Nintendo/Sony S-DSP\", which implements BRR decoding, per-voice ADSR envelope states, a noise generator, pitch modulation and an FIR echo buffer. Filed sound-pcm under taxonomy A2 (fixed-silicon sample replay); Q2 does not fire because the part runs no microcode. Manufacturer recorded as Sony for the same reason as the S-SMP row."
+    }
+  ]
+}

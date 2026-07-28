@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "5a22",
+      "display_name": "Ricoh 5A22",
+      "function_id": "cpu",
+      "manufacturer_id": "ricoh",
+      "description": "65C816-core processor with integrated DMA/HDMA, controller ports, multiply/divide registers and the SNES system timing (taxonomy §6 adjudication: TB1, the core absorbs the rest).",
+      "notes": "Classification fixed by docs/taxonomy.md §6. MAME 0.288 defines the device in src/devices/cpu/g65816/g65816.cpp as _5A22, short name \"5a22\", full name \"Ricoh 5A22\"."
+    }
+  ]
+}

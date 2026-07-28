@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k007121",
+      "display_name": "K007121",
+      "function_id": "video-ppu",
+      "manufacturer_id": "konami",
+      "description": "Video controller managing sprites and two 32x32 tilemaps (joinable to 64x32) with all tile/sprite priority resolved on-die, generating 6809-compatible clock and interrupt signals; an evolution of the 005885 (taxonomy V1).",
+      "notes": "Function from src/mame/konami/k007121.cpp in MAME 0.288 (\"It manages sprites and two 32x32 tilemaps ... The chip also generates clock and interrupt signals suitable for a 6809\"). Filed video-ppu because one die produces tile layers, sprites and timing (taxonomy §3.1 V1)."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "tc0180vcu",
+      "display_name": "TC0180VCU",
+      "function_id": "video-ppu",
+      "manufacturer_id": "taito",
+      "description": "Video control unit of the Taito B system: two 16x16 background tilemaps, an 8x8 text tilemap, the sprite engine, a page-flipped framebuffer and the blanking-derived INT/INTL interrupt outputs, all on one die (taxonomy V1).",
+      "notes": "src/mame/taito/tc0180vcu.cpp in MAME 0.288: three tilemaps created in device_start, a spriteram region at 0x10000, a framebuffer window at 0x40000-0x7ffff, and a vblank callback driving \"the INT ... and INTL/\\\"INT4\\\" (pin 66) interrupt outputs\". Filed video-ppu because one die produces tile layers, sprites and the video-derived timing; this is a judgement call on V1's third limb, since the source documents interrupt outputs rather than sync generation."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "ymw258f",
+      "display_name": "YMW-258-F",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "yamaha",
+      "description": "28-voice sample player (\"GEW8\") reading a metadata table plus 8-bit or 12-bit linear samples from ROM, with per-voice pan, pitch, envelope and LFO; second-sourced to Sega as the 315-5560.",
+      "notes": "src/devices/sound/multipcm.cpp in MAME 0.288 (\"Yamaha YMW-258-F 'GEW8' (aka Sega 315-5560) emulation ... Information by R. Belmont and the YMF278B (OPL4) manual\")."
+    }
+  ]
+}

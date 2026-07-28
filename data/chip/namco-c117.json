@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "namco-c117",
+      "display_name": "Namco C117",
+      "function_id": "memory",
+      "manufacturer_id": "namco",
+      "description": "MMU providing a 23-bit virtual address space to a pair of M6809 CPUs in eight 8 KB banks each, and emitting the RAM/ROM/video chip-enable lines; also serves as the interrupt controller for the two 6809s and as the system reset generator.",
+      "notes": "src/mame/namco/c117.cpp in MAME 0.288, device full name \"Namco C117 MMU\". Filed memory (taxonomy Q8) because address translation and banking is the part's stated primary function; the interrupt and reset duties are secondary, so TB5 does not fire."
+    }
+  ]
+}

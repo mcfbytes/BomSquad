@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k053245",
+      "display_name": "K053245",
+      "function_id": "video-sprite",
+      "manufacturer_id": "konami",
+      "description": "Sprite generator of the 053244/053245 pair, carrying the 16-bit main-CPU data bus and the double-buffered sprite RAM.",
+      "notes": "src/mame/konami/k053244_k053245.cpp in MAME 0.288 (\"The 053245 has a 16-bit data bus to the main CPU. The sprites are buffered, a write to 006 activates to copy between the main ram and the buffer\"). MAME models the pair with a single k053244 device, so this chip row has no mame_device row of its own."
+    }
+  ]
+}

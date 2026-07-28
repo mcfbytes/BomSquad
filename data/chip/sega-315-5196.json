@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5196",
+      "display_name": "Sega 315-5196",
+      "function_id": "video-sprite",
+      "manufacturer_id": "sega",
+      "description": "Sprite generator of Sega System 16B, System 18 and System C.",
+      "package": "PGA135",
+      "notes": "Guru PCB notes in src/mame/sega/segas16b.cpp (MAME 0.288): \"315-5196 - Custom Sega IC Sprite Generator (PGA135)\"; corroborated by the custom-parts table in src/mame/sega/segaic16.cpp."
+    }
+  ]
+}

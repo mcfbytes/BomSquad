@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5195",
+      "display_name": "Sega 315-5195",
+      "function_id": "memory",
+      "manufacturer_id": "sega",
+      "description": "Memory mapper: programmable address decoding and banking for the 68000 bus on Sega System 16B, System 18, System 24 and X-Board (taxonomy §4.5 example).",
+      "package": "PGA135",
+      "notes": "Identified as \"memory mapper\" in the custom-parts table of src/mame/sega/segaic16.cpp in MAME 0.288 and in the Guru PCB notes in src/mame/sega/segas16b.cpp (\"315-5195 - Custom Sega IC (PGA135)\")."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "tc0510nio",
+      "display_name": "TC0510NIO",
+      "function_id": "io",
+      "manufacturer_id": "taito",
+      "description": "QFP100 successor to the TC0220IOC with the same DSW/player/coin port set, watchdog and coin counter/lockout outputs.",
+      "package": "QFP100",
+      "notes": "src/mame/taito/taitoio.cpp in MAME 0.288 (\"Newer QFP100 version of the I/O chip\")."
+    }
+  ]
+}

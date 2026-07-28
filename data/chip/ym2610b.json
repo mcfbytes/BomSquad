@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "ym2610b",
+      "display_name": "YM2610B",
+      "function_id": "sound-fm",
+      "manufacturer_id": "yamaha",
+      "family_id": "opn",
+      "description": "OPNB2: the YM2610 with six FM channels instead of four, retaining the SSG, ADPCM-A and ADPCM-B sections (taxonomy TB3 keeps the whole part in sound-fm).",
+      "notes": "MAME 0.288 device ym2610b, full name \"YM2610B OPNB2\", implemented in src/devices/sound/ymopn.cpp alongside the YM2610 (OPNB)."
+    }
+  ]
+}

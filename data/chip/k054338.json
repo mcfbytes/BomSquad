@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k054338",
+      "display_name": "K054338",
+      "function_id": "video-mixer",
+      "manufacturer_id": "konami",
+      "description": "Colour combiner and final mixer: background colour, three shadow/highlight blend sets, brightness and alpha-blend registers, normally driven alongside the 055555.",
+      "notes": "src/mame/konami/k054338.cpp in MAME 0.288 (\"Color combiner engine / final mixer. Designed for use with the 055555\"), device full name \"Konami 054338 Mixer\". konamiic.txt annotates it \"(alpha blending)\" and records the equivalent 058144 on version 2 System GX mainboards."
+    }
+  ]
+}

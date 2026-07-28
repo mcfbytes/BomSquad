@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "toaplan-fcu",
+      "display_name": "Toaplan FCU",
+      "function_id": "video-sprite",
+      "manufacturer_id": "toaplan",
+      "description": "Sprite generator of Toaplan 1 hardware: up to 256 sprites of 8x8 to 128x128 pixels, sized through a lookup RAM, with a 4-bit priority level per sprite.",
+      "notes": "src/mame/toaplan/toaplan_fcu.cpp in MAME 0.288 (\"Toaplan 'FCU' sprite generator\"). Toaplan 1 boards mark the part FCU-2."
+    }
+  ]
+}

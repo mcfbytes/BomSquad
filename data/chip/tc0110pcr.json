@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "tc0110pcr",
+      "display_name": "TC0110PCR",
+      "function_id": "video-mixer",
+      "manufacturer_id": "taito",
+      "description": "Palette RAM interface with a fixed-order tilemap/sprite priority handler on a 16-bit data bus (taxonomy §4.22 example).",
+      "notes": "src/mame/taito/tc0110pcr.cpp in MAME 0.288 (\"Interface to palette RAM, and simple tilemap/sprite priority handler. The priority order seems to be fixed\")."
+    }
+  ]
+}

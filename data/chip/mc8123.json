@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "mc8123",
+      "display_name": "MC-8123",
+      "function_id": "cpu",
+      "manufacturer_id": "nec",
+      "family_id": "z80",
+      "description": "Zilog Z80 with built-in encryption: 12 address bits plus the opcode/data distinction select a key byte from 8 KB of battery-backed internal RAM, which controls the decryption of each fetched byte.",
+      "notes": "src/devices/cpu/z80/mc8123.cpp in MAME 0.288 (\"The NEC MC-8123 is a Z80 with built-in encryption. It contains 0x2000 bytes of battery-backed RAM\"). Classified cpu by the taxonomy §6 FD1094 adjudication (TB1, TB6: decryption is a property of the core's fetch path). Fitted to Sega System 16 and System E boards, where Sega catalogues it under 317-xxxx key numbers."
+    }
+  ]
+}

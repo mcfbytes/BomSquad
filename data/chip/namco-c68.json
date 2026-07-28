@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "namco-c68",
+      "display_name": "Namco C68",
+      "function_id": "mcu",
+      "manufacturer_id": "namco",
+      "description": "Mitsubishi M37450 microcontroller with on-die program ROM, used as the I/O and coin/input controller of later Namco System 2 boards.",
+      "notes": "src/mame/namco/namco68.cpp in MAME 0.288 (device full name \"Namco C68 I/O\") wraps an m37450_device with an internal ROM region. Filed mcu under taxonomy TB2. MAME instantiates the m37450 core as a separate device inside this one, so a machine can list both for a single package."
+    }
+  ]
+}

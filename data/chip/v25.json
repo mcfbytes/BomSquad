@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "v25",
+      "display_name": "V25",
+      "function_id": "cpu",
+      "manufacturer_id": "nec",
+      "description": "V20-core 16/8-bit processor with integrated register banks, two 16-bit timers, a two-channel DMA controller, an interrupt controller, a dual-channel UART and I/O ports (uPD70320 family). Arcade boards fit the ROM-less variant, executing from external program ROM.",
+      "notes": "NEC markets the V25/V35 as \"16/8-bit single-chip microcontrollers\", but the arcade parts run their program from external memory across a bus, so taxonomy TB2 gives cpu — the same call this dataset already makes for the i8032, i8035 and h83002 ROM-less variants. Peripheral list from src/devices/cpu/nec/v25.cpp in MAME 0.288 and the uPD70320 datasheet."
+    }
+  ]
+}

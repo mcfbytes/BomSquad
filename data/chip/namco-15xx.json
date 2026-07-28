@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "namco-15xx",
+      "display_name": "Namco 15XX",
+      "function_id": "sound-wavetable",
+      "manufacturer_id": "namco",
+      "description": "Eight-voice mono wavetable generator reading 4-bit waveforms from PROM and streaming them into the companion 99XX DAC rather than converting on-die (taxonomy §4.13 example).",
+      "notes": "src/devices/sound/namco.cpp in MAME 0.288 (\"8-voice mono (custom 15XX: Mappy, Dig Dug 2, etc) ... The 15XX custom does not have a DAC of its own; instead, it streams the 4-bit PROM data directly into the 99XX custom DAC\")."
+    }
+  ]
+}

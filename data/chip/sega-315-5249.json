@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5249",
+      "display_name": "Sega 315-5249",
+      "function_id": "dsp",
+      "manufacturer_id": "sega",
+      "description": "Hardware divider coprocessor mapped into the 68000 address space.",
+      "notes": "Identified as \"hardware divider\" in the custom-parts table of src/mame/sega/segaic16.cpp (MAME 0.288), fitted to Out Run (x2) and X-Board (x3). Filed dsp on the same reasoning as the 315-5248 and flagged as a judgement call."
+    }
+  ]
+}

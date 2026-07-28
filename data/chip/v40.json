@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "v40",
+      "display_name": "V40",
+      "function_id": "cpu",
+      "manufacturer_id": "nec",
+      "description": "V20 core (uPD70208) with an integrated timer/counter unit, DMA control unit, interrupt control unit and serial control unit.",
+      "notes": "Device table in src/devices/cpu/v5x.cpp (MAME 0.288): \"V40 (uPD70208) -- V20 (uPD70108)\", with the TCU/DMAU/ICU/SCU peripheral list and datasheet references given in the same header. Filed cpu under taxonomy TB1/TB2 (external program bus)."
+    }
+  ]
+}

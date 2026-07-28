@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k053246",
+      "display_name": "K053246",
+      "function_id": "video-sprite",
+      "manufacturer_id": "konami",
+      "description": "Sprite generator paired with the 053247 or the 055673: holds global X/Y offsets, flip and object-DMA controls and the graphics-ROM read address.",
+      "notes": "src/mame/konami/k053246_k053247_k055673.cpp in MAME 0.288 (\"053247/053246 ... Sprite generators\"; \"053246 memory map (but the 053247 sees and processes them too)\"). MAME models the pair with the k053247 or k055673 device, so this chip row has no mame_device row of its own. konamiic.txt records that the version 2 System GX mainboard substitutes the equivalent 058142 in a smaller package."
+    }
+  ]
+}

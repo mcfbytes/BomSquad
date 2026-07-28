@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "v53a",
+      "display_name": "V53A",
+      "function_id": "cpu",
+      "manufacturer_id": "nec",
+      "description": "V33A core (uPD70236A) with an integrated timer/counter unit, DMA control unit, interrupt control unit and serial control unit; the DMAU additionally supports a uPD71037/i8237A-compatible mode.",
+      "notes": "Device table and peripheral notes in src/devices/cpu/v5x.cpp (MAME 0.288): \"V53A (uPD70236A) -- V33A (uPD70136A)\"; \"The V53/V53A DMAU also supports a configurable uPD71037/i8237A mode.\""
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "tc0150rod",
+      "display_name": "TC0150ROD",
+      "function_id": "video-tilemap",
+      "manufacturer_id": "taito",
+      "description": "Road layer generator for Taito driving games: two forkable roads composed per scanline from 256 lines of road RAM (edge and body positions, colour bank, priority) plus road graphics tiles fetched from ROM.",
+      "notes": "src/mame/taito/tc0150rod.cpp in MAME 0.288 (\"Road generator. Two roads allow for forking. Gfx data fetched from ROM\"), with the per-line RAM layout including a \"Road Gfx Tile number\" field. Filed video-tilemap under taxonomy V3 — a scrolling layer generated from a map plus a character ROM into the scanout path — because the taxonomy has no road-generator value; flagged as a judgement call."
+    }
+  ]
+}

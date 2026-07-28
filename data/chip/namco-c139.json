@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "namco-c139",
+      "display_name": "Namco C139",
+      "function_id": "io",
+      "manufacturer_id": "namco",
+      "description": "Serial interface controller with 16 KB of shared RAM, used for the board-to-board link on Namco System 2 and System 21 multi-cabinet games.",
+      "notes": "src/mame/namco/namco_c139.cpp in MAME 0.288, device full name \"Namco C139 Serial\" (\"Namco C139 - Serial I/F Controller\"). Filed io per taxonomy Q11 (network/link interfaces). MAME notes the emulation is incomplete and asks whether the part is itself an MCU with internal ROM; if that is confirmed the row needs revisiting."
+    }
+  ]
+}

@@ -25,6 +25,10 @@
       "chip_id": "sega-315-5649"
     },
     {
+      "mame_device": "5a22",
+      "chip_id": "5a22"
+    },
+    {
       "mame_device": "7474",
       "chip_id": "7474"
     },
@@ -113,6 +117,14 @@
     {
       "mame_device": "buffered_spriteram16",
       "ignore_reason": "Sprite-RAM double-buffering helper; models a RAM-copy convention, not a part."
+    },
+    {
+      "mame_device": "c140",
+      "chip_id": "namco-c140"
+    },
+    {
+      "mame_device": "c219",
+      "chip_id": "namco-c219"
     },
     {
       "mame_device": "c352",
@@ -264,6 +276,18 @@
       "ignore_reason": "On-die I/O port block of a Fujitsu F2MC-16-family microcontroller."
     },
     {
+      "mame_device": "fd1089a",
+      "chip_id": "fd1089a"
+    },
+    {
+      "mame_device": "fd1089b",
+      "chip_id": "fd1089b"
+    },
+    {
+      "mame_device": "fd1094",
+      "chip_id": "fd1094"
+    },
+    {
       "mame_device": "filter_rc",
       "ignore_reason": "Models a passive resistor-capacitor filter stage in the audio path; passive components, not silicon — no chip exists behind this device."
     },
@@ -342,6 +366,10 @@
     {
       "mame_device": "gfxdecode",
       "ignore_reason": "MAME graphics-decoding helper; decodes ROM data for the renderer, with no hardware counterpart."
+    },
+    {
+      "mame_device": "gp9001vdp",
+      "chip_id": "gp9001"
     },
     {
       "mame_device": "gpl_dma",
@@ -550,8 +578,77 @@
       "ignore_reason": "JVS bus port/connector abstraction."
     },
     {
+      "mame_device": "k005289",
+      "chip_id": "k005289"
+    },
+    {
+      "mame_device": "k007121",
+      "chip_id": "k007121"
+    },
+    {
+      "mame_device": "k007232",
+      "chip_id": "k007232"
+    },
+    {
+      "mame_device": "k051316",
+      "chip_id": "k051316"
+    },
+    {
+      "mame_device": "k051649",
+      "chip_id": "k051649"
+    },
+    {
+      "mame_device": "k051733",
+      "chip_id": "k051733"
+    },
+    {
+      "mame_device": "k051960",
+      "chip_id": "k051960",
+      "note": "MAME models the 051960/051937 sprite pair as one device named after the 051960, which is the half that processes the sprite list; the 051937 has its own chip row and no device row."
+    },
+    {
+      "mame_device": "k052109",
+      "chip_id": "k052109",
+      "note": "MAME models the 052109/051962 tilemap pair as one device named after the 052109, which is the half that manages the tilemaps; the 051962 has its own chip row and no device row. The device also stands for the earlier, functionally equivalent 051961 (konamiic.txt)."
+    },
+    {
+      "mame_device": "k053244",
+      "chip_id": "k053244",
+      "note": "MAME device full name \"Konami 053244/053245 Sprite Generator\": one device for the pair, mapped to the 053244 whose register map it implements. The 053245 has its own chip row and no device row."
+    },
+    {
+      "mame_device": "k053247",
+      "chip_id": "k053247",
+      "note": "MAME models the 053246/053247 sprite pair as one device named after the 053247; the 053246 has its own chip row and no device row."
+    },
+    {
+      "mame_device": "k053251",
+      "chip_id": "k053251"
+    },
+    {
       "mame_device": "k053252",
       "chip_id": "k053252"
+    },
+    {
+      "mame_device": "k053260",
+      "chip_id": "k053260"
+    },
+    {
+      "mame_device": "k053936",
+      "chip_id": "k053936"
+    },
+    {
+      "mame_device": "k054000",
+      "chip_id": "k054000"
+    },
+    {
+      "mame_device": "k054321",
+      "chip_id": "k054321",
+      "note": "The 054321 is also the communication block inside the 054544 and 054986A hybrid modules (src/devices/sound/k054321.cpp); MAME instantiates this device for those boards too."
+    },
+    {
+      "mame_device": "k054338",
+      "chip_id": "k054338"
     },
     {
       "mame_device": "k054539",
@@ -560,6 +657,19 @@
     {
       "mame_device": "k055555",
       "chip_id": "k055555"
+    },
+    {
+      "mame_device": "k055673",
+      "chip_id": "k055673",
+      "note": "MAME models the 053246/055673 sprite pair as one device named after the 055673; the 053246 has its own chip row and no device row."
+    },
+    {
+      "mame_device": "k056230",
+      "chip_id": "k056230"
+    },
+    {
+      "mame_device": "k056800",
+      "chip_id": "k056800"
     },
     {
       "mame_device": "k056832",
@@ -581,6 +691,10 @@
     {
       "mame_device": "kp64",
       "ignore_reason": "On-die KP64 timer/counter macro cell of a Kawasaki Steel KL5C80-family microcontroller, modelled as a child device; not a separate package."
+    },
+    {
+      "mame_device": "lr35902",
+      "chip_id": "lr35902"
     },
     {
       "mame_device": "ls259",
@@ -673,6 +787,10 @@
     {
       "mame_device": "mc68681",
       "chip_id": "mc68681"
+    },
+    {
+      "mame_device": "mc8123",
+      "chip_id": "mc8123"
     },
     {
       "mame_device": "mcpx_ohci",
@@ -768,16 +886,79 @@
       "chip_id": "n82077aa"
     },
     {
+      "mame_device": "namco_15xx",
+      "chip_id": "namco-15xx"
+    },
+    {
       "mame_device": "namco_c116",
       "chip_id": "namco-c116"
+    },
+    {
+      "mame_device": "namco_c117",
+      "chip_id": "namco-c117"
     },
     {
       "mame_device": "namco_c123tmap",
       "chip_id": "namco-c123"
     },
     {
+      "mame_device": "namco_c139",
+      "chip_id": "namco-c139"
+    },
+    {
       "mame_device": "namco_c148",
       "chip_id": "namco-c148"
+    },
+    {
+      "mame_device": "namco_c169roz",
+      "chip_id": "namco-c169"
+    },
+    {
+      "mame_device": "namco_c355spr",
+      "chip_id": "namco-c355"
+    },
+    {
+      "mame_device": "namco_cus30",
+      "chip_id": "namco-cus30"
+    },
+    {
+      "mame_device": "namco_wsg",
+      "chip_id": "namco-wsg"
+    },
+    {
+      "mame_device": "namcoc65",
+      "chip_id": "namco-c65",
+      "note": "MAME instantiates the HD63705 core as a subdevice inside this one, so a machine can list both for a single physical package."
+    },
+    {
+      "mame_device": "namcoc68",
+      "chip_id": "namco-c68",
+      "note": "MAME instantiates the Mitsubishi M37450 core as a subdevice inside this one, so a machine can list both for a single physical package."
+    },
+    {
+      "mame_device": "namcoc69",
+      "chip_id": "namco-c69",
+      "note": "MAME instantiates the Mitsubishi M37702 core as a subdevice inside this one, so a machine can list both for a single physical package."
+    },
+    {
+      "mame_device": "namcoc70",
+      "chip_id": "namco-c70",
+      "note": "MAME instantiates the Mitsubishi M37702 core as a subdevice inside this one, so a machine can list both for a single physical package."
+    },
+    {
+      "mame_device": "namcoc74",
+      "chip_id": "namco-c74",
+      "note": "MAME instantiates the Mitsubishi M37702 core as a subdevice inside this one, so a machine can list both for a single physical package."
+    },
+    {
+      "mame_device": "namcoc75",
+      "chip_id": "namco-c75",
+      "note": "MAME instantiates the Mitsubishi M37702 core as a subdevice inside this one, so a machine can list both for a single physical package."
+    },
+    {
+      "mame_device": "namcoc76",
+      "chip_id": "namco-c76",
+      "note": "MAME instantiates the Mitsubishi M37702 core as a subdevice inside this one, so a machine can list both for a single physical package."
     },
     {
       "mame_device": "naomi_m2_board",
@@ -848,6 +1029,10 @@
     {
       "mame_device": "nl_stream_out",
       "ignore_reason": "Netlist-simulation plumbing; not a part."
+    },
+    {
+      "mame_device": "nmk112",
+      "chip_id": "nmk112"
     },
     {
       "mame_device": "ns16550",
@@ -947,8 +1132,17 @@
       "note": "The rendering core of the HOLLY system ASIC; HOLLY's Maple and G2 bus blocks are separate MAME devices, ignored as on-die."
     },
     {
+      "mame_device": "ppu2c02",
+      "chip_id": "ppu2c02"
+    },
+    {
       "mame_device": "ppu2c03b",
       "chip_id": "ppu2c03b"
+    },
+    {
+      "mame_device": "ppu2c04",
+      "chip_id": "ppu2c04",
+      "note": "MAME models the 2C04-0001..0004 palette variants with this one device plus a supplied palette, so the row stands for the 2C04 family rather than a single suffix."
     },
     {
       "mame_device": "ppu_vt03",
@@ -1022,6 +1216,10 @@
       "ignore_reason": "Configurable RAM abstraction: models memory capacity as configuration; the physical array is a board-specific mix of parts, not a single identifiable chip."
     },
     {
+      "mame_device": "rf5c68",
+      "chip_id": "rf5c68"
+    },
+    {
       "mame_device": "rp2a03_core",
       "ignore_reason": "6502-family CPU core sub-device instantiated inside famiclone system-on-chip models; not a discrete RP2A03 package."
     },
@@ -1060,6 +1258,14 @@
     {
       "mame_device": "s2650",
       "chip_id": "s2650"
+    },
+    {
+      "mame_device": "s_dsp",
+      "chip_id": "s-dsp"
+    },
+    {
+      "mame_device": "s_smp",
+      "chip_id": "s-smp"
     },
     {
       "mame_device": "samples",
@@ -1106,12 +1312,20 @@
       "ignore_reason": "On-die DSP block of the Sega Saturn SCU (mapped via the saturn_scu device)."
     },
     {
+      "mame_device": "sega315_5124",
+      "chip_id": "sega-315-5124"
+    },
+    {
       "mame_device": "sega315_5246",
       "chip_id": "sega-315-5246"
     },
     {
       "mame_device": "sega315_5313",
       "chip_id": "sega-315-5313"
+    },
+    {
+      "mame_device": "sega315_5377",
+      "chip_id": "sega-315-5377"
     },
     {
       "mame_device": "sega315_5881",
@@ -1122,12 +1336,33 @@
       "chip_id": "sega-315-6154"
     },
     {
+      "mame_device": "sega_315_5195",
+      "chip_id": "sega-315-5195"
+    },
+    {
+      "mame_device": "sega_315_5248",
+      "chip_id": "sega-315-5248"
+    },
+    {
+      "mame_device": "sega_315_5249",
+      "chip_id": "sega-315-5249"
+    },
+    {
+      "mame_device": "sega_sys16b_sprite",
+      "chip_id": "sega-315-5196",
+      "note": "MAME's System 16B sprite device also serves System 18 and System C boards. The custom-parts table in src/mame/sega/segaic16.cpp marks the 315-5196 present on all three, but also lists an equivalent 315-5361 on System 18; which part a given System 18 board carries is machine-dependent and a global device row cannot express it, so per-machine trimming belongs in machine_chip_correction rows."
+    },
+    {
       "mame_device": "segabill",
       "ignore_reason": "Sega bill validator; an electromechanical peripheral."
     },
     {
       "mame_device": "segadimm",
       "ignore_reason": "Sega NAOMI DIMM board: a PCB assembly, not a chip."
+    },
+    {
+      "mame_device": "segapcm",
+      "chip_id": "sega-315-5218"
     },
     {
       "mame_device": "segapsg",
@@ -1209,8 +1444,60 @@
       "ignore_reason": "On-die renderer block of the Sunplus SPG2xx system-on-a-chip (mapped via the spg24x device)."
     },
     {
+      "mame_device": "tc0040ioc",
+      "chip_id": "tc0040ioc"
+    },
+    {
+      "mame_device": "tc0080vco",
+      "chip_id": "tc0080vco"
+    },
+    {
+      "mame_device": "tc0090lvc",
+      "chip_id": "tc0090lvc"
+    },
+    {
+      "mame_device": "tc0091lvc",
+      "chip_id": "tc0091lvc"
+    },
+    {
+      "mame_device": "tc0100scn",
+      "chip_id": "tc0100scn"
+    },
+    {
+      "mame_device": "tc0110pcr",
+      "chip_id": "tc0110pcr"
+    },
+    {
       "mame_device": "tc0140syt",
       "chip_id": "tc0140syt"
+    },
+    {
+      "mame_device": "tc0150rod",
+      "chip_id": "tc0150rod"
+    },
+    {
+      "mame_device": "tc0180vcu",
+      "chip_id": "tc0180vcu"
+    },
+    {
+      "mame_device": "tc0220ioc",
+      "chip_id": "tc0220ioc"
+    },
+    {
+      "mame_device": "tc0360pri",
+      "chip_id": "tc0360pri"
+    },
+    {
+      "mame_device": "tc0480scp",
+      "chip_id": "tc0480scp"
+    },
+    {
+      "mame_device": "tc0510nio",
+      "chip_id": "tc0510nio"
+    },
+    {
+      "mame_device": "tc0640fio",
+      "chip_id": "tc0640fio"
     },
     {
       "mame_device": "ticket_dispenser",
@@ -1251,6 +1538,18 @@
       "chip_id": "tms57002"
     },
     {
+      "mame_device": "toaplan_bcu",
+      "chip_id": "toaplan-bcu"
+    },
+    {
+      "mame_device": "toaplan_fcu",
+      "chip_id": "toaplan-fcu"
+    },
+    {
+      "mame_device": "toaplan_scu",
+      "chip_id": "toaplan-scu"
+    },
+    {
       "mame_device": "ttl166",
       "chip_id": "74166"
     },
@@ -1275,8 +1574,55 @@
       "chip_id": "v20"
     },
     {
+      "mame_device": "v25",
+      "chip_id": "v25"
+    },
+    {
       "mame_device": "v30",
       "chip_id": "v30"
+    },
+    {
+      "mame_device": "v33",
+      "chip_id": "v33"
+    },
+    {
+      "mame_device": "v35",
+      "chip_id": "v35"
+    },
+    {
+      "mame_device": "v40",
+      "chip_id": "v40"
+    },
+    {
+      "mame_device": "v50",
+      "chip_id": "v50"
+    },
+    {
+      "mame_device": "v53a",
+      "chip_id": "v53a"
+    },
+    {
+      "mame_device": "v5x_dmau",
+      "ignore_reason": "On-die peripheral block of the NEC V40/V50/V53/V53A, which MAME instantiates as a subdevice of the v40/v50/v53/v53a CPU device (src/devices/cpu/v5x.cpp).",
+      "note": "DMA control unit; documented as uPD71071-equivalent."
+    },
+    {
+      "mame_device": "v5x_icu",
+      "ignore_reason": "On-die peripheral block of the NEC V40/V50/V53/V53A, which MAME instantiates as a subdevice of the v40/v50/v53/v53a CPU device (src/devices/cpu/v5x.cpp).",
+      "note": "Interrupt control unit; documented as uPD71059/i8259-equivalent."
+    },
+    {
+      "mame_device": "v5x_scu",
+      "ignore_reason": "On-die peripheral block of the NEC V40/V50/V53/V53A, which MAME instantiates as a subdevice of the v40/v50/v53/v53a CPU device (src/devices/cpu/v5x.cpp).",
+      "note": "Serial control unit; documented as a uPD71051/i8251 subset (async only)."
+    },
+    {
+      "mame_device": "v60",
+      "chip_id": "v60"
+    },
+    {
+      "mame_device": "v70",
+      "chip_id": "v70"
     },
     {
       "mame_device": "v9938",
@@ -1289,6 +1635,11 @@
     {
       "mame_device": "va_rc_eg",
       "ignore_reason": "Models an RC envelope-generator circuit: a passive/discrete network shaped by control voltages, not an identifiable single chip."
+    },
+    {
+      "mame_device": "vr4300be",
+      "chip_id": "vr4300",
+      "note": "The \"be\" suffix is MAME's big-endian configuration of the VR4300 core, not a separate part."
     },
     {
       "mame_device": "vt1682timer",
@@ -1373,6 +1724,10 @@
       "chip_id": "ym2610"
     },
     {
+      "mame_device": "ym2610b",
+      "chip_id": "ym2610b"
+    },
+    {
       "mame_device": "ym2612",
       "chip_id": "ym2612"
     },
@@ -1383,6 +1738,10 @@
     {
       "mame_device": "ym3812",
       "chip_id": "ym3812"
+    },
+    {
+      "mame_device": "ymw258f",
+      "chip_id": "ymw258f"
     },
     {
       "mame_device": "ymz280b",

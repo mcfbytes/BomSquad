@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k051649",
+      "display_name": "K051649",
+      "function_id": "sound-wavetable",
+      "manufacturer_id": "konami",
+      "description": "Five-channel wavetable generator playing 32-byte signed 8-bit waveforms from on-die waveform RAM; the SCC1, functionally the sound half of the Konami MSX SCC cartridges (taxonomy §4.13 example).",
+      "notes": "src/devices/sound/k051649.cpp in MAME 0.288: \"The 051649 is a 5 channel sound generator, each channel gets its waveform from RAM (32 bytes per waveform, 8 bit signed data).\""
+    }
+  ]
+}

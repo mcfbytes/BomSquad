@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "tc0640fio",
+      "display_name": "TC0640FIO",
+      "function_id": "io",
+      "manufacturer_id": "taito",
+      "description": "Later Taito I/O interface with the same port set as the TC0510NIO (taxonomy §4.10 example).",
+      "notes": "src/mame/taito/taitoio.cpp in MAME 0.288."
+    }
+  ]
+}

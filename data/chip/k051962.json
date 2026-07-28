@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k051962",
+      "display_name": "K051962",
+      "function_id": "video-tilemap",
+      "manufacturer_id": "konami",
+      "description": "Tilemap pixel stage of the 052109/051962 pair: multiplexes the three tile layers, converting graphics-ROM data and colour code into palette indexes and transparency bits for an external mixer.",
+      "notes": "src/mame/konami/k052109.cpp in MAME 0.288 (\"Konami 052109/051962 ... The 051962 multiplexes the data of the three layers and converts it into palette indexes and transparency bits which will be mixed later in the video chain\"). MAME has no separate 051962 device: the pair is emulated by the k052109 device, so this chip row has no mame_device row. Filed video-tilemap rather than video-mixer because the source states the mixing happens later, off-die (TB4)."
+    }
+  ]
+}

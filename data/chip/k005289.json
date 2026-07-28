@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k005289",
+      "display_name": "K005289",
+      "function_id": "sound-wavetable",
+      "manufacturer_id": "konami",
+      "description": "Two-channel waveform address/frequency generator for an external 4-bit waveform PROM (32 bytes per waveform, eight waveforms), volume and waveform selection supplied by a companion AY-3-8910; the SCC sound of Konami Bubble System hardware.",
+      "notes": "src/devices/sound/k005289.cpp in MAME 0.288: \"The 005289 is a 2 channel sound generator. Each channel gets its waveform from a prom (4 bits wide) ... The 005289 itself is nothing but an address generator.\" Filed sound-wavetable per taxonomy A4/§4.13 (waveform held in ROM, looped at a programmable rate); TB4 keeps the address-generator role inside its own branch."
+    }
+  ]
+}

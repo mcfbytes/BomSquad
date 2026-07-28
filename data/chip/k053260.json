@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k053260",
+      "display_name": "K053260",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "konami",
+      "description": "Four-voice PCM/ADPCM sample player with a 21-bit sample-ROM address bus (2 MB), a YM3012-compatible output and a YM2151-compatible digital auxiliary input, integrating four 8-bit main-CPU/sound-CPU communication ports (taxonomy §4.14 example).",
+      "notes": "src/devices/sound/k053260.cpp in MAME 0.288, device full name \"Konami 053260 KDSC\"."
+    }
+  ]
+}

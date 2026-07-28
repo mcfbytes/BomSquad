@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "rf5c68",
+      "display_name": "RF5C68",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "ricoh",
+      "description": "Eight-channel PCM sample player with 64 KB of on-die waveform RAM, mapped as a register block plus a wave-RAM window (taxonomy §4.14 example).",
+      "notes": "src/devices/sound/rf5c68.cpp in MAME 0.288 (\"ricoh RF5C68(or clone) PCM controller\"). The custom-parts table in src/mame/sega/segaic16.cpp records that Sega System 18 and System 32 fit the same part, \"also seen as 315-5476A and ASSP 5c105 and ASSP 5c68a\"; MAME's rf5c164 device is the Mega-CD relative."
+    }
+  ]
+}

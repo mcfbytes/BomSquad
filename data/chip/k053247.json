@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k053247",
+      "display_name": "K053247",
+      "function_id": "video-sprite",
+      "manufacturer_id": "konami",
+      "description": "Sprite generator paired with the 053246, carrying the sprite RAM and the graphics-ROM data path; used on X-Men, The Simpsons, Vendetta, Bucky O'Hare and other 1991-1993 Konami boards.",
+      "notes": "src/mame/konami/k053246_k053247_k055673.cpp and konamiic.txt in MAME 0.288. The 055673 is the higher-bit-depth alternative in the same socket role."
+    }
+  ]
+}

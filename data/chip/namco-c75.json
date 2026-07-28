@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "namco-c75",
+      "display_name": "Namco C75",
+      "function_id": "mcu",
+      "manufacturer_id": "namco",
+      "description": "Mitsubishi M37702 microcontroller with 16 KB of on-die mask ROM, relabelled by Namco as the C75 and used on Namco NB-1, NB-2 and System FL hardware.",
+      "notes": "src/mame/namco/namcomcu.cpp in MAME 0.288 (\"Mitsubishi M37702 MCUs with Namco custom labels\"), with the label-to-system table and a 0x4000-byte internal ROM region per part. Filed mcu under taxonomy TB2 (on-die program store plus integrated peripherals)."
+    }
+  ]
+}

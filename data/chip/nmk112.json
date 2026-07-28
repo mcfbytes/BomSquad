@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "nmk112",
+      "display_name": "NMK112",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "nmk",
+      "description": "Sample-ROM bank switcher for a pair of OKI MSM6295 ADPCM chips: four independently banked regions per chip, with the sample table optionally banked in four pages alongside the sample data.",
+      "notes": "src/devices/machine/nmk112.cpp in MAME 0.288 (\"NMK112 - NMK custom IC for bankswitching the sample ROMs of a pair of OKI6295 ADPCM chips\"). Filed sound-pcm under taxonomy TB4 and §4.14, which place a sample-ROM address generator that exists only to drive a companion PCM channel in the sound branch."
+    }
+  ]
+}

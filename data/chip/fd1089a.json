@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "fd1089a",
+      "display_name": "FD1089A",
+      "function_id": "cpu",
+      "manufacturer_id": "hitachi",
+      "family_id": "m68k",
+      "description": "Motorola 68000 with built-in encryption of both opcodes and data, keyed by battery-backed internal RAM; the FD1089A and FD1089B differ only in their decryption tables.",
+      "notes": "src/mame/sega/fd1089.cpp in MAME 0.288 (\"The FD1089 is a 68000 with built-in encryption ... The FD1089A and FD1089B work in the same way, but the decryption tables are different\"). Manufacturer follows MAME's device full name, \"Hitachi FD1089A Encrypted CPU\". Classified cpu by the taxonomy §6 FD1094 adjudication (TB1, TB6)."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "toaplan-bcu",
+      "display_name": "Toaplan BCU",
+      "function_id": "video-tilemap",
+      "manufacturer_id": "toaplan",
+      "description": "Tilemap generator of Toaplan 1 hardware: four 512x512-pixel scrolling layers of 8x8 tiles, each tile carrying a 4-bit priority level and a 6-bit colour index.",
+      "notes": "src/mame/toaplan/toaplan_bcu.cpp in MAME 0.288 (\"Toaplan 'BCU' tilemap generator\"), with the tile RAM bit layout taken from the Out Zone schematics. The source notes the function is \"Implemented with PGA chip and/or NEC Gate array at some (older?) hardware\", so the physical package varies by board; Toaplan 1 boards mark the part BCU-2."
+    }
+  ]
+}

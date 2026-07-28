@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k051937",
+      "display_name": "K051937",
+      "function_id": "video-sprite",
+      "manufacturer_id": "konami",
+      "description": "Sprite pixel/attribute stage of the 051960/051937 pair: receives graphics-ROM data plus colour code from the 051960 over a 32-bit ROM bus and outputs up to 12 bits of palette index with shadow and transparency flags.",
+      "notes": "src/mame/konami/k051960.cpp in MAME 0.288 (\"Konami 051960/051937 ... Sprite generators. Designed to work in pair ... The 051937 outputs up to 12 bits of palette index, plus \\\"shadow\\\" and transparency information\"). MAME has no separate 051937 device: the pair is emulated by the k051960 device, so this chip row has no mame_device row. Filed video-sprite with the 051960 (TB4: the stage serves the sprite engine, and its output is mixed later off-die)."
+    }
+  ]
+}

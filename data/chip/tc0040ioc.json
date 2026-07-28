@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "tc0040ioc",
+      "display_name": "TC0040IOC",
+      "function_id": "io",
+      "manufacturer_id": "taito",
+      "description": "Taito's first custom I/O interface: a 64-pin DIP with an address port and a data port handling digital inputs, coin-related outputs, an integrated watchdog and steering-wheel/trackball conversion.",
+      "package": "DIP-64",
+      "notes": "src/mame/taito/taitoio.cpp in MAME 0.288."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "tc0091lvc",
+      "display_name": "TC0091LVC",
+      "function_id": "cpu",
+      "manufacturer_id": "taito",
+      "family_id": "z80",
+      "description": "Variant of the TC0090LVC used on later Taito L-system and Taito hardware; MAME implements it as a derivative of the TC0090LVC with the differences not yet established.",
+      "notes": "src/devices/machine/tc009xlvc.cpp in MAME 0.288 defines TC0090LVC and TC0091LVC in one file, with the TODO \"Verify difference between TC0090LVC and TC0091LVC\". Classified cpu by the taxonomy §6 TC0090LVC adjudication, which this part inherits."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "tc0090lvc",
+      "display_name": "TC0090LVC",
+      "function_id": "cpu",
+      "manufacturer_id": "taito",
+      "family_id": "z80",
+      "description": "Z80-core processor with an integrated tilemap and sprite generator and a bank-switching MMU; the single large custom of the Taito L system (taxonomy §6 adjudication: TB1 outranks TB5).",
+      "notes": "Classification fixed by docs/taxonomy.md §6 and TB1's consequence list. MAME 0.288 implements it in src/devices/machine/tc009xlvc.cpp."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k054000",
+      "display_name": "K054000",
+      "function_id": "dsp",
+      "manufacturer_id": "konami",
+      "description": "Fixed-function collision/hitbox math coprocessor: takes object centre and half-extent parameters and returns a boolean overlap result, with no access to graphics data.",
+      "notes": "src/mame/konami/k054000.cpp in MAME 0.288 (\"Konami K054000 hitbox/math custom chip ... It is passed a few parameters, and returns a boolean telling if collision happened. It has no access to gfx data, it only does arithmetical operations on the parameters\"); konamiic.txt annotates it \"(collision)\". Filed dsp on taxonomy §4.3's \"a documented math engine is dsp even when it is a board-specific part\"; MAME's device full name says \"Protection\", but TB6 reserves protection for parts designed to enforce security and the documented behaviour is arithmetic. Flagged as a judgement call."
+    }
+  ]
+}

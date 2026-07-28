@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k056230",
+      "display_name": "K056230",
+      "function_id": "io",
+      "manufacturer_id": "konami",
+      "description": "LANC: the link/LAN interface controller of networked Konami cabinets, driving an RS485 transceiver over 64 KB of shared RAM (taxonomy §4.10 example).",
+      "notes": "src/devices/machine/k056230.cpp in MAME 0.288 (\"Konami IC 056230 (LANC)\"), device full name \"Konami 056230 LANC\"; the surrounding circuit is 64k shared RAM, an LS161 counter, a 056787 PAL and an HYC2485S RS485 transceiver. Classification also fixed by docs/taxonomy.md §4.10, which names \"Konami 056230 (link/LAN)\" as an io example. MAME's separate k056230_viper device is deliberately NOT mapped to this chip: the same source records the TODO \"LANC part name for konami/viper.cpp\", so the Viper part number is unestablished."
+    }
+  ]
+}

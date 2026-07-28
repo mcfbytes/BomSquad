@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k056800",
+      "display_name": "K056800",
+      "function_id": "io",
+      "manufacturer_id": "konami",
+      "description": "Main-CPU/sound-CPU interface and audio control latch (MIRAC): four host-to-sound registers, two sound-to-host registers and a maskable interrupt line to the sound CPU.",
+      "notes": "src/devices/sound/k056800.cpp in MAME 0.288, device full name \"Konami 056800 MIRAC\" (\"Sound interface and audio control\"). Filed io per taxonomy Q11, as for the 054321."
+    }
+  ]
+}

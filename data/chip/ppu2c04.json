@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "ppu2c04",
+      "display_name": "Ricoh 2C04",
+      "function_id": "video-ppu",
+      "manufacturer_id": "ricoh",
+      "description": "RGB-output picture processing unit of Nintendo VS. System arcade boards: the 2C02 pipeline with a scrambled palette ROM in place of the NTSC encoder.",
+      "notes": "src/devices/video/ppu2c0x.cpp in MAME 0.288, device full name \"2C04 PPU\", implemented as a ppu2c0x_rgb_device alongside the 2C03B. MAME models the 2C04-0001..0004 palette variants with one device plus a supplied palette, so this row stands for the 2C04 family rather than a single suffix."
+    }
+  ]
+}

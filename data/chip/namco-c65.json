@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "namco-c65",
+      "display_name": "Namco C65",
+      "function_id": "mcu",
+      "manufacturer_id": "namco",
+      "description": "Hitachi HD63705-family microcontroller with on-die program ROM, used as the I/O and coin/input controller of Namco System 2.",
+      "notes": "src/mame/namco/namco65.cpp in MAME 0.288 (device full name \"Namco C65 I/O\") wraps an hd63705z0_device with an 8 KB internal ROM region (sys2mcpu.bin). Filed mcu under taxonomy TB2; taxonomy §4.2 already files the Namco 5xXX/6xXX satellite controllers the same way."
+    }
+  ]
+}

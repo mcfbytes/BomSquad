@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k053936",
+      "display_name": "K053936",
+      "function_id": "video-tilemap",
+      "manufacturer_id": "konami",
+      "description": "PSAC2 rotate/zoom (ROZ) layer generator: a 16-bit evolution of the 051316 with 512x4 words of internal RAM allowing per-scanline rotation and zoom rather than whole-screen transforms (taxonomy §4.18 example).",
+      "notes": "src/devices/video/k053936.cpp in MAME 0.288 (\"053936 PSAC2 ... Evolution of the 051316 ... 512x4 words of internal RAM used to control rotation and zoom scanline by scanline\"). konamiic.txt annotates it \"(roz+)\"."
+    }
+  ]
+}

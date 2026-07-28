@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "namco-c355",
+      "display_name": "Namco C355",
+      "function_id": "video-sprite",
+      "manufacturer_id": "namco",
+      "description": "Zooming sprite generator with per-sprite format, window/clipping attributes and two sprite pages; later boards integrate the companion 186 into the same package (taxonomy §4.19 example).",
+      "notes": "src/mame/shared/namco_c355spr.cpp in MAME 0.288 (\"Namco C355/187 Zooming sprites ... earlier titles use the 186/187 pair ... while later boards appear to integrate the 186 into the C355 custom\")."
+    }
+  ]
+}

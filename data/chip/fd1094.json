@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "fd1094",
+      "display_name": "FD1094",
+      "function_id": "cpu",
+      "manufacturer_id": "hitachi",
+      "family_id": "m68k",
+      "description": "Motorola 68000 with on-die opcode decryption; the 8 KB key lives in battery-backed internal RAM, so the part stops running the game when the battery dies (taxonomy §6 adjudication: an encrypted 68000 is a 68000).",
+      "notes": "src/mame/sega/fd1094.cpp in MAME 0.288 (\"The FD1094 is a custom CPU based on the 68000, which runs encrypted code. The decryption key is stored in 8KB of battery-backed RAM\"). Manufacturer follows MAME's device full name, \"Hitachi FD1094 Encrypted CPU\"; the module was supplied to Sega, which catalogues it under its own 317-xxxx key numbers."
+    }
+  ]
+}

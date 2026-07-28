@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "tc0220ioc",
+      "display_name": "TC0220IOC",
+      "function_id": "io",
+      "manufacturer_id": "taito",
+      "description": "I/O interface with an integrated watchdog in an 80-pin flat package: two DSW ports, two player ports, a coin port and coin counter/lockout outputs.",
+      "package": "QFP80",
+      "notes": "src/mame/taito/taitoio.cpp in MAME 0.288 (\"A simple I/O interface with integrated watchdog in a 80-pin flat package\")."
+    }
+  ]
+}

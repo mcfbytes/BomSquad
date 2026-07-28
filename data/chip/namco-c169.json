@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "namco-c169",
+      "display_name": "Namco C169",
+      "function_id": "video-tilemap",
+      "manufacturer_id": "namco",
+      "description": "ROZ (rotate and zoom) generator managing two affine layers, each a designated subset of a 256x256-tile master tilemap, with per-scanline ROZ attributes and per-layer colour and tile banking.",
+      "notes": "src/mame/namco/namco_c169roz.cpp in MAME 0.288, device full name \"Namco C169 (ROZ)\". Filed video-tilemap under taxonomy V3 and the §6 K051316 adjudication (an affine tile layer is still a tile layer). Used on Namco NB-2, System 2 and System FL."
+    }
+  ]
+}

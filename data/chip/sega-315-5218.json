@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5218",
+      "display_name": "Sega 315-5218",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "sega",
+      "description": "16-channel 8-bit PCM sample player, believed to be the integrated version of the discrete TTL PCM board used by Space Harrier (taxonomy §4.14 example, \"Sega PCM\").",
+      "notes": "src/devices/sound/segapcm.cpp in MAME 0.288 (\"SEGA 16ch 8bit PCM\"). Part number and board usage from the custom-parts table in src/mame/sega/segaic16.cpp (\"315-5218 -- PCM sound controller\", fitted to Space Harrier, After Burner, Galaxy Force and System C hardware; note (b) records the TTL predecessor)."
+    }
+  ]
+}

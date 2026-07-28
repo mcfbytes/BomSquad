@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "tc0080vco",
+      "display_name": "TC0080VCO",
+      "function_id": "video-sprite",
+      "manufacturer_id": "taito",
+      "description": "Combined sprite (motion object) and tilemap generator: two ROM-sourced 64x64 tilemaps of 16x16 tiles, an optional RAM-sourced 64x64 front tilemap of 8x8 3bpp tiles, and a sprite engine sharing the same graphics set through chain RAM (taxonomy §4.19 example).",
+      "notes": "Classification follows docs/taxonomy.md §4.19, which names Taito TC0080VCO as a video-sprite example, and that value is kept here. FLAGGED FOR THE TAXONOMY OWNER: src/mame/taito/tc0080vco.cpp in MAME 0.288 opens \"Combined tilemap and motion object generator\" and documents both tilemaps and sprites on the die, so TB3 (within one branch, the defining stage wins) has to adjudicate sprites against tilemaps rather than the question being settled by inspection. V1/video-ppu does not apply: the device emits no sync, blanking or interrupt outputs. This part is named in §4.19's example list but not in §6, so a reclassification would be a data change to this row."
+    }
+  ]
+}

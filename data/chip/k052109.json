@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "k052109",
+      "display_name": "K052109",
+      "function_id": "video-tilemap",
+      "manufacturer_id": "konami",
+      "description": "Tilemap generator managing three 64x32 scrolling 8x8-character layers with 16 KB of private RAM, also able to generate timing clocks and NMI/IRQ/FIRQ for the main CPU; paired with the 051962 (taxonomy §4.18 example).",
+      "notes": "src/mame/konami/k052109.cpp in MAME 0.288. konamiic.txt notes the earlier 051961 is functionally equivalent and interchangeable."
+    }
+  ]
+}

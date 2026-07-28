@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5197",
+      "display_name": "Sega 315-5197",
+      "function_id": "video-tilemap",
+      "manufacturer_id": "sega",
+      "description": "Tilemap generator of Sega System 16B, System 18, Super Hang-On and X-Board.",
+      "package": "PGA135",
+      "notes": "Guru PCB notes in src/mame/sega/segas16b.cpp (MAME 0.288): \"315-5197 - Custom Sega IC Tilemap Generator (PGA135)\"; corroborated by the custom-parts table in src/mame/sega/segaic16.cpp."
+    }
+  ]
+}

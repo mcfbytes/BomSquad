@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "v35",
+      "display_name": "V35",
+      "function_id": "cpu",
+      "manufacturer_id": "nec",
+      "description": "V30-core 16-bit processor with the same integrated peripheral set as the V25 (uPD70330 family). Arcade boards fit the ROM-less variant executing from external program ROM, frequently with an opcode-scrambling security table; the Irem M92/M107 sound CPU and various Toaplan and Sega System 32 CPUs are V35s.",
+      "notes": "src/devices/cpu/nec/v25.cpp in MAME 0.288 implements V25 and V35 together; src/mame/irem/m107.cpp instantiates \"required_device<v35_device> m_soundcpu\". Filed cpu on taxonomy TB2 for the same reason as the V25 row."
+    }
+  ]
+}

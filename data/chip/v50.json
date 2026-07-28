@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "v50",
+      "display_name": "V50",
+      "function_id": "cpu",
+      "manufacturer_id": "nec",
+      "description": "V30 core (uPD70216) with an integrated timer/counter unit, DMA control unit, interrupt control unit and serial control unit.",
+      "notes": "Device table in src/devices/cpu/v5x.cpp (MAME 0.288): \"V50 (uPD70216) -- V30 (uPD70116)\". Peripherals: TCU (uPD71054/i8254 subset), DMAU (uPD71071 equivalent), ICU (uPD71059/i8259 equivalent), SCU (uPD71051/i8251 subset)."
+    }
+  ]
+}

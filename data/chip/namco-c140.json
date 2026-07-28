@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "namco-c140",
+      "display_name": "Namco C140",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "namco",
+      "description": "24-voice PCM sample player with per-voice panning and looping, reading 8-bit signed or compressed samples from ROM (taxonomy §4.14 example).",
+      "notes": "src/devices/sound/c140.cpp in MAME 0.288."
+    }
+  ]
+}

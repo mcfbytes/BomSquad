@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "gp9001",
+      "display_name": "GP9001",
+      "function_id": "video-ppu",
+      "manufacturer_id": "toaplan",
+      "description": "L7A0498 graphics controller: three scrolling tile layers (background, foreground and text), a sprite engine with 8x8 to 128x128 variable-size double-buffered sprites, and the /HSYNC, /VSYNC and /BLANK outputs with a scanline counter — the whole video system of Toaplan 2 hardware (taxonomy V1).",
+      "notes": "src/mame/toaplan/gp9001.cpp in MAME 0.288 (\"Toaplan L7A0498 GP9001 graphic controller\"), whose video status register documents the /H-Sync, /V-Sync and /Blank control signals and the scanline count. Some boards fit two of them, mixed by a motherboard PAL."
+    }
+  ]
+}

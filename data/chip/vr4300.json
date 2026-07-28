@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "vr4300",
+      "display_name": "VR4300",
+      "function_id": "cpu",
+      "manufacturer_id": "nec",
+      "description": "64-bit MIPS III RISC processor; the main CPU of the Nintendo 64 and of Aleck 64 arcade hardware.",
+      "notes": "MAME 0.288 device vr4300be, full name \"NEC VR4300 (big)\", implemented in src/devices/cpu/mips/mips3.cpp alongside the R4000/R4400/R4600 family. \"be\" denotes the big-endian configuration, not a separate part."
+    }
+  ]
+}

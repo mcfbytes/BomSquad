@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "lr35902",
+      "display_name": "LR35902",
+      "function_id": "cpu",
+      "manufacturer_id": "sharp",
+      "description": "Game Boy processor core: an 8-bit CPU whose instruction set is a modified Z80/8080 hybrid, deployed as the CPU block of the Game Boy system-on-chip.",
+      "notes": "MAME 0.288 device lr35902, full name \"Sharp LR35902\", implemented as a CPU core in src/devices/cpu/lr35902/lr35902.cpp."
+    }
+  ]
+}

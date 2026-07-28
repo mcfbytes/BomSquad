@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "s-smp",
+      "display_name": "S-SMP",
+      "function_id": "cpu",
+      "manufacturer_id": "sony",
+      "description": "SPC700-core sound processor of the SNES: the CPU core plus three timers (two clocked at 8 kHz, one at 64 kHz), four bidirectional main-CPU communication ports and a 64-byte IPL boot ROM, executing from external RAM.",
+      "notes": "src/devices/machine/s_smp.cpp in MAME 0.288, device full name \"Nintendo/Sony S-SMP\": a 0x40-byte \"sound_ipl\" ROM region, four m_port_in/m_port_out registers, and three timer channels of which \"if timer channel is 0 or 1 we update at 64000/8\". Filed cpu under taxonomy TB2: the device carries no RAM region of its own and the 64-byte IPL ROM is a bootstrap rather than the program store, so the part fetches its program from external memory. Manufacturer recorded as Sony, which designed the SPC700 core; MAME attributes the part to \"Nintendo/Sony\" and the dataset cannot express two manufacturers on one row."
+    }
+  ]
+}

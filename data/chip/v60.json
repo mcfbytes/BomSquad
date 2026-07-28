@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "v60",
+      "display_name": "V60",
+      "function_id": "cpu",
+      "manufacturer_id": "nec",
+      "description": "32-bit CISC processor (uPD70615/uPD70616) with 32 general registers, paged virtual memory and a four-level protection architecture; 24-bit address bus and 16-bit data bus. Main CPU of Sega System 32 and Multi 32.",
+      "notes": "src/devices/cpu/v60/v60.cpp in MAME 0.288, which quotes the NEC Semiconductor Selection Guide (Oct. 1995) for the uPD70615 feature list and address/data bus widths."
+    }
+  ]
+}
