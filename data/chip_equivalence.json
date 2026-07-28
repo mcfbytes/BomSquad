@@ -1,0 +1,94 @@
+{
+  "chip_equivalence": [
+    {
+      "from_chip_id": "74hc259",
+      "to_chip_id": "74ls259",
+      "kind": "equivalent",
+      "note": "Same 7400-family '259 8-bit addressable latch: identical function table, pinout and latch/clear behaviour. The LS (bipolar low-power Schottky) and HC (high-speed CMOS) versions differ only electrically — logic thresholds, drive, speed — which is invisible at HDL granularity. Source: TI SN74LS259B datasheet, TI SN74HC259 datasheet."
+    },
+    {
+      "from_chip_id": "ay8910",
+      "to_chip_id": "ay8912",
+      "kind": "provides",
+      "note": "The AY-3-8912 is the same PSG die as the AY-3-8910 in a 28-pin package with only I/O port A bonded out, so an AY-3-8910 implementation is a strict superset — port B simply goes unused. The reverse is withheld: AY-3-8910 sockets routinely read DIP switches and inputs through port B, which a true 8912 lacks. Source: General Instrument AY-3-8910/8912 Programmable Sound Generator Data Manual."
+    },
+    {
+      "from_chip_id": "ay8910",
+      "to_chip_id": "ym2149",
+      "kind": "equivalent",
+      "note": "The YM2149 is Yamaha's licensed manufacture of the GI AY-3-8910: identical register map, tone/noise/envelope generators and both I/O ports. The deltas are fidelity-level, not programming-model: the YM2149 halves each envelope step (32 output levels vs 16) and adds the SEL half-clock pin. MAME models it as a subclass of the AY-3-8910 device. Source: GI AY-3-8910/8912 Data Manual; Yamaha YM2149 datasheet; MAME src/devices/sound/ay8910.h (ym2149_device : public ay8910_device)."
+    },
+    {
+      "from_chip_id": "i8085a",
+      "to_chip_id": "i8080",
+      "kind": "provides",
+      "note": "The 8085A executes the entire 8080A instruction set unchanged — Intel documents it as fully 8080A software compatible — adding RIM/SIM, the SID/SOD serial pins and the RST5.5/6.5/7.5/TRAP interrupts. The reverse fails: an 8085 socket depends on those additions. Known caveats are part-level and fire on no known real 8080 software: RIM/SIM occupy encodings (0x20/0x30) that are undocumented NOPs on the 8080, the undocumented flag bits differ, and a few instructions differ by one T-state. Source: Intel MCS-85 User's Manual."
+    },
+    {
+      "from_chip_id": "i8254",
+      "to_chip_id": "i8253",
+      "kind": "provides",
+      "note": "Intel documents the 8254 as a superset of the 8253: same three counters, same control-word format and gate/clock semantics, adding the read-back command, status latch and higher clock ratings. 8253 software runs unchanged — the read-back encoding (SC1 SC0 = 11) is an illegal control word on the 8253 that its software never issues. The reverse fails: 8254-aware software uses read-back/status, which the 8253 lacks. Source: Intel 8254 datasheet ('a superset of the 8253')."
+    },
+    {
+      "from_chip_id": "mc6809",
+      "to_chip_id": "mc6809e",
+      "kind": "equivalent",
+      "note": "Same processor, same programming model: the MC6809E is the external-clock variant of the MC6809 — E/Q become inputs and TSC/LIC/AVMA/BUSY bus-control pins replace the on-chip oscillator and MRDY/DMA-BREQ. Instruction set, registers and cycle behaviour are identical, so one HDL core serves both sockets; the clocking difference is board-level wiring. Source: Motorola MC6809/MC6809E datasheet; Motorola M6809 Programming Manual (M6809PM/AD)."
+    },
+    {
+      "from_chip_id": "mc68681",
+      "to_chip_id": "scn2681",
+      "kind": "provides",
+      "note": "Same dual-UART design: the MC68681 is the M68000-bus variant of the Signetics SCN2681 DUART — common channel, counter/timer and mode/status/command register core — adding an interrupt vector register and 68k-style IACK vectored-interrupt handshake. A 68681 implementation covers a 2681 socket, with the bus handshake as adaptation work; the reverse fails because a 2681 has no IVR or IACK cycle. Source: Motorola MC68681 and Signetics SCN2681 datasheets; MAME src/devices/machine/mc68681.h (scn2681_device and mc68681_device share duart_base_device)."
+    },
+    {
+      "from_chip_id": "n82077aa",
+      "to_chip_id": "upd765a",
+      "kind": "provides",
+      "note": "The 82077AA integrates a µPD765A/8272A-compatible floppy controller core — the 765 command set is a strict subset of its own — plus the data separator the 765A needed external logic for, a FIFO, and the configure/perpendicular/version command extensions. µPD765A software runs unchanged; the reverse fails because 82077-aware software issues commands the 765A rejects as invalid. Source: Intel 82077AA datasheet; MAME src/devices/machine/upd765.h (upd765a_device and n82077aa_device share upd765_family_device)."
+    },
+    {
+      "from_chip_id": "sn76489",
+      "to_chip_id": "sn76489a",
+      "kind": "equivalent",
+      "note": "Register-interface-identical revisions of one TI PSG design: same tone generators, same attenuators, same command format. The behavioural delta is confined to the noise section and output stage — both use a 15-bit shift register tapped at bits D/E, with the noise output taken from bit E and the output inverted (SN76489) versus bit F, not inverted (SN76489A) — a constants-level difference inside one HDL core, not a distinct design. Source: MAME src/devices/sound/sn76496.cpp header notes; SMS Power! SN76489 documentation."
+    },
+    {
+      "from_chip_id": "ym2149",
+      "to_chip_id": "ay8912",
+      "kind": "provides",
+      "note": "The YM2149 is register-compatible with the AY-3-8910 including both I/O ports (see the ay8910/ym2149 equivalent edge), so it strictly covers the AY-3-8912 — the same PSG exposing only port A. Closes the chain ym2149 ≈ ay8910 → ay8912 per coverage.md §2.4. The reverse fails: an 8912 lacks port B, which a YM2149 socket may use. Source: GI AY-3-8910/8912 Data Manual; Yamaha YM2149 datasheet."
+    },
+    {
+      "from_chip_id": "ym2203",
+      "to_chip_id": "ay8910",
+      "kind": "provides",
+      "note": "The YM2203 (OPN) embeds a complete Yamaha SSG — functionally the YM2149 — as registers 0x00-0x0F, including both I/O ports (0x0E/0x0F), which arcade boards use for DIP-switch reads exactly as they do an AY-3-8910's. A YM2203 implementation therefore covers an AY-3-8910 socket, with the FM half unused and SSG clock/prescaler wiring as adaptation work. The reverse is false outright: an AY-3-8910 has no FM section. Source: Yamaha YM2203 Application Manual; MAME src/devices/sound/ymopn.h (YM2203 exposes SSG port A/B handlers)."
+    },
+    {
+      "from_chip_id": "ym2203",
+      "to_chip_id": "ay8912",
+      "kind": "provides",
+      "note": "Chain closure per coverage.md §2.4: the YM2203's embedded SSG covers an AY-3-8910 socket (see that edge), and the AY-3-8912 is the same PSG exposing only port A, so the single-port socket is covered a fortiori by the SSG's port A plus registers 0x00-0x0F. The reverse is false outright: an 8912 has no FM section. Source: Yamaha YM2203 Application Manual; GI AY-3-8910/8912 Data Manual."
+    },
+    {
+      "from_chip_id": "ym2203",
+      "to_chip_id": "ym2149",
+      "kind": "provides",
+      "note": "The YM2203's SSG block is Yamaha's own YM2149-compatible generator, mapped at registers 0x00-0x0F with both I/O ports; a YM2203 implementation covers a YM2149 socket with the FM half unused, and SSG clock/prescaler wiring as adaptation work. The reverse is false outright: a YM2149 has no FM section. Source: Yamaha YM2203 Application Manual; MAME src/devices/sound/ymopn.h (YM2203 exposes SSG port A/B handlers)."
+    },
+    {
+      "from_chip_id": "ym2612",
+      "to_chip_id": "ym3438",
+      "kind": "equivalent",
+      "note": "The YM3438 (OPN2C) is the CMOS reimplementation of the YM2612 (OPN2): identical register map, channel structure and timers. The differences are analog — the YM2612's 9-bit DAC with its characteristic ladder effect versus the YM3438's cleaner output stage — and change nothing about what HDL is required; an OPN2 core covers both sockets. Canonical equivalent pair per coverage.md §1.2. Source: Yamaha YM3438 datasheet; coverage.md §1.2."
+    },
+    {
+      "from_chip_id": "z85c30",
+      "to_chip_id": "z8530",
+      "kind": "provides",
+      "note": "The Z85C30 is the CMOS SCC: with its enhancements disabled — their reset state — it is register- and behaviour-compatible with the NMOS Z8530, and the enablement bits sit in WR15/WR7' positions the Z8530 documents as program-to-0, so NMOS-SCC software runs unchanged on a Z85C30 implementation. The reverse is withheld: a machine fitted with a Z85C30 may enable CMOS-only enhancements (WR7' features) that a Z8530 implementation lacks. Source: Zilog SCC User's Manual (UM010903)."
+    }
+  ]
+}
