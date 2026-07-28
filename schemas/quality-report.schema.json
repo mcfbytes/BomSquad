@@ -79,7 +79,9 @@
       "description": "SELECT code, COUNT(*) FROM v_quality_warning GROUP BY code. Codes with zero rows are omitted; a consumer treats a missing key as zero. The registry is closed (data-quality.md §4).",
       "propertyNames": {
         "enum": [
+          "CHIP_MANUFACTURER_FAMILY_MISMATCH",
           "CHIP_MISSING_METADATA",
+          "CHIP_NAME_COLLISION",
           "EQUIVALENCE_MUTUAL_PROVIDES",
           "IMPL_MACHINES_WITHOUT_SYSTEM",
           "IMPL_STALE_REVIEW",
@@ -88,6 +90,7 @@
           "IMPL_UNVERIFIED_LICENSE",
           "MACHINE_ZERO_MAPPED_CHIPS",
           "MAPPED_INSTANCE_SHARE_LOW",
+          "SYSTEM_NAME_COLLISION",
           "SYSTEM_NO_CHIPS",
           "SYSTEM_UNMAPPED_SHARE_HIGH",
           "UNMAPPED_DEVICE_HIGH_IMPACT"

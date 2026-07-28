@@ -17,7 +17,12 @@
  * Every function is pure: `(SourceFile, schema) => Diagnostic[]`. No I/O, no database,
  * no global state, so each is unit-testable against a literal.
  */
-import { compareBytes, type Row } from '../db/rowfiles.js';
+import {
+  byPrimaryKey,
+  canonicalRowFileJson,
+  canonicalTableOrder as canonicalOrder,
+  type Row,
+} from '../db/rowfiles.js';
 import type { TableInfo } from '../db/introspect.js';
 
 export type Severity = 'ERROR' | 'WARN';
@@ -182,9 +187,7 @@ export function ruleFilenameKey(file: SourceFile, schema: Schema): Diagnostic[] 
 
 /** Canonical top-level key order: the entity table first, then the rest bytewise. */
 export function canonicalTableOrder(file: SourceFile): string[] {
-  const entityTable = entityTableOf(file);
-  const rest = [...file.tables.keys()].filter((table) => table !== entityTable).sort(compareBytes);
-  return entityTable === undefined ? rest : [entityTable, ...rest];
+  return canonicalOrder(file.tables.keys(), entityTableOf(file));
 }
 
 export function ruleTableKeyOrder(file: SourceFile, _schema: Schema): Diagnostic[] {
@@ -236,17 +239,7 @@ export function ruleRowKeyOrder(file: SourceFile, schema: Schema): Diagnostic[] 
 
 /** Bytewise for text, numeric for integers. Never locale collation, never `"10" < "9"`. */
 function compareRows(info: TableInfo, a: Row, b: Row): number {
-  for (const column of info.primaryKey) {
-    const x = a[column];
-    const y = b[column];
-    if (typeof x === 'number' && typeof y === 'number') {
-      if (x !== y) return x < y ? -1 : 1;
-      continue;
-    }
-    const order = compareBytes(String(x ?? ''), String(y ?? ''));
-    if (order !== 0) return order;
-  }
-  return 0;
+  return byPrimaryKey(info.primaryKey)(a, b);
 }
 
 export function ruleRowOrder(file: SourceFile, schema: Schema): Diagnostic[] {
@@ -279,26 +272,13 @@ export function ruleRowOrder(file: SourceFile, schema: Schema): Diagnostic[] {
  * Serialises a row file exactly as data-model.md §4.3 requires. The formatting rule is
  * then a byte comparison, which is the only way to cover indentation, escaping and the
  * trailing newline without three more rules.
+ *
+ * The serialiser itself lives in `db/rowfiles.ts` because T6.1's emitter writes
+ * `extract/*.json` through the very same function: one definition of canonical form, so
+ * a generated file cannot fail the rule that guards a hand-written one.
  */
 export function canonicalJson(file: SourceFile, schema: Schema): string {
-  const document: Record<string, unknown> = {};
-  for (const table of canonicalTableOrder(file)) {
-    const info = schema.get(table);
-    const rows = [...(file.tables.get(table) ?? [])];
-    if (info !== undefined) rows.sort((a, b) => compareRows(info, a, b));
-    document[table] = rows.map((row) => {
-      const order = info === undefined ? Object.keys(row) : info.columns.map((c) => c.name);
-      const canonical: Record<string, unknown> = {};
-      for (const column of order) {
-        if (column in row) canonical[column] = row[column];
-      }
-      for (const column of Object.keys(row)) {
-        if (!(column in canonical)) canonical[column] = row[column];
-      }
-      return canonical;
-    });
-  }
-  return `${JSON.stringify(document, null, 2)}\n`;
+  return canonicalRowFileJson(file.tables, schema, entityTableOf(file));
 }
 
 /**

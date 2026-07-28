@@ -20,14 +20,7 @@
 import type { DatabaseSync, StatementSync } from 'node:sqlite';
 
 import { describeTables, tableLoadOrder, type TableInfo } from './introspect.js';
-import {
-  compareBytes,
-  discoverRowFiles,
-  readRowFile,
-  type Row,
-  type RowFile,
-  type RowValue,
-} from './rowfiles.js';
+import { byPrimaryKey, discoverRowFiles, readRowFile, type Row, type RowFile } from './rowfiles.js';
 
 export interface LoadResult {
   /** Files read, in the order they were read. */
@@ -52,23 +45,6 @@ function collect(files: readonly RowFile[], known: ReadonlySet<string>): Map<str
     }
   }
   return byTable;
-}
-
-/** Bytewise for text, numeric for integers — never locale collation, never `"10" < "9"`. */
-function compareCells(a: RowValue | undefined, b: RowValue | undefined): number {
-  if (typeof a === 'number' && typeof b === 'number') return a < b ? -1 : a > b ? 1 : 0;
-  return compareBytes(String(a ?? ''), String(b ?? ''));
-}
-
-/** Comparison on the primary-key columns, in declaration order. */
-function byPrimaryKey(primaryKey: readonly string[]): (a: Row, b: Row) => number {
-  return (a, b) => {
-    for (const column of primaryKey) {
-      const order = compareCells(a[column], b[column]);
-      if (order !== 0) return order;
-    }
-    return 0;
-  };
 }
 
 /**

@@ -1,0 +1,321 @@
+{
+  "machine_system": [
+    {
+      "machine_id": "aes",
+      "system_id": "snk-neogeo-aes",
+      "reason": "Home AES console; neogeo/neogeo.cpp defaults to the MVS arcade board."
+    },
+    {
+      "machine_id": "airduel",
+      "system_id": "irem-m82",
+      "reason": "M82 hardware; irem/m72.cpp defaults to M72."
+    },
+    {
+      "machine_id": "as1",
+      "system_id": "sega-multi32",
+      "reason": "Multi 32 (V70 main CPU, dual monitor); sega/segas32.cpp defaults to System 32."
+    },
+    {
+      "machine_id": "balonfgt",
+      "system_id": "nintendo-vs-dualsystem",
+      "reason": "VS. DualSystem (two CPU/PPU sets); nintendo/vsnes.cpp defaults to the UniSystem."
+    },
+    {
+      "machine_id": "beachspi",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "choplift",
+      "system_id": "sega-system2",
+      "reason": "System 2 video hardware; sega/system1.cpp hosts both System 1 and System 2."
+    },
+    {
+      "machine_id": "clubk2k3",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "clubkcyc",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "clubkprz",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "clubkpzb",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "clubkrt",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "columns",
+      "system_id": "sega-systemc",
+      "reason": "System C, without the uPD7759 ADPCM that defines System C2."
+    },
+    {
+      "machine_id": "columns2",
+      "system_id": "sega-systemc",
+      "reason": "System C, without the uPD7759 ADPCM that defines System C2."
+    },
+    {
+      "machine_id": "cosmccop",
+      "system_id": "irem-m84",
+      "reason": "M84 hardware; irem/m72.cpp defaults to M72."
+    },
+    {
+      "machine_id": "dakkochn",
+      "system_id": "sega-system2",
+      "reason": "System 2 video hardware; sega/system1.cpp hosts both System 1 and System 2."
+    },
+    {
+      "machine_id": "dbreed",
+      "system_id": "irem-m81",
+      "reason": "M81 hardware; irem/m72.cpp defaults to M72."
+    },
+    {
+      "machine_id": "dino",
+      "system_id": "capcom-cps1-5",
+      "reason": "QSound sound board (CPS-1.5); capcom/cps1.cpp defaults to CPS-1."
+    },
+    {
+      "machine_id": "fantzn2x",
+      "system_id": "sega-system16c",
+      "reason": "System 16C ROM board; sega/segas16b.cpp defaults to System 16B."
+    },
+    {
+      "machine_id": "gamegear",
+      "system_id": "sega-game-gear",
+      "reason": "Game Gear handheld; sega/sms.cpp defaults to the Master System."
+    },
+    {
+      "machine_id": "gbcolor",
+      "system_id": "nintendo-game-boy-color",
+      "reason": "Game Boy Color; nintendo/gb.cpp defaults to the original Game Boy."
+    },
+    {
+      "machine_id": "harddunk",
+      "system_id": "sega-multi32",
+      "reason": "Multi 32 (V70 main CPU, dual monitor); sega/segas32.cpp defaults to System 32."
+    },
+    {
+      "machine_id": "hharry",
+      "system_id": "irem-m81",
+      "reason": "M81 hardware; irem/m72.cpp defaults to M72."
+    },
+    {
+      "machine_id": "iceclmrd",
+      "system_id": "nintendo-vs-dualsystem",
+      "reason": "VS. DualSystem (two CPU/PPU sets); nintendo/vsnes.cpp defaults to the UniSystem."
+    },
+    {
+      "machine_id": "inidv3cy",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "initd",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "initdexp",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "initdv2j",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "initdv3e",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "initdv3j",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "kingrt66",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "ltswords",
+      "system_id": "irem-m84",
+      "reason": "M84 hardware; irem/m72.cpp defaults to M72."
+    },
+    {
+      "machine_id": "majtitle",
+      "system_id": "irem-m82",
+      "reason": "M82 hardware; irem/m72.cpp defaults to M72."
+    },
+    {
+      "machine_id": "mbombrd",
+      "system_id": "capcom-cps1-5",
+      "reason": "QSound sound board (CPS-1.5); capcom/cps1.cpp defaults to CPS-1."
+    },
+    {
+      "machine_id": "mduckspa",
+      "reason": "Mega Duck / Cougar Boy: a separate Game Boy-alike handheld sharing MAME's Game Boy driver, not Game Boy hardware."
+    },
+    {
+      "machine_id": "megaduck",
+      "reason": "Mega Duck / Cougar Boy: a separate Game Boy-alike handheld sharing MAME's Game Boy driver, not Game Boy hardware."
+    },
+    {
+      "machine_id": "orunners",
+      "system_id": "sega-multi32",
+      "reason": "Multi 32 (V70 main CPU, dual monitor); sega/segas32.cpp defaults to System 32."
+    },
+    {
+      "machine_id": "poundfor",
+      "system_id": "irem-m85",
+      "reason": "M85-A-B / M85-B hardware; irem/m72.cpp defaults to M72."
+    },
+    {
+      "machine_id": "punisher",
+      "system_id": "capcom-cps1-5",
+      "reason": "QSound sound board (CPS-1.5); capcom/cps1.cpp defaults to CPS-1."
+    },
+    {
+      "machine_id": "robotech",
+      "reason": "A 2018 Coleco plug-and-play built on GBA-class silicon, not a Game Boy Advance."
+    },
+    {
+      "machine_id": "rtype2",
+      "system_id": "irem-m84",
+      "reason": "M84 hardware; irem/m72.cpp defaults to M72."
+    },
+    {
+      "machine_id": "scross",
+      "system_id": "sega-multi32",
+      "reason": "Multi 32 (V70 main CPU, dual monitor); sega/segas32.cpp defaults to System 32."
+    },
+    {
+      "machine_id": "sgdrvsim",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "shtngmst",
+      "system_id": "sega-system2",
+      "reason": "System 2 video hardware; sega/system1.cpp hosts both System 1 and System 2."
+    },
+    {
+      "machine_id": "slammast",
+      "system_id": "capcom-cps1-5",
+      "reason": "QSound sound board (CPS-1.5); capcom/cps1.cpp defaults to CPS-1."
+    },
+    {
+      "machine_id": "soulsurf",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "titlef",
+      "system_id": "sega-multi32",
+      "reason": "Multi 32 (V70 main CPU, dual monitor); sega/segas32.cpp defaults to System 32."
+    },
+    {
+      "machine_id": "tokisens",
+      "system_id": "sega-system2",
+      "reason": "System 2 video hardware; sega/system1.cpp hosts both System 1 and System 2."
+    },
+    {
+      "machine_id": "ufosensi",
+      "system_id": "sega-system2",
+      "reason": "System 2 video hardware; sega/system1.cpp hosts both System 1 and System 2."
+    },
+    {
+      "machine_id": "vf4",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "vf4cart",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "vf4evo",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "vf4evoct",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "vf4tuned",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "vsbball",
+      "system_id": "nintendo-vs-dualsystem",
+      "reason": "VS. DualSystem (two CPU/PPU sets); nintendo/vsnes.cpp defaults to the UniSystem."
+    },
+    {
+      "machine_id": "vsmahjng",
+      "system_id": "nintendo-vs-dualsystem",
+      "reason": "VS. DualSystem (two CPU/PPU sets); nintendo/vsnes.cpp defaults to the UniSystem."
+    },
+    {
+      "machine_id": "vstennis",
+      "system_id": "nintendo-vs-dualsystem",
+      "reason": "VS. DualSystem (two CPU/PPU sets); nintendo/vsnes.cpp defaults to the UniSystem."
+    },
+    {
+      "machine_id": "vstrik3",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "vstrik3c",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "wbml",
+      "system_id": "sega-system2",
+      "reason": "System 2 video hardware; sega/system1.cpp hosts both System 1 and System 2."
+    },
+    {
+      "machine_id": "wldrider",
+      "system_id": "sega-naomi2",
+      "reason": "NAOMI 2 (second PowerVR2 and dedicated geometry hardware); sega/naomi.cpp defaults to NAOMI."
+    },
+    {
+      "machine_id": "wof",
+      "system_id": "capcom-cps1-5",
+      "reason": "QSound sound board (CPS-1.5); capcom/cps1.cpp defaults to CPS-1."
+    },
+    {
+      "machine_id": "wofch",
+      "system_id": "capcom-cps1-5",
+      "reason": "QSound sound board (CPS-1.5); capcom/cps1.cpp defaults to CPS-1."
+    },
+    {
+      "machine_id": "wrecking",
+      "system_id": "nintendo-vs-dualsystem",
+      "reason": "VS. DualSystem (two CPU/PPU sets); nintendo/vsnes.cpp defaults to the UniSystem."
+    },
+    {
+      "machine_id": "xmultipl",
+      "system_id": "irem-m81",
+      "reason": "M81 hardware; irem/m72.cpp defaults to M72."
+    }
+  ]
+}

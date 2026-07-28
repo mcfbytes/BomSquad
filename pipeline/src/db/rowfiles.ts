@@ -14,7 +14,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { describeTables, listTables, tableSql } from './introspect.js';
+import { describeTables, listTables, tableSql, type TableInfo } from './introspect.js';
 import type { DatabaseSync } from 'node:sqlite';
 
 /** A cell. `NULL` columns are omitted from the file, never written as `null` (§4.3). */
@@ -127,6 +127,83 @@ export function readRowFile(path: string): RowFile {
     tables.set(table, rows);
   }
   return { path, tables };
+}
+
+// ---------------------------------------------------------------------------
+// Canonical form (§4.3)
+// ---------------------------------------------------------------------------
+
+/**
+ * Cell comparison: bytewise for text, numeric for integers. Never locale collation,
+ * never `"10" < "9"`. Shared by every consumer that has to put rows in order — the
+ * loader's insert order, the emitter's row order, and the linter that checks a committed
+ * file is already in that order — so the three cannot disagree about what "sorted" means.
+ */
+export function compareCells(a: RowValue | undefined, b: RowValue | undefined): number {
+  if (typeof a === 'number' && typeof b === 'number') return a < b ? -1 : a > b ? 1 : 0;
+  return compareBytes(String(a ?? ''), String(b ?? ''));
+}
+
+/** Comparison on the primary-key columns, in declaration order. */
+export function byPrimaryKey(primaryKey: readonly string[]): (a: Row, b: Row) => number {
+  return (a, b) => {
+    for (const column of primaryKey) {
+      const order = compareCells(a[column], b[column]);
+      if (order !== 0) return order;
+    }
+    return 0;
+  };
+}
+
+/**
+ * Canonical top-level key order: the file's entity table first, then the rest bytewise
+ * ascending. A file with no entity table (`extract/machine.json`, `data/lookup/*.json`)
+ * is simply bytewise throughout.
+ */
+export function canonicalTableOrder(tables: Iterable<string>, entityTable?: string): string[] {
+  const rest = [...tables].filter((table) => table !== entityTable).sort(compareBytes);
+  return entityTable === undefined ? rest : [entityTable, ...rest];
+}
+
+/**
+ * Serialises a row-file bundle exactly as data-model.md §4.3 requires: top-level keys in
+ * {@link canonicalTableOrder}, rows sorted by the table's primary key, each row's keys in
+ * DDL column order with absent columns omitted, `JSON.stringify(v, null, 2)` layout and
+ * exactly one trailing newline.
+ *
+ * **This is the single definition of canonical form**, and both directions use it: T6.1
+ * writes `extract/*.json` through it, and `pipeline validate`'s `json-format` rule
+ * compares a committed file against it byte for byte. A generated file therefore cannot
+ * fail the linter that guards hand-written ones without the two agreeing to be wrong
+ * together, which no separate emitter could promise.
+ *
+ * Columns the DDL does not have keep their relative order at the end rather than being
+ * dropped: the linter must render an unknown column so `unknown-column` can name it, and
+ * silently deleting one here would turn a reported error into an invisible one.
+ */
+export function canonicalRowFileJson(
+  tables: ReadonlyMap<string, readonly Row[]>,
+  schema: ReadonlyMap<string, TableInfo>,
+  entityTable?: string,
+): string {
+  const document: Record<string, unknown> = {};
+  for (const table of canonicalTableOrder(tables.keys(), entityTable)) {
+    const info = schema.get(table);
+    const rows = [...(tables.get(table) ?? [])];
+    if (info !== undefined) rows.sort(byPrimaryKey(info.primaryKey));
+    document[table] = rows.map((row) => {
+      const order = info === undefined ? Object.keys(row) : info.columns.map((c) => c.name);
+      const canonical: Record<string, unknown> = {};
+      for (const column of order) {
+        if (column in row) canonical[column] = row[column];
+      }
+      for (const column of Object.keys(row)) {
+        if (!(column in canonical)) canonical[column] = row[column];
+      }
+      return canonical;
+    });
+  }
+  return `${JSON.stringify(document, null, 2)}\n`;
 }
 
 // ---------------------------------------------------------------------------

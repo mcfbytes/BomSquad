@@ -6,8 +6,10 @@
  *   pipeline validate [--strict] [--json]
  *   pipeline mame:fetch
  *   pipeline mame:extract
+ *   pipeline mame:rows
  *   pipeline mame:bump-pin <release-tag>
  *   pipeline mame:refresh-summary <old-extract-dir> <new-extract-dir>
+ *   pipeline build [--build-date <YYYY-MM-DD>] [--dataset-version <v>] [--out <dir>]
  *
  * Exit codes: 0 clean (or warnings only), 1 at least one ERROR (or any WARN under
  * `--strict`), 2 bad usage.
@@ -26,6 +28,18 @@ import {
   MAME_CONFIG_PATH,
 } from './mame/config.js';
 import { buildRefreshSummary, formatRefreshSummaryMarkdown } from './mame/refresh-summary.js';
+import { createSchemaDatabase } from './db/schema.js';
+import { describeTables } from './db/introspect.js';
+import { emitExtractRowFiles, formatEmitLog } from './build/extract-rows.js';
+import {
+  buildDatabase,
+  BuildFailure,
+  DATA_DIR,
+  DIST_DIR,
+  EXTRACT_DIR,
+  formatBuildLog,
+  type BuildOptions,
+} from './build/index.js';
 import type { RawMachine } from './mame/parse.js';
 import type { WorklistEntry } from './mame/worklist.js';
 
@@ -33,8 +47,10 @@ const COMMANDS = [
   'validate',
   'mame:fetch',
   'mame:extract',
+  'mame:rows',
   'mame:bump-pin',
   'mame:refresh-summary',
+  'build',
 ] as const;
 type Command = (typeof COMMANDS)[number];
 
@@ -83,6 +99,79 @@ async function runMameExtract(): Promise<number> {
   const result = await runExtraction({ log: write });
   process.stdout.write(formatExtractionLog(result));
   return result.verification.unexpected.length > 0 ? 1 : 0;
+}
+
+/**
+ * TASKS T6.1 — applies the curated `mame_device` map to `extract/machines.raw.json` and
+ * writes the four row files of data-model.md §4.2.
+ *
+ * Separate from `mame:extract` because the two have different inputs and different reasons
+ * to re-run: `mame:extract` needs a 20 MB download and only changes when the pin or the
+ * filter policy does, whereas this needs neither and changes every time a curator maps a
+ * device. Separate from `build` because its output is committed, so a curation PR shows
+ * the machines and BOM rows it actually moves.
+ */
+function runMameRows(): number {
+  const db = createSchemaDatabase();
+  try {
+    const schema = new Map(describeTables(db).map((info) => [info.name, info]));
+    const result = emitExtractRowFiles({
+      extractDir: EXTRACT_DIR,
+      dataRoots: [DATA_DIR],
+      schema,
+    });
+    process.stdout.write(formatEmitLog(result));
+  } finally {
+    db.close();
+  }
+  return 0;
+}
+
+const BUILD_FLAGS = ['--build-date', '--dataset-version', '--out'] as const;
+type BuildFlag = (typeof BUILD_FLAGS)[number];
+
+/**
+ * TASKS T6.5 — assembles `dist/bomsquad.sqlite` and `dist/quality-report.json`.
+ *
+ * A tripped gate is reported in full and exits 1 with `dist/` untouched; anything else
+ * (a malformed config, a schema that will not apply) is a defect rather than a data
+ * problem and propagates as a stack trace.
+ */
+function runBuild(argv: readonly string[]): number {
+  const options: {
+    buildDate?: string;
+    datasetVersion?: string;
+    outputDir?: string;
+  } = {};
+  for (let index = 0; index < argv.length; index += 1) {
+    const flag = argv[index];
+    const value = argv[index + 1];
+    if (!BUILD_FLAGS.includes(flag as BuildFlag) || value === undefined) {
+      process.stderr.write(`pipeline build: bad option '${String(flag)}'\n`);
+      process.stderr.write(`usage: pipeline build [${BUILD_FLAGS.join(' <value>] [')} <value>]\n`);
+      return 2;
+    }
+    if (flag === '--build-date') options.buildDate = value;
+    else if (flag === '--dataset-version') options.datasetVersion = value;
+    else options.outputDir = value;
+    index += 1;
+  }
+
+  const buildOptions: BuildOptions = {
+    ...(options.buildDate !== undefined ? { buildDate: options.buildDate } : {}),
+    ...(options.datasetVersion !== undefined ? { datasetVersion: options.datasetVersion } : {}),
+    outputDir: options.outputDir ?? DIST_DIR,
+    log: write,
+  };
+  try {
+    process.stdout.write(formatBuildLog(buildDatabase(buildOptions)));
+  } catch (error) {
+    if (!(error instanceof BuildFailure)) throw error;
+    for (const failure of error.failures) process.stderr.write(`${failure}\n`);
+    process.stderr.write('build: nothing published; dist/ is unchanged\n');
+    return 1;
+  }
+  return 0;
 }
 
 /**
@@ -167,10 +256,14 @@ async function main(argv: readonly string[]): Promise<number> {
       return runMameFetch();
     case 'mame:extract':
       return runMameExtract();
+    case 'mame:rows':
+      return runMameRows();
     case 'mame:bump-pin':
       return runMameBumpPin(rest);
     case 'mame:refresh-summary':
       return runMameRefreshSummary(rest);
+    case 'build':
+      return runBuild(rest);
     default:
       return 2;
   }

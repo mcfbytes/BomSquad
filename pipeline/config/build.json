@@ -1,0 +1,7 @@
+{
+  "revisit_trigger": {
+    "brotli_bytes": 8388608,
+    "raw_bytes": 33554432
+  },
+  "version": "1.0.0"
+}

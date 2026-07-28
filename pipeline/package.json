@@ -16,8 +16,10 @@
     "validate": "tsx src/cli.ts validate",
     "mame:fetch": "tsx src/cli.ts mame:fetch",
     "mame:extract": "tsx src/cli.ts mame:extract",
+    "mame:rows": "tsx src/cli.ts mame:rows",
     "mame:bump-pin": "tsx src/cli.ts mame:bump-pin",
-    "mame:refresh-summary": "tsx src/cli.ts mame:refresh-summary"
+    "mame:refresh-summary": "tsx src/cli.ts mame:refresh-summary",
+    "build:db": "tsx src/cli.ts build"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",

@@ -23,6 +23,7 @@ jobs:
       site: ${{ steps.filter.outputs.site || 'true' }}
       pipeline: ${{ steps.filter.outputs.pipeline || 'true' }}
       extract: ${{ steps.filter.outputs.extract || 'true' }}
+      build: ${{ steps.filter.outputs.build || 'true' }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -58,6 +59,15 @@ jobs:
               - 'pipeline/src/mame/**'
               - 'pipeline/src/db/**'
               - 'schemas/schema.sql'
+              - 'extract/**'
+            # The database build reads everything the dataset is made of, and the row
+            # files T6.1 emits move whenever the curated device map does — so a chip PR
+            # that maps one device changes extract/machine_chip.json and must rerun this.
+            build:
+              - *shared
+              - 'pipeline/**'
+              - 'schemas/**'
+              - 'data/**'
               - 'extract/**'
 
   lint:
@@ -132,6 +142,57 @@ jobs:
       - name: The committed extract must be the extract this code produces
         run: git diff --exit-code -- extract/
 
+  # TASKS T6.1, T6.4, T6.5. Three claims, none of which a unit test can make:
+  #
+  #   1. The committed extract row files are the row files this code, this raw extract and
+  #      today's curated device map produce (`git diff --exit-code`). That makes
+  #      hand-editing extract/ a build failure rather than a convention, and makes a
+  #      device-mapping PR reviewable as a diff of the BOM rows it actually moves.
+  #   2. `pipeline validate` reaches zero errors against the whole dataset — the signal
+  #      that machine_correction / machine_system reference real machine rows.
+  #   3. The build is deterministic (data-quality.md §3.2 NONDETERMINISTIC_BUILD): built
+  #      twice from a clean tree, dist/bomsquad.sqlite and dist/quality-report.json are
+  #      byte-identical. SOURCE_DATE_EPOCH is pinned to the commit so build_date is a
+  #      property of the commit rather than of when the runner happened to start, which is
+  #      also what makes rebuilding an old commit reproduce its warnings exactly.
+  build:
+    name: Dataset build
+    needs: changes
+    if: needs.changes.outputs.build == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Pin build_date to the commit
+        run: echo "SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)" >> "$GITHUB_ENV"
+
+      - name: Extraction to row files (T6.1)
+        run: npm run mame:rows --workspace @bomsquad/pipeline
+      - name: The committed row files must be the row files this code produces
+        run: git diff --exit-code -- extract/
+
+      - name: Validate the whole dataset
+        run: npm run validate --workspace @bomsquad/pipeline
+
+      - name: Build (first run)
+        run: npm run build:db --workspace @bomsquad/pipeline
+      - name: Snapshot the first run
+        run: |
+          mkdir -p "${RUNNER_TEMP}/build1"
+          cp dist/bomsquad.sqlite dist/quality-report.json "${RUNNER_TEMP}/build1/"
+      - name: Build (second run)
+        run: npm run build:db --workspace @bomsquad/pipeline
+      - name: NONDETERMINISTIC_BUILD — byte-compare the two runs
+        run: |
+          cmp "${RUNNER_TEMP}/build1/bomsquad.sqlite" dist/bomsquad.sqlite
+          cmp "${RUNNER_TEMP}/build1/quality-report.json" dist/quality-report.json
+      - name: Quality report
+        run: cat dist/quality-report.json >> "$GITHUB_STEP_SUMMARY"
+
   site:
     name: Site
     needs: changes
@@ -151,7 +212,7 @@ jobs:
   ci:
     name: CI
     if: always()
-    needs: [changes, lint, pipeline, extract, site]
+    needs: [changes, lint, pipeline, extract, build, site]
     runs-on: ubuntu-latest
     steps:
       - name: Verify required jobs succeeded
@@ -161,6 +222,7 @@ jobs:
             [lint]="${{ needs.lint.result }}"
             [pipeline]="${{ needs.pipeline.result }}"
             [extract]="${{ needs.extract.result }}"
+            [build]="${{ needs.build.result }}"
             [site]="${{ needs.site.result }}"
           )
           failed=0
