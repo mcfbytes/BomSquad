@@ -1,0 +1,14 @@
+{
+  "chip": [
+    {
+      "chip_id": "m6502",
+      "display_name": "6502",
+      "function_id": "cpu",
+      "manufacturer_id": "mos-technology",
+      "family_id": "m6502",
+      "description": "Low-cost 8-bit CPU, widely second-sourced; common as a main or sound CPU.",
+      "package": "DIP-40",
+      "year_introduced": 1975
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "pic16c622",
+      "display_name": "PIC16C622",
+      "function_id": "mcu",
+      "manufacturer_id": "microchip",
+      "description": "8-bit midrange PIC microcontroller with on-chip EPROM program memory; widely fitted as the security PIC on Sega NAOMI-era hardware.",
+      "notes": "Taxonomy TB6: a catalog MCU deployed as a protection device keeps its catalog function."
+    }
+  ]
+}

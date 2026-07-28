@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "saturn-scu",
+      "display_name": "Saturn SCU",
+      "function_id": "custom",
+      "manufacturer_id": "sega",
+      "description": "System Control Unit of the Sega Saturn/ST-V: two DMA controllers, a DSP coprocessor and the interrupt controller in one ASIC (taxonomy §4.25 example, TB5)."
+    }
+  ]
+}

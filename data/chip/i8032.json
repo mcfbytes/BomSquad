@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "i8032",
+      "display_name": "Intel 8032",
+      "function_id": "cpu",
+      "manufacturer_id": "intel",
+      "family_id": "mcs-51",
+      "description": "ROMless MCS-51 microcontroller: 8052 core with no on-die program ROM, executing from external memory.",
+      "notes": "Taxonomy TB2: no on-die program store, so this files as cpu, not mcu."
+    }
+  ]
+}

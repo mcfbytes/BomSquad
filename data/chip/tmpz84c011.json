@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "tmpz84c011",
+      "display_name": "TMPZ84C011",
+      "function_id": "cpu",
+      "manufacturer_id": "toshiba",
+      "description": "Z80 core with on-die CTC and five parallel ports, executing from external memory; common on Nichibutsu mahjong hardware.",
+      "notes": "Taxonomy TB1/TB2: external program store, so cpu rather than mcu."
+    }
+  ]
+}

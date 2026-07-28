@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "h83002",
+      "display_name": "H8/3002",
+      "function_id": "cpu",
+      "manufacturer_id": "hitachi",
+      "description": "H8/300H-family 16-bit microcontroller, ROMless variant: CPU core with on-die timers, serial and ports but external program memory.",
+      "notes": "Taxonomy TB2: no on-die program store, so cpu rather than mcu."
+    }
+  ]
+}

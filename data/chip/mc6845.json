@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "mc6845",
+      "display_name": "MC6845",
+      "function_id": "video-crtc",
+      "manufacturer_id": "motorola",
+      "description": "CRT controller: raster timing and display addressing with no pixel generation (taxonomy §4.23 example)."
+    }
+  ]
+}

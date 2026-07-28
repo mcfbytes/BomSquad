@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "m48t58",
+      "display_name": "M48T58",
+      "function_id": "rtc",
+      "manufacturer_id": "stmicroelectronics",
+      "description": "Timekeeper: real-time clock integrated with 8 Kbytes of battery-backed SRAM.",
+      "notes": "Taxonomy §4.8: the clock is the reason for the part, so rtc wins over memory."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "sh7604",
+      "display_name": "SH-2 (SH7604)",
+      "function_id": "cpu",
+      "manufacturer_id": "hitachi",
+      "family_id": "superh",
+      "description": "SH-2 32-bit RISC CPU (SH7604), used in pairs in the Sega Saturn and ST-V and as the Sega 32X processors."
+    }
+  ]
+}

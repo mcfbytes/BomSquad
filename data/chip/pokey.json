@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "pokey",
+      "display_name": "POKEY",
+      "function_id": "sound-psg",
+      "manufacturer_id": "atari",
+      "model": "C012294",
+      "description": "Four-channel sound generator with poly-counter noise, plus potentiometer/keyboard scanning and serial I/O.",
+      "notes": "Decision guide order: Q5 (audio generation) fires before Q11 (I/O), and TB5 does not apply to a catalog part, so sound-psg despite the substantial I/O section."
+    }
+  ]
+}

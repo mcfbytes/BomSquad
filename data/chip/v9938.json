@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "v9938",
+      "display_name": "V9938",
+      "function_id": "video-ppu",
+      "manufacturer_id": "yamaha",
+      "description": "MSX2 video display processor: tile and bitmap modes, sprites and raster timing plus blitter-style commands; §4.20/TB3 file it as video-ppu."
+    }
+  ]
+}

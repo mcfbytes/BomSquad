@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "n82077aa",
+      "display_name": "82077AA",
+      "function_id": "storage",
+      "manufacturer_id": "intel",
+      "model": "N82077AA",
+      "description": "Single-chip floppy-disk controller integrating the FDC core, data separator and drive interface."
+    }
+  ]
+}

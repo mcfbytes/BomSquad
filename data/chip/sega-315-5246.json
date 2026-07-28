@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5246",
+      "display_name": "Sega 315-5246",
+      "function_id": "video-ppu",
+      "manufacturer_id": "sega",
+      "description": "Master System 2 VDP: TMS9918-derived video display processor with the SMS extensions and an integrated SN76489-compatible PSG section."
+    }
+  ]
+}

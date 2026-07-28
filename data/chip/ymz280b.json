@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "ymz280b",
+      "display_name": "YMZ280B",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "yamaha",
+      "description": "Eight-voice ADPCM/PCM sample player (PCMD8)."
+    }
+  ]
+}

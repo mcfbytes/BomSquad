@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "r65c02",
+      "display_name": "R65C02",
+      "function_id": "cpu",
+      "manufacturer_id": "rockwell",
+      "family_id": "m6502",
+      "description": "Rockwell CMOS 65C02: low-power 6502 successor with additional instructions, including Rockwell's bit-manipulation extensions.",
+      "notes": "Deliberate manufacturer/family mismatch: the 6502 family was widely second-sourced, and the family description names Rockwell as one of the second sources."
+    }
+  ]
+}

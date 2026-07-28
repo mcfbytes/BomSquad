@@ -1,0 +1,10 @@
+{
+  "chip": [
+    {
+      "chip_id": "7474",
+      "display_name": "7474",
+      "function_id": "glue",
+      "description": "Dual D-type positive-edge-triggered flip-flop (74x74); industry-standard multi-vendor part."
+    }
+  ]
+}

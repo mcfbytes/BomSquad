@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "k054539",
+      "display_name": "K054539",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "konami",
+      "description": "Eight-voice sample player with effects, used on 1990s Konami boards."
+    }
+  ]
+}

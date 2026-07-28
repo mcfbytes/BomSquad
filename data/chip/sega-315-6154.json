@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-6154",
+      "display_name": "Sega 315-6154",
+      "function_id": "memory",
+      "manufacturer_id": "sega",
+      "description": "PCI bridge with SDRAM controller, used on the NAOMI/Chihiro/Triforce GD-ROM DIMM board and in Hikaru.",
+      "notes": "Classified per Q8: its function is bus address translation and memory control, which the decision guide reaches before io."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "mos6532",
+      "display_name": "MOS 6532",
+      "function_id": "io",
+      "manufacturer_id": "mos-technology",
+      "description": "RIOT: 128 bytes of RAM, two 8-bit ports and a timer; a multifunction peripheral, which §4.9 resolves to io."
+    }
+  ]
+}

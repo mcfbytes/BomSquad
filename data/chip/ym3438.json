@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "ym3438",
+      "display_name": "YM3438",
+      "function_id": "sound-fm",
+      "manufacturer_id": "yamaha",
+      "family_id": "opn",
+      "description": "CMOS reimplementation of the YM2612 (OPN2C)."
+    }
+  ]
+}

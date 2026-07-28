@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "at28c16",
+      "display_name": "AT28C16",
+      "function_id": "memory",
+      "manufacturer_id": "atmel",
+      "description": "16 Kbit (2Kx8) parallel EEPROM."
+    }
+  ]
+}

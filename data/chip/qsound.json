@@ -1,0 +1,19 @@
+{
+  "chip": [
+    {
+      "chip_id": "qsound",
+      "display_name": "QSound",
+      "function_id": "dsp",
+      "manufacturer_id": "capcom",
+      "description": "Sample-playback and stereo-spatialization sound processor: an AT&T DSP16A core running mask-ROM QSound firmware (Capcom part DL-1425).",
+      "notes": "Decision guide Q2 (a signal-processing engine driven by the host CPU) fires before the audio sub-guide, so this files as dsp rather than sound-pcm; the implementation burden is exactly §4.3's — a microcoded DSP whose firmware must be reproduced."
+    }
+  ],
+  "chip_name": [
+    {
+      "chip_id": "qsound",
+      "name": "DL-1425",
+      "kind": "alias"
+    }
+  ]
+}

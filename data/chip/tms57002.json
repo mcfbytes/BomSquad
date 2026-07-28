@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "tms57002",
+      "display_name": "TMS57002",
+      "function_id": "dsp",
+      "manufacturer_id": "texas-instruments",
+      "description": "24-bit audio DSP ('DASP'), used by Konami as a sound effects processor on GX-era hardware."
+    }
+  ]
+}

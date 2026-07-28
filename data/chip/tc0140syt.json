@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "tc0140syt",
+      "display_name": "TC0140SYT",
+      "function_id": "io",
+      "manufacturer_id": "taito",
+      "description": "Sound-communication custom: the master/slave mailbox between main and sound CPUs on late-1980s/1990s Taito hardware."
+    }
+  ]
+}

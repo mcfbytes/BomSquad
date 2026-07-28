@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "x2212",
+      "display_name": "X2212",
+      "function_id": "memory",
+      "manufacturer_id": "xicor",
+      "description": "NOVRAM: 256x4 static RAM with a bit-for-bit EEPROM shadow array for store/recall."
+    }
+  ]
+}

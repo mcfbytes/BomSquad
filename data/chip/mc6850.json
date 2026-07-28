@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "mc6850",
+      "display_name": "MC6850",
+      "function_id": "io",
+      "manufacturer_id": "motorola",
+      "description": "Asynchronous communications interface adapter (UART)."
+    }
+  ]
+}

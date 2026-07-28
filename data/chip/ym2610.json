@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "ym2610",
+      "display_name": "YM2610",
+      "function_id": "sound-fm",
+      "manufacturer_id": "yamaha",
+      "family_id": "opn",
+      "description": "Four FM channels, SSG section, six ADPCM-A sample channels and one ADPCM-B channel (OPNB); the Neo Geo sound chip. TB3: the FM engine defines it."
+    }
+  ]
+}

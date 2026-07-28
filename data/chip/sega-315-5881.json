@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5881",
+      "display_name": "Sega 315-5881",
+      "function_id": "protection",
+      "manufacturer_id": "sega",
+      "description": "ROM-data encryption/decryption ASIC ('security chip') fitted to ST-V, Model 3 and NAOMI cartridges (taxonomy §4.6 example)."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "mb87078",
+      "display_name": "MB87078",
+      "function_id": "sound-analog",
+      "manufacturer_id": "fujitsu",
+      "description": "Four-channel digitally-controlled analog volume attenuator in the audio path."
+    }
+  ]
+}

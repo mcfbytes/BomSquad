@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "tms34010",
+      "display_name": "TMS34010",
+      "function_id": "cpu",
+      "manufacturer_id": "texas-instruments",
+      "description": "Programmable 32-bit graphics processor with bit-addressable memory; executes a general-purpose instruction stream.",
+      "year_introduced": 1986,
+      "notes": "Taxonomy TB1/§4.21: as a programmable processor it is cpu; only a fixed-function rasterizer deployment would be video-blitter."
+    }
+  ]
+}

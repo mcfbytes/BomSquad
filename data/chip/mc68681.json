@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "mc68681",
+      "display_name": "MC68681",
+      "function_id": "io",
+      "manufacturer_id": "motorola",
+      "description": "Dual universal asynchronous receiver/transmitter (DUART) with counter/timer, for the 68000 bus."
+    }
+  ]
+}

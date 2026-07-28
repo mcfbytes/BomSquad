@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "cxd8530cq",
+      "display_name": "CXD8530CQ",
+      "function_id": "cpu",
+      "manufacturer_id": "sony",
+      "description": "PlayStation main CPU: MIPS R3000A-compatible core with the GTE geometry coprocessor and on-die DMA, interrupt, timer and serial blocks.",
+      "typical_clock_hz": 33868800
+    }
+  ]
+}

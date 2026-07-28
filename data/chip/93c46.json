@@ -1,0 +1,10 @@
+{
+  "chip": [
+    {
+      "chip_id": "93c46",
+      "display_name": "93C46",
+      "function_id": "memory",
+      "description": "1 Kbit Microwire serial EEPROM, organizable as 64x16 or 128x8; industry-standard multi-vendor part, so no single manufacturer is recorded."
+    }
+  ]
+}

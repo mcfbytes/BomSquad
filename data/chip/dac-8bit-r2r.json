@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "dac-8bit-r2r",
+      "display_name": "8-bit R-2R DAC",
+      "function_id": "sound-dac",
+      "description": "Generic 8-bit R-2R resistor-ladder DAC on the audio path, as modelled by MAME's DAC device; a discrete network or equivalent unidentified monolithic part rather than one catalog part.",
+      "notes": "Kept as a chip per taxonomy §4.16, which includes 'R-2R ladders modelled as a device'."
+    }
+  ]
+}

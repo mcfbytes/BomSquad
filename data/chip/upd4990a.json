@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "upd4990a",
+      "display_name": "µPD4990A",
+      "function_id": "rtc",
+      "manufacturer_id": "nec",
+      "description": "Serial-interface real-time clock/calendar; the Neo Geo MVS clock chip."
+    }
+  ]
+}

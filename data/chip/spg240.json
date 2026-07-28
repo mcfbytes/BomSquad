@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "spg240",
+      "display_name": "SPG240",
+      "function_id": "cpu",
+      "manufacturer_id": "sunplus",
+      "description": "SPG240-series system-on-a-chip: 16-bit unSP CPU core with on-die video and sound, used in JAKKS Pacific-class TV games."
+    }
+  ]
+}

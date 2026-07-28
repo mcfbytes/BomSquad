@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "k9f2808u0b",
+      "display_name": "K9F2808U0B",
+      "function_id": "memory",
+      "manufacturer_id": "samsung",
+      "description": "128 Mbit (16Mx8) 3.3 V NAND flash memory, used as program storage on Namco System 10."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "cxd1095",
+      "display_name": "CXD1095",
+      "function_id": "io",
+      "manufacturer_id": "sony",
+      "description": "CMOS parallel I/O port expander ('CXD I/O')."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "chip": [
+    {
+      "chip_id": "z80",
+      "display_name": "Z80",
+      "function_id": "cpu",
+      "manufacturer_id": "zilog",
+      "family_id": "z80",
+      "model": "Z8400",
+      "description": "8-bit CPU, a binary-compatible superset of the Intel 8080; ubiquitous as an arcade main and sound CPU.",
+      "package": "DIP-40",
+      "year_introduced": 1976
+    }
+  ]
+}

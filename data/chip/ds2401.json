@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "ds2401",
+      "display_name": "DS2401",
+      "function_id": "memory",
+      "manufacturer_id": "dallas",
+      "description": "Silicon serial number: a factory-lasered unique 64-bit ROM read over the 1-Wire bus.",
+      "notes": "Classified memory per Q8 (a small non-volatile store); boards commonly read it as a security/ID dongle, but TB6 keeps the catalog function."
+    }
+  ]
+}

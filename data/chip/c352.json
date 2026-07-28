@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "c352",
+      "display_name": "Namco C352",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "namco",
+      "description": "32-voice PCM sample player used on 1990s Namco hardware (taxonomy §4.14 example)."
+    }
+  ]
+}

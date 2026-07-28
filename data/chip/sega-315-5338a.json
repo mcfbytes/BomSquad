@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5338a",
+      "display_name": "Sega 315-5338A",
+      "function_id": "io",
+      "manufacturer_id": "sega",
+      "description": "I/O port controller custom on 1990s Sega arcade hardware (ST-V, Model 1/2/3)."
+    }
+  ]
+}

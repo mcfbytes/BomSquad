@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "k053252",
+      "display_name": "K053252",
+      "function_id": "video-crtc",
+      "manufacturer_id": "konami",
+      "description": "Video timing generator (taxonomy §4.23 example)."
+    }
+  ]
+}

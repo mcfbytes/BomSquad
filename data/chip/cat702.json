@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "cat702",
+      "display_name": "CAT702",
+      "function_id": "protection",
+      "description": "Bus-scrambling protection chip fitted per publisher on Sony ZN-1/ZN-2-based arcade boards; each variant is differently keyed.",
+      "notes": "Manufacturer deliberately omitted: the part carries only the CAT702 marking and its fabricator is not reliably documented."
+    }
+  ]
+}

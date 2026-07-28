@@ -1,0 +1,10 @@
+{
+  "chip": [
+    {
+      "chip_id": "2816",
+      "display_name": "2816",
+      "function_id": "memory",
+      "description": "16 Kbit (2Kx8) parallel EEPROM; industry-standard multi-vendor part."
+    }
+  ]
+}

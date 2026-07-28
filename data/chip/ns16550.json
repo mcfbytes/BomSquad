@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "ns16550",
+      "display_name": "NS16550",
+      "function_id": "io",
+      "manufacturer_id": "national-semiconductor",
+      "description": "UART with 16-byte transmit/receive FIFOs; the PC-era standard serial interface."
+    }
+  ]
+}

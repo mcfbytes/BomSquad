@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "mc6809",
+      "display_name": "MC6809",
+      "function_id": "cpu",
+      "manufacturer_id": "motorola",
+      "family_id": "m6809",
+      "description": "8-bit CPU with a more orthogonal instruction set and hardware multiply than the 6800; internal-oscillator variant."
+    }
+  ]
+}

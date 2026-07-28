@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "msm5205",
+      "display_name": "MSM5205",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "oki",
+      "description": "Single-voice 4-bit ADPCM speech/sample decoder fed by a host CPU."
+    }
+  ]
+}

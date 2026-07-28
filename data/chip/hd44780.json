@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "hd44780",
+      "display_name": "HD44780",
+      "function_id": "video-tilemap",
+      "manufacturer_id": "hitachi",
+      "description": "Dot-matrix character LCD controller/driver: generates the character raster from display-data RAM and a character-generator ROM and drives the panel directly.",
+      "notes": "Classified per video sub-guide V3 (character layer generated from a map plus character ROM, with display shift): it generates pixel content, so it is not a video-crtc, and it has no sprites, so it is not a video-ppu."
+    }
+  ]
+}

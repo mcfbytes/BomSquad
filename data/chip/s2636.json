@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "s2636",
+      "display_name": "2636",
+      "function_id": "video-ppu",
+      "manufacturer_id": "signetics",
+      "description": "Programmable video interface: generates movable objects, background and sync, with a single-channel sound generator on die.",
+      "notes": "A catalog part, so TB5 does not apply; Q4 fires first and the picture generator dominates, so video-ppu."
+    }
+  ]
+}

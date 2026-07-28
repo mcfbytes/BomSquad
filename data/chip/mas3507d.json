@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "mas3507d",
+      "display_name": "MAS3507D",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "micronas",
+      "description": "MPEG audio (MP3-era) decoder DSP; A2 explicitly includes MP3-era codecs under sample playback."
+    }
+  ]
+}

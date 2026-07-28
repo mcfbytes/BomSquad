@@ -1,0 +1,28 @@
+{
+  "chip": [
+    {
+      "chip_id": "m68000",
+      "display_name": "MC68000",
+      "function_id": "cpu",
+      "manufacturer_id": "motorola",
+      "family_id": "m68k",
+      "description": "16/32-bit CISC processor with a 24-bit address bus.",
+      "package": "DIP-64",
+      "year_introduced": 1979
+    }
+  ],
+  "chip_datasheet": [
+    {
+      "chip_id": "m68000",
+      "url": "https://www.nxp.com/docs/en/data-sheet/MC68000UM.pdf",
+      "title": "MC68000 8-/16-/32-Bit Microprocessors User's Manual"
+    }
+  ],
+  "chip_name": [
+    {
+      "chip_id": "m68000",
+      "name": "MC68000P10",
+      "kind": "alias"
+    }
+  ]
+}

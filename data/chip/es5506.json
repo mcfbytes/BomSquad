@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "es5506",
+      "display_name": "ES5506",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "ensoniq",
+      "description": "32-voice sample-playback sound processor ('OTTO'), successor to the ES5505."
+    }
+  ]
+}

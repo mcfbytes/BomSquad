@@ -1,0 +1,14 @@
+{
+  "chip": [
+    {
+      "chip_id": "ay8910",
+      "display_name": "AY-3-8910",
+      "function_id": "sound-psg",
+      "manufacturer_id": "general-instrument",
+      "family_id": "psg",
+      "description": "Three square-wave tone channels plus noise and an envelope generator; the ubiquitous programmable sound generator.",
+      "package": "DIP-40",
+      "year_introduced": 1978
+    }
+  ]
+}

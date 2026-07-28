@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "xavix",
+      "display_name": "XaviX",
+      "function_id": "cpu",
+      "manufacturer_id": "ssd",
+      "description": "6502-derived system-on-a-chip (SSD 97 / SSD 98) integrating video and sound, used in XaviX-based TV games."
+    }
+  ]
+}

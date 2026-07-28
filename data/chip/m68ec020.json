@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "m68ec020",
+      "display_name": "MC68EC020",
+      "function_id": "cpu",
+      "manufacturer_id": "motorola",
+      "family_id": "m68k",
+      "description": "Cost-reduced 68020: 32-bit CISC core with a 24-bit external address bus and no on-chip MMU support."
+    }
+  ]
+}

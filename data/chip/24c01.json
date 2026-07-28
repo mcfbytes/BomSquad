@@ -1,0 +1,10 @@
+{
+  "chip": [
+    {
+      "chip_id": "24c01",
+      "display_name": "24C01",
+      "function_id": "memory",
+      "description": "1 Kbit (128x8) I2C serial EEPROM; industry-standard multi-vendor part."
+    }
+  ]
+}

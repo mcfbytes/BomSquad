@@ -1,0 +1,19 @@
+{
+  "chip": [
+    {
+      "chip_id": "mos8364",
+      "display_name": "MOS 8364",
+      "function_id": "custom",
+      "manufacturer_id": "mos-technology",
+      "description": "Amiga 'Paula': four-channel DMA-driven sample audio, floppy-disk controller, serial port and interrupt logic in one custom.",
+      "notes": "TB5: audio, storage and I/O functions with no dominant branch on a machine-specific ASIC, so custom rather than sound-pcm."
+    }
+  ],
+  "chip_name": [
+    {
+      "chip_id": "mos8364",
+      "name": "Paula",
+      "kind": "alias"
+    }
+  ]
+}

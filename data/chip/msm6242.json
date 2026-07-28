@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "msm6242",
+      "display_name": "MSM6242",
+      "function_id": "rtc",
+      "manufacturer_id": "oki",
+      "description": "Direct bus-connected real-time clock/calendar."
+    }
+  ]
+}

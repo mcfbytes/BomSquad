@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "arm9",
+      "display_name": "ARM9",
+      "function_id": "cpu",
+      "family_id": "arm",
+      "description": "ARM9-family 32-bit RISC core, embedded as a licensed core inside consumer systems-on-chip (GeneralPlus TV-game controllers and similar).",
+      "notes": "As with ARM7, MAME instantiates the core separately from the SoC that physically contains it."
+    }
+  ]
+}

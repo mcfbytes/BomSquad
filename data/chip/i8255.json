@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "i8255",
+      "display_name": "Intel 8255",
+      "function_id": "io",
+      "manufacturer_id": "intel",
+      "description": "Programmable peripheral interface: three 8-bit parallel ports."
+    }
+  ]
+}

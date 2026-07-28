@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "sn76489",
+      "display_name": "SN76489",
+      "function_id": "sound-psg",
+      "manufacturer_id": "texas-instruments",
+      "description": "Digital complex sound generator: three tone channels plus noise."
+    }
+  ]
+}

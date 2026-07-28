@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "mb3773",
+      "display_name": "MB3773",
+      "function_id": "glue",
+      "manufacturer_id": "fujitsu",
+      "description": "Power-supply monitor with watchdog timer (reset supervisor); glue per Q13."
+    }
+  ]
+}

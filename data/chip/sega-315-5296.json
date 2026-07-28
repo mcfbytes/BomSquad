@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5296",
+      "display_name": "Sega 315-5296",
+      "function_id": "io",
+      "manufacturer_id": "sega",
+      "description": "8-bit I/O port controller custom (eight ports) on late-1980s/1990s Sega arcade boards (System 18/24/32, System C-2, Y Board); taxonomy §4.10 example."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "mc6809e",
+      "display_name": "MC6809E",
+      "function_id": "cpu",
+      "manufacturer_id": "motorola",
+      "family_id": "m6809",
+      "description": "MC6809 variant clocked from an external oscillator (E suffix), common on arcade boards with shared clock generation."
+    }
+  ]
+}

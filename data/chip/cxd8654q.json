@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "cxd8654q",
+      "display_name": "CXD8654Q",
+      "function_id": "video-blitter",
+      "manufacturer_id": "sony",
+      "description": "Later-revision PlayStation GPU, paired with the CXD8661R on Namco System 12."
+    }
+  ]
+}

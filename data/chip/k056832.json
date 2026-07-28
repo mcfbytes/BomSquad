@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "k056832",
+      "display_name": "K056832",
+      "function_id": "video-tilemap",
+      "manufacturer_id": "konami",
+      "description": "Multi-layer scrolling tilemap generator on 1990s Konami hardware, successor to the K052109."
+    }
+  ]
+}

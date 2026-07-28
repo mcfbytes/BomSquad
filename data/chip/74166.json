@@ -1,0 +1,10 @@
+{
+  "chip": [
+    {
+      "chip_id": "74166",
+      "display_name": "74166",
+      "function_id": "glue",
+      "description": "8-bit parallel-load shift register (74x166); industry-standard multi-vendor part."
+    }
+  ]
+}

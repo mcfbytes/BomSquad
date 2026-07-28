@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "cxd8661r",
+      "display_name": "CXD8661R",
+      "function_id": "cpu",
+      "manufacturer_id": "sony",
+      "description": "Later-revision PlayStation-architecture main CPU (R3000A-class core plus GTE), as fitted to Namco System 12."
+    }
+  ]
+}

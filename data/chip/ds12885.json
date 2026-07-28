@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "ds12885",
+      "display_name": "DS12885",
+      "function_id": "rtc",
+      "manufacturer_id": "dallas",
+      "description": "MC146818-compatible real-time clock with battery-backed CMOS RAM."
+    }
+  ]
+}

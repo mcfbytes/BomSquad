@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "hd6845s",
+      "display_name": "HD6845S",
+      "function_id": "video-crtc",
+      "manufacturer_id": "hitachi",
+      "description": "Hitachi 6845-family CRT controller (HD46505S)."
+    }
+  ]
+}

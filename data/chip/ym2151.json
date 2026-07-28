@@ -1,0 +1,15 @@
+{
+  "chip": [
+    {
+      "chip_id": "ym2151",
+      "display_name": "YM2151",
+      "function_id": "sound-fm",
+      "manufacturer_id": "yamaha",
+      "family_id": "opm",
+      "description": "Eight-channel, four-operator FM synthesizer (OPM).",
+      "typical_clock_hz": 3579545,
+      "package": "DIP-24",
+      "year_introduced": 1984
+    }
+  ]
+}

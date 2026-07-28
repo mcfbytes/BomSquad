@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "upd765a",
+      "display_name": "µPD765A",
+      "function_id": "storage",
+      "manufacturer_id": "nec",
+      "description": "Floppy-disk controller; the industry-standard FDC design, second-sourced by Intel as the 8272A."
+    }
+  ]
+}

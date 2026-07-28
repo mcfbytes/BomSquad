@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "x1-010",
+      "display_name": "X1-010",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "seta",
+      "description": "Sixteen-voice sound custom playing PCM samples or looped waveforms from ROM, on Seta-designed boards.",
+      "notes": "Audio sub-guide order: A2 (sample playback) fires before A4 (wavetable), so sound-pcm."
+    }
+  ]
+}

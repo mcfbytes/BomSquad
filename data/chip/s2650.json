@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "s2650",
+      "display_name": "2650",
+      "function_id": "cpu",
+      "manufacturer_id": "signetics",
+      "description": "8-bit CPU used in early arcade hardware and the Interton VC 4000 console line."
+    }
+  ]
+}

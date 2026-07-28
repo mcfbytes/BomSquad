@@ -6,8 +6,18 @@
       "country": "US"
     },
     {
+      "manufacturer_id": "analog-devices",
+      "name": "Analog Devices",
+      "country": "US"
+    },
+    {
       "manufacturer_id": "atari",
       "name": "Atari",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "atmel",
+      "name": "Atmel",
       "country": "US"
     },
     {
@@ -24,6 +34,17 @@
       "manufacturer_id": "cave",
       "name": "Cave",
       "country": "JP"
+    },
+    {
+      "manufacturer_id": "curtis",
+      "name": "Curtis Electromusic Specialties",
+      "country": "US",
+      "notes": "Analog music-synthesis IC maker (CEM series)."
+    },
+    {
+      "manufacturer_id": "dallas",
+      "name": "Dallas Semiconductor",
+      "country": "US"
     },
     {
       "manufacturer_id": "data-east",
@@ -56,6 +77,12 @@
       "country": "JP"
     },
     {
+      "manufacturer_id": "igs",
+      "name": "IGS",
+      "country": "TW",
+      "notes": "International Games System; Taiwanese arcade manufacturer that also designs its own custom silicon (IGS027A etc.)."
+    },
+    {
       "manufacturer_id": "intel",
       "name": "Intel",
       "country": "US"
@@ -79,6 +106,16 @@
       "manufacturer_id": "konami",
       "name": "Konami",
       "country": "JP"
+    },
+    {
+      "manufacturer_id": "microchip",
+      "name": "Microchip Technology",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "micronas",
+      "name": "Micronas",
+      "notes": "Micronas Intermetall; audio decoder/DSP vendor (MAS35xx MPEG decoders)."
     },
     {
       "manufacturer_id": "midway",
@@ -156,6 +193,11 @@
       "country": "US"
     },
     {
+      "manufacturer_id": "samsung",
+      "name": "Samsung Electronics",
+      "country": "KR"
+    },
+    {
       "manufacturer_id": "sega",
       "name": "Sega",
       "country": "JP"
@@ -189,6 +231,28 @@
       "manufacturer_id": "snk",
       "name": "SNK",
       "country": "JP"
+    },
+    {
+      "manufacturer_id": "sony",
+      "name": "Sony",
+      "country": "JP"
+    },
+    {
+      "manufacturer_id": "ssd",
+      "name": "SSD Company Limited",
+      "country": "JP",
+      "notes": "Developer of the XaviX processor line."
+    },
+    {
+      "manufacturer_id": "stmicroelectronics",
+      "name": "STMicroelectronics",
+      "country": "CH",
+      "notes": "Formed 1987 as SGS-Thomson Microelectronics, renamed STMicroelectronics in 1998; older parts such as the M48T58 timekeeper carry the SGS-Thomson name."
+    },
+    {
+      "manufacturer_id": "sunplus",
+      "name": "Sunplus Technology",
+      "country": "TW"
     },
     {
       "manufacturer_id": "sunsoft",
@@ -254,6 +318,11 @@
     {
       "manufacturer_id": "williams",
       "name": "Williams Electronics",
+      "country": "US"
+    },
+    {
+      "manufacturer_id": "xicor",
+      "name": "Xicor",
       "country": "US"
     },
     {

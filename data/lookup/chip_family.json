@@ -1,6 +1,11 @@
 {
   "chip_family": [
     {
+      "family_id": "arm",
+      "name": "ARM",
+      "description": "32-bit RISC CPU core family designed by Advanced RISC Machines (Arm) and licensed for embedding in third-party ASICs and systems-on-chip."
+    },
+    {
       "family_id": "m6502",
       "name": "MOS 6502",
       "manufacturer_id": "mos-technology",
@@ -59,6 +64,12 @@
       "name": "GI PSG",
       "manufacturer_id": "general-instrument",
       "description": "The AY-3-8910 programmable sound generator family: three square-wave tone channels plus noise, second-sourced widely and cloned by Yamaha as the YM2149."
+    },
+    {
+      "family_id": "superh",
+      "name": "Hitachi SuperH",
+      "manufacturer_id": "hitachi",
+      "description": "32-bit RISC CPU family (SH-1/SH-2/SH-3/SH-4) used as the main processor of the Sega Saturn, 32X and Dreamcast generations."
     },
     {
       "family_id": "tms320",

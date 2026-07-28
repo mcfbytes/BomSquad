@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "i8035",
+      "display_name": "Intel 8035",
+      "function_id": "cpu",
+      "manufacturer_id": "intel",
+      "family_id": "mcs-48",
+      "description": "ROMless MCS-48 microcontroller: 8048 core with no on-die program ROM, executing from external memory.",
+      "notes": "Taxonomy TB2: no on-die program store, so this files as cpu, not mcu."
+    }
+  ]
+}

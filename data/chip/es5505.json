@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "es5505",
+      "display_name": "ES5505",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "ensoniq",
+      "description": "32-voice sample-playback sound processor ('OTIS'), used on Taito F3 and Ensoniq instruments."
+    }
+  ]
+}

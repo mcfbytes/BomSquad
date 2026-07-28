@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "namco-c116",
+      "display_name": "Namco C116",
+      "function_id": "video-mixer",
+      "manufacturer_id": "namco",
+      "description": "Palette/colour RAM controller with screen clipping, used on Namco System 1/2, NB-1 and System FL (V5: palette lookup and colour RAM)."
+    }
+  ]
+}

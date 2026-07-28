@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "mbm29f016a",
+      "display_name": "MBM29F016A",
+      "function_id": "memory",
+      "manufacturer_id": "fujitsu",
+      "description": "16 Mbit (2Mx8) CMOS flash memory, fitted in quantity on Konami System 573 flash carts and Capcom CPS-3 SIMMs."
+    }
+  ]
+}

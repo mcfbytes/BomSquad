@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "i8080",
+      "display_name": "Intel 8080",
+      "function_id": "cpu",
+      "manufacturer_id": "intel",
+      "description": "8-bit CPU; the processor of the earliest programmable arcade video games (Midway 8080 hardware).",
+      "package": "DIP-40",
+      "year_introduced": 1974
+    }
+  ]
+}

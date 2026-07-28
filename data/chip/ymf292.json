@@ -1,0 +1,20 @@
+{
+  "chip": [
+    {
+      "chip_id": "ymf292",
+      "display_name": "YMF292",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "yamaha",
+      "model": "YMF292-F",
+      "description": "SCSP (Saturn Custom Sound Processor): 32-slot PCM/FM sound generator with integrated effects DSP, used in the Sega Saturn, ST-V and Model 2/3.",
+      "notes": "TB3: all functions are in the sound branch and sample playback defines the part, so sound-pcm."
+    }
+  ],
+  "chip_name": [
+    {
+      "chip_id": "ymf292",
+      "name": "SCSP",
+      "kind": "alias"
+    }
+  ]
+}

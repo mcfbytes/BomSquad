@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "ppu2c03b",
+      "display_name": "RP2C03B",
+      "function_id": "video-ppu",
+      "manufacturer_id": "ricoh",
+      "description": "NES-architecture picture processing unit with RGB output, used in the VS. System and PlayChoice-10."
+    }
+  ]
+}

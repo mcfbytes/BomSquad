@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "rp5c01",
+      "display_name": "RP5C01",
+      "function_id": "rtc",
+      "manufacturer_id": "ricoh",
+      "description": "Real-time clock/calendar with battery-backed RAM (taxonomy §4.8 example)."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "sm510",
+      "display_name": "SM510",
+      "function_id": "mcu",
+      "manufacturer_id": "sharp",
+      "description": "4-bit microcontroller with on-die mask ROM and LCD drivers, used across Nintendo Game & Watch and many LCD handhelds."
+    }
+  ]
+}

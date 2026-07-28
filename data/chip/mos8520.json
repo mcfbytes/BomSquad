@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "mos8520",
+      "display_name": "MOS 8520",
+      "function_id": "io",
+      "manufacturer_id": "mos-technology",
+      "description": "Complex interface adapter (6526 CIA variant with a binary TOD counter); the Amiga's peripheral interface chip."
+    }
+  ]
+}

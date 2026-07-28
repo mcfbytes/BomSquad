@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "k055555",
+      "display_name": "K055555",
+      "function_id": "video-mixer",
+      "manufacturer_id": "konami",
+      "description": "Priority encoder/mixer resolving layer priority and palette selection (taxonomy §4.22 example)."
+    }
+  ]
+}

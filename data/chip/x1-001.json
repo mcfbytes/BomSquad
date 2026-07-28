@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "x1-001",
+      "display_name": "X1-001",
+      "function_id": "video-sprite",
+      "manufacturer_id": "seta",
+      "description": "Sprite-generation custom, deployed together with the X1-002 companion on Seta-designed boards (including Seta-built Taito games)."
+    }
+  ]
+}

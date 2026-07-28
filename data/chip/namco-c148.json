@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "namco-c148",
+      "display_name": "Namco C148",
+      "function_id": "io",
+      "manufacturer_id": "namco",
+      "description": "CPU bus manager and interrupt controller custom on Namco System 2 and System 21."
+    }
+  ]
+}

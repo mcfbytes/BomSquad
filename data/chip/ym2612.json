@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "ym2612",
+      "display_name": "YM2612",
+      "function_id": "sound-fm",
+      "manufacturer_id": "yamaha",
+      "family_id": "opn",
+      "description": "Six-channel, four-operator FM synthesizer with a direct DAC channel (OPN2); the Mega Drive sound chip."
+    }
+  ]
+}

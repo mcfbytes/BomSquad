@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "z85c30",
+      "display_name": "Z85C30",
+      "function_id": "io",
+      "manufacturer_id": "zilog",
+      "description": "CMOS version of the Z8530 serial communications controller."
+    }
+  ]
+}

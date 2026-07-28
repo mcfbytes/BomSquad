@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "namco-c123",
+      "display_name": "Namco C123",
+      "function_id": "video-tilemap",
+      "manufacturer_id": "namco",
+      "description": "Scrolling tilemap generator custom used on Namco System 1/2, NB-1 and System FL."
+    }
+  ]
+}

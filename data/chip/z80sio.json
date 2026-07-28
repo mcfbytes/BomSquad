@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "z80sio",
+      "display_name": "Z80 SIO",
+      "function_id": "io",
+      "manufacturer_id": "zilog",
+      "description": "Z80-family dual-channel serial input/output controller."
+    }
+  ]
+}

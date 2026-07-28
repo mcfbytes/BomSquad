@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "ad7524",
+      "display_name": "AD7524",
+      "function_id": "sound-dac",
+      "manufacturer_id": "analog-devices",
+      "description": "8-bit CMOS multiplying digital-to-analog converter (taxonomy §4.16 example)."
+    }
+  ]
+}

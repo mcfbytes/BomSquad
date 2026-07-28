@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "psx-spu",
+      "display_name": "PlayStation SPU",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "sony",
+      "description": "24-voice ADPCM sample-playback sound processor with reverb, of the PlayStation architecture; a discrete package (CXD2922-class) on early hardware, integrated into combined parts later."
+    }
+  ]
+}

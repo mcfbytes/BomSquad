@@ -1,0 +1,10 @@
+{
+  "chip": [
+    {
+      "chip_id": "74ls259",
+      "display_name": "74LS259",
+      "function_id": "glue",
+      "description": "8-bit addressable latch (74LS259), typically latching output and control lines; industry-standard multi-vendor part."
+    }
+  ]
+}

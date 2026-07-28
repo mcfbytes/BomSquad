@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "mc6821",
+      "display_name": "MC6821",
+      "function_id": "io",
+      "manufacturer_id": "motorola",
+      "description": "Peripheral interface adapter: two 8-bit parallel ports with handshake lines."
+    }
+  ]
+}

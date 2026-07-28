@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "igs027a",
+      "display_name": "IGS 027A",
+      "function_id": "mcu",
+      "manufacturer_id": "igs",
+      "family_id": "arm",
+      "description": "ARM7-core custom microcontroller with internal boot ROM, used by IGS as a protection and supervisor processor (PGM and later hardware)."
+    }
+  ]
+}

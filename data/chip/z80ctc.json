@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "z80ctc",
+      "display_name": "Z80 CTC",
+      "function_id": "timer",
+      "manufacturer_id": "zilog",
+      "model": "Z8430",
+      "description": "Z80-family counter/timer circuit: four counter/timer channels with daisy-chained interrupts."
+    }
+  ]
+}

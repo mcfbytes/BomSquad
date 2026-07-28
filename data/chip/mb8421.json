@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "mb8421",
+      "display_name": "MB8421",
+      "function_id": "memory",
+      "manufacturer_id": "fujitsu",
+      "description": "16 Kbit (2Kx8) dual-port static RAM, commonly used as an inter-CPU mailbox."
+    }
+  ]
+}

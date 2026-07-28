@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "pentium3",
+      "display_name": "Pentium III",
+      "function_id": "cpu",
+      "manufacturer_id": "intel",
+      "description": "IA-32 P6-family microprocessor, fitted on PC-based arcade platforms (Sega Chihiro and similar).",
+      "year_introduced": 1999
+    }
+  ]
+}

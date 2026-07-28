@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "scn2681",
+      "display_name": "SCN2681",
+      "function_id": "io",
+      "manufacturer_id": "signetics",
+      "description": "Dual universal asynchronous receiver/transmitter (DUART), closely related to the Motorola MC68681."
+    }
+  ]
+}

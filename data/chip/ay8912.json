@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "ay8912",
+      "display_name": "AY-3-8912",
+      "function_id": "sound-psg",
+      "manufacturer_id": "general-instrument",
+      "family_id": "psg",
+      "description": "AY-3-8910 variant in a 28-pin package with a single I/O port."
+    }
+  ]
+}

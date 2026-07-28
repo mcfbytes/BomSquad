@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "adc0834",
+      "display_name": "ADC0834",
+      "function_id": "io",
+      "manufacturer_id": "national-semiconductor",
+      "description": "8-bit serial-I/O A/D converter with 4-channel multiplexer; reads analog controls (Q11: interfacing operators to the system)."
+    }
+  ]
+}

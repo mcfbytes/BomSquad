@@ -1,0 +1,10 @@
+{
+  "chip": [
+    {
+      "chip_id": "74hc259",
+      "display_name": "74HC259",
+      "function_id": "glue",
+      "description": "High-speed CMOS 8-bit addressable latch (74HC259); industry-standard multi-vendor part."
+    }
+  ]
+}

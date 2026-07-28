@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "dac-8bit-bw",
+      "display_name": "8-bit binary-weighted DAC",
+      "function_id": "sound-dac",
+      "description": "Generic 8-bit binary-weighted resistor DAC on the audio path, as modelled by MAME's DAC device; a discrete network rather than one catalog part.",
+      "notes": "Kept as a chip per taxonomy §4.16, which includes resistor DACs modelled as a device."
+    }
+  ]
+}

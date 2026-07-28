@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "cxd8561q",
+      "display_name": "CXD8561Q",
+      "function_id": "video-blitter",
+      "manufacturer_id": "sony",
+      "description": "PlayStation GPU: rasterizes triangles, sprites and lines from command lists into the frame buffer (V2)."
+    }
+  ]
+}

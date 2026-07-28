@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "i80186",
+      "display_name": "Intel 80186",
+      "function_id": "cpu",
+      "manufacturer_id": "intel",
+      "description": "8086-compatible CPU integrating DMA channels, timers and an interrupt controller.",
+      "year_introduced": 1982
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "ym2149",
+      "display_name": "YM2149",
+      "function_id": "sound-psg",
+      "manufacturer_id": "yamaha",
+      "family_id": "psg",
+      "description": "Yamaha's licensed version of the AY-3-8910 (SSG) with a selectable clock divider.",
+      "notes": "Deliberate manufacturer/family mismatch: the GI PSG family description itself records the YM2149 as Yamaha's licensed clone of the AY-3-8910."
+    }
+  ]
+}

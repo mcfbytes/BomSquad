@@ -1,0 +1,10 @@
+{
+  "chip": [
+    {
+      "chip_id": "r5000",
+      "display_name": "MIPS R5000",
+      "function_id": "cpu",
+      "description": "64-bit MIPS IV RISC microprocessor (designed by Quantum Effect Design), fabricated by several licensees; used on Midway Seattle/Vegas 3D hardware."
+    }
+  ]
+}

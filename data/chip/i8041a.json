@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "i8041a",
+      "display_name": "Intel 8041A",
+      "function_id": "mcu",
+      "manufacturer_id": "intel",
+      "description": "UPI-41A universal peripheral interface: 8-bit slave microcontroller with 1 KB of on-die ROM."
+    }
+  ]
+}

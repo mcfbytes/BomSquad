@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "mos6522",
+      "display_name": "MOS 6522",
+      "function_id": "io",
+      "manufacturer_id": "mos-technology",
+      "description": "Versatile interface adapter: two 8-bit parallel ports, two timers and a shift register."
+    }
+  ]
+}

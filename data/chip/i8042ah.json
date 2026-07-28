@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "i8042ah",
+      "display_name": "Intel 8042AH",
+      "function_id": "mcu",
+      "manufacturer_id": "intel",
+      "description": "UPI-42 universal peripheral interface: 8-bit slave microcontroller with 2 KB of on-die ROM; the standard PC/AT keyboard controller."
+    }
+  ]
+}

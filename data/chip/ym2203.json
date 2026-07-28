@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "ym2203",
+      "display_name": "YM2203",
+      "function_id": "sound-fm",
+      "manufacturer_id": "yamaha",
+      "family_id": "opn",
+      "description": "Three FM channels plus an AY-3-8910-compatible SSG section (OPN); TB3 keeps the whole part sound-fm."
+    }
+  ]
+}

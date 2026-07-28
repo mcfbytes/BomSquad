@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "cem3394",
+      "display_name": "CEM3394",
+      "function_id": "sound-analog",
+      "manufacturer_id": "curtis",
+      "description": "Single-chip analog synthesizer voice: VCO, filter and VCA under voltage control; used by Bally Sente and in Sequential synthesizers."
+    }
+  ]
+}

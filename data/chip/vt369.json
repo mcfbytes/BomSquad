@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "vt369",
+      "display_name": "VT369",
+      "function_id": "cpu",
+      "description": "Famiclone system-on-a-chip: 6502-family core with NES-compatible PPU and APU plus an enhanced sound block; vendor attribution is left unrecorded.",
+      "notes": "Manufacturer omitted deliberately: VT-series famiclone SoC vendor attribution is not reliably documented."
+    }
+  ]
+}

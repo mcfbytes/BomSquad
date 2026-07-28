@@ -1,0 +1,18 @@
+{
+  "chip": [
+    {
+      "chip_id": "am9517a",
+      "display_name": "Am9517A",
+      "function_id": "dma",
+      "manufacturer_id": "amd",
+      "description": "Four-channel DMA controller; AMD's design, second-sourced by Intel as the 8237/8237A."
+    }
+  ],
+  "chip_name": [
+    {
+      "chip_id": "am9517a",
+      "name": "Intel 8237A",
+      "kind": "alias"
+    }
+  ]
+}

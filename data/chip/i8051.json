@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "i8051",
+      "display_name": "Intel 8051",
+      "function_id": "mcu",
+      "manufacturer_id": "intel",
+      "family_id": "mcs-51",
+      "description": "8-bit MCS-51 microcontroller with 4 KB of on-die mask ROM and integrated ports, timers and serial interface."
+    }
+  ]
+}

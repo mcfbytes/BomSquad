@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "te28f160",
+      "display_name": "TE28F160",
+      "function_id": "memory",
+      "manufacturer_id": "intel",
+      "description": "16 Mbit flash memory of the Intel 28F160 series."
+    }
+  ]
+}

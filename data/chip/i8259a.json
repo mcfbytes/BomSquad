@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "i8259a",
+      "display_name": "Intel 8259A",
+      "function_id": "io",
+      "manufacturer_id": "intel",
+      "description": "Programmable interrupt controller, 8 levels, cascadable; io per taxonomy §4.10 (no separate interrupt row)."
+    }
+  ]
+}

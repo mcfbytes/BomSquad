@@ -1,0 +1,1419 @@
+{
+  "mame_device": [
+    {
+      "mame_device": "24c01",
+      "chip_id": "24c01"
+    },
+    {
+      "mame_device": "24c04",
+      "chip_id": "24c04"
+    },
+    {
+      "mame_device": "2816",
+      "chip_id": "2816"
+    },
+    {
+      "mame_device": "315_5296",
+      "chip_id": "sega-315-5296"
+    },
+    {
+      "mame_device": "315_5338a",
+      "chip_id": "sega-315-5338a"
+    },
+    {
+      "mame_device": "315_5649",
+      "chip_id": "sega-315-5649"
+    },
+    {
+      "mame_device": "7474",
+      "chip_id": "7474"
+    },
+    {
+      "mame_device": "93c46_16",
+      "chip_id": "93c46",
+      "note": "The 93C46 in its 16-bit (64x16) organization."
+    },
+    {
+      "mame_device": "93c46_8",
+      "chip_id": "93c46",
+      "note": "The 93C46 in its 8-bit (128x8) organization."
+    },
+    {
+      "mame_device": "a2bus_slot",
+      "ignore_reason": "Apple II expansion bus slot abstraction."
+    },
+    {
+      "mame_device": "acia6850",
+      "chip_id": "mc6850"
+    },
+    {
+      "mame_device": "ad7524",
+      "chip_id": "ad7524"
+    },
+    {
+      "mame_device": "adc0834",
+      "chip_id": "adc0834"
+    },
+    {
+      "mame_device": "address_map_bank",
+      "ignore_reason": "Address-space banking helper internal to MAME's memory system; not hardware."
+    },
+    {
+      "mame_device": "agnus_copper",
+      "ignore_reason": "On-die Copper coprocessor block of the Amiga Agnus custom."
+    },
+    {
+      "mame_device": "aica",
+      "chip_id": "aica",
+      "note": "The AICA package integrates the ARM7DI core that MAME models separately as arm7_le; taxonomy TB1 classifies the part as cpu (see the chip's notes)."
+    },
+    {
+      "mame_device": "aicartc",
+      "ignore_reason": "On-die real-time clock block of the Yamaha AICA (mapped via the aica device)."
+    },
+    {
+      "mame_device": "am9517a",
+      "chip_id": "am9517a",
+      "note": "MAME instantiates am9517a wherever an 8237-class DMA controller sits; the Intel 8237/8237A is the second-sourced version of this same AMD design."
+    },
+    {
+      "mame_device": "arm7_le",
+      "chip_id": "arm7",
+      "note": "Generic ARM7-core device: on AICA-based hardware this is the AICA's embedded ARM7DI, elsewhere the ARM7 core of various SoCs and customs; MAME instantiates the core separately from its host package."
+    },
+    {
+      "mame_device": "arm9",
+      "chip_id": "arm9",
+      "note": "Generic ARM9-core device standing for the core inside various consumer SoCs; MAME instantiates the core separately from its host package."
+    },
+    {
+      "mame_device": "at28c16",
+      "chip_id": "at28c16"
+    },
+    {
+      "mame_device": "ata_interface",
+      "ignore_reason": "ATA/IDE bus interface abstraction."
+    },
+    {
+      "mame_device": "ata_slot",
+      "ignore_reason": "ATA/IDE slot abstraction."
+    },
+    {
+      "mame_device": "ay8910",
+      "chip_id": "ay8910"
+    },
+    {
+      "mame_device": "ay8912",
+      "chip_id": "ay8912"
+    },
+    {
+      "mame_device": "beep",
+      "ignore_reason": "Beeper abstraction for a fixed-frequency tone line; no identifiable sound part."
+    },
+    {
+      "mame_device": "buffered_spriteram16",
+      "ignore_reason": "Sprite-RAM double-buffering helper; models a RAM-copy convention, not a part."
+    },
+    {
+      "mame_device": "c352",
+      "chip_id": "c352"
+    },
+    {
+      "mame_device": "cassette_image",
+      "ignore_reason": "Cassette drive/media abstraction."
+    },
+    {
+      "mame_device": "cat702",
+      "chip_id": "cat702"
+    },
+    {
+      "mame_device": "cdda",
+      "ignore_reason": "CD digital-audio playback abstraction; part of the CD drive's function, not a chip on the board."
+    },
+    {
+      "mame_device": "cdrom",
+      "ignore_reason": "CD-ROM drive; a drive assembly, not a chip."
+    },
+    {
+      "mame_device": "cdrom_image",
+      "ignore_reason": "CD-ROM media image; not hardware."
+    },
+    {
+      "mame_device": "cem3394",
+      "chip_id": "cem3394"
+    },
+    {
+      "mame_device": "centronics",
+      "ignore_reason": "Centronics parallel-port connector abstraction."
+    },
+    {
+      "mame_device": "centronics_printer",
+      "ignore_reason": "Printer peripheral."
+    },
+    {
+      "mame_device": "clock",
+      "ignore_reason": "Clock-signal line helper; models a periodic signal, not an oscillator part."
+    },
+    {
+      "mame_device": "coin_hopper",
+      "ignore_reason": "Electromechanical coin hopper."
+    },
+    {
+      "mame_device": "cr589",
+      "ignore_reason": "Matsushita CR-589 CD-ROM drive; a drive assembly, not a chip."
+    },
+    {
+      "mame_device": "cxd1095",
+      "chip_id": "cxd1095"
+    },
+    {
+      "mame_device": "cxd8530cq",
+      "chip_id": "cxd8530cq"
+    },
+    {
+      "mame_device": "cxd8561q",
+      "chip_id": "cxd8561q"
+    },
+    {
+      "mame_device": "cxd8654q",
+      "chip_id": "cxd8654q"
+    },
+    {
+      "mame_device": "cxd8661r",
+      "chip_id": "cxd8661r"
+    },
+    {
+      "mame_device": "dac",
+      "ignore_reason": "MAME's 1-bit DAC stand-in: a single latched output bit driving the audio path; no DAC component exists to catalog."
+    },
+    {
+      "mame_device": "dac_12bit_r2r",
+      "chip_id": "dac-12bit-r2r",
+      "note": "Generic width/topology stand-in kept as a part per taxonomy §4.16; see the chip description."
+    },
+    {
+      "mame_device": "dac_16bit_r2r_tc",
+      "chip_id": "dac-16bit-r2r",
+      "note": "The _tc suffix is the device's two's-complement input format, an emulation detail, not a different part."
+    },
+    {
+      "mame_device": "dac_4bit_r2r",
+      "chip_id": "dac-4bit-r2r",
+      "note": "Generic width/topology stand-in kept as a part per taxonomy §4.16; see the chip description."
+    },
+    {
+      "mame_device": "dac_8bit_bw",
+      "chip_id": "dac-8bit-bw",
+      "note": "Generic width/topology stand-in kept as a part per taxonomy §4.16; see the chip description."
+    },
+    {
+      "mame_device": "dac_8bit_r2r",
+      "chip_id": "dac-8bit-r2r",
+      "note": "Generic width/topology stand-in kept as a part per taxonomy §4.16; see the chip description."
+    },
+    {
+      "mame_device": "dc_g2if",
+      "ignore_reason": "On-die G2 bus interface block of the Dreamcast HOLLY system ASIC."
+    },
+    {
+      "mame_device": "dcctrl",
+      "ignore_reason": "Dreamcast game controller; an external peripheral, not board silicon."
+    },
+    {
+      "mame_device": "discrete",
+      "ignore_reason": "MAME discrete-circuit simulation; taxonomy §4.17 requires this pseudo-device to be ignored, with real analog parts curated individually where identified."
+    },
+    {
+      "mame_device": "dmadac",
+      "ignore_reason": "Generic DMA-fed DAC stand-in; does not identify the physical DAC part."
+    },
+    {
+      "mame_device": "ds12885",
+      "chip_id": "ds12885"
+    },
+    {
+      "mame_device": "ds2401",
+      "chip_id": "ds2401"
+    },
+    {
+      "mame_device": "dsp56362",
+      "chip_id": "dsp56362"
+    },
+    {
+      "mame_device": "dsp5636x_shi",
+      "ignore_reason": "On-die serial host interface block of a DSP5636x-family DSP (mapped via the dsp56362 device)."
+    },
+    {
+      "mame_device": "duart_channel",
+      "ignore_reason": "Per-channel sub-device of a 68681/2681-family DUART; the DUART is mapped via its own device."
+    },
+    {
+      "mame_device": "es5505",
+      "chip_id": "es5505"
+    },
+    {
+      "mame_device": "es5506",
+      "chip_id": "es5506"
+    },
+    {
+      "mame_device": "es5510",
+      "chip_id": "es5510"
+    },
+    {
+      "mame_device": "esq_5505_5510_pump",
+      "ignore_reason": "Emulation glue moving samples between the ES5505/5506 and ES5510 devices; not a part."
+    },
+    {
+      "mame_device": "f2mc16_port",
+      "ignore_reason": "On-die I/O port block of a Fujitsu F2MC-16-family microcontroller."
+    },
+    {
+      "mame_device": "filter_biquad",
+      "ignore_reason": "Models an op-amp biquad filter stage generically; the physical op-amp and network are not identified."
+    },
+    {
+      "mame_device": "filter_rc",
+      "ignore_reason": "Models an RC filter stage in the audio path generically; the discrete network is not an identifiable cataloged part."
+    },
+    {
+      "mame_device": "filter_volume",
+      "ignore_reason": "Generic volume-scaling helper in MAME's audio stream; not a part."
+    },
+    {
+      "mame_device": "fixfreq",
+      "ignore_reason": "Fixed-frequency video output stage of MAME's netlist simulation; not a part."
+    },
+    {
+      "mame_device": "floppy_35_dd",
+      "ignore_reason": "3.5-inch floppy disk drive (mechanical drive assembly)."
+    },
+    {
+      "mame_device": "floppy_35_hd",
+      "ignore_reason": "3.5-inch floppy disk drive (mechanical drive assembly)."
+    },
+    {
+      "mame_device": "floppy_525_dd",
+      "ignore_reason": "5.25-inch floppy disk drive (mechanical drive assembly)."
+    },
+    {
+      "mame_device": "floppy_525_hd",
+      "ignore_reason": "5.25-inch floppy disk drive (mechanical drive assembly)."
+    },
+    {
+      "mame_device": "floppy_525_qd",
+      "ignore_reason": "5.25-inch floppy disk drive (mechanical drive assembly)."
+    },
+    {
+      "mame_device": "floppy_connector",
+      "ignore_reason": "Floppy-drive bus connector abstraction."
+    },
+    {
+      "mame_device": "flopsnd",
+      "ignore_reason": "Floppy-drive sound-sample player; emulation ambience, not hardware."
+    },
+    {
+      "mame_device": "gcm394_audio",
+      "ignore_reason": "On-die audio block of the SunPlus/GeneralPlus GCM394 system-on-a-chip."
+    },
+    {
+      "mame_device": "gcm394_video",
+      "ignore_reason": "On-die video block of the SunPlus/GeneralPlus GCM394 system-on-a-chip."
+    },
+    {
+      "mame_device": "gdrom",
+      "ignore_reason": "GD-ROM drive; a drive assembly, not a chip."
+    },
+    {
+      "mame_device": "gdrom_image",
+      "ignore_reason": "GD-ROM media image; not hardware."
+    },
+    {
+      "mame_device": "generic_cartslot",
+      "ignore_reason": "Cartridge slot abstraction."
+    },
+    {
+      "mame_device": "generic_fifo_u32_device",
+      "ignore_reason": "Generic FIFO emulation helper; does not identify a physical part."
+    },
+    {
+      "mame_device": "generic_keyboard",
+      "ignore_reason": "Keyboard peripheral abstraction."
+    },
+    {
+      "mame_device": "generic_latch_16",
+      "ignore_reason": "Generic 16-bit inter-CPU communication latch abstraction; the physical part varies per board and is not identified."
+    },
+    {
+      "mame_device": "generic_latch_8",
+      "ignore_reason": "Generic inter-CPU communication latch abstraction: asserts a latched byte path exists without identifying the physical part, which varies per board and cannot be resolved from this device."
+    },
+    {
+      "mame_device": "generic_socket",
+      "ignore_reason": "ROM/media socket abstraction."
+    },
+    {
+      "mame_device": "gfxdecode",
+      "ignore_reason": "MAME graphics-decoding helper; decodes ROM data for the renderer, with no hardware counterpart."
+    },
+    {
+      "mame_device": "gpl_dma",
+      "ignore_reason": "On-die DMA block of a GeneralPlus system-on-a-chip."
+    },
+    {
+      "mame_device": "gpl_renderer",
+      "ignore_reason": "On-die renderer block of a GeneralPlus system-on-a-chip."
+    },
+    {
+      "mame_device": "gpl_timebase",
+      "ignore_reason": "On-die timebase block of a GeneralPlus system-on-a-chip."
+    },
+    {
+      "mame_device": "h83002",
+      "chip_id": "h83002"
+    },
+    {
+      "mame_device": "h8_adc_3337",
+      "ignore_reason": "On-die A/D converter block of a Hitachi H8-family microcontroller."
+    },
+    {
+      "mame_device": "h8_digital_port",
+      "ignore_reason": "On-die I/O port block of a Hitachi H8-family microcontroller, modelled as a child device; not a separate package."
+    },
+    {
+      "mame_device": "h8_intc",
+      "ignore_reason": "On-die interrupt controller block of a Hitachi H8-family microcontroller."
+    },
+    {
+      "mame_device": "h8_sci",
+      "ignore_reason": "On-die serial communication interface block of a Hitachi H8-family microcontroller."
+    },
+    {
+      "mame_device": "h8_timer16",
+      "ignore_reason": "On-die 16-bit timer block of a Hitachi H8-family microcontroller."
+    },
+    {
+      "mame_device": "h8_timer8_channel",
+      "ignore_reason": "On-die 8-bit timer channel of a Hitachi H8-family microcontroller."
+    },
+    {
+      "mame_device": "h8_watchdog",
+      "ignore_reason": "On-die watchdog block of a Hitachi H8-family microcontroller."
+    },
+    {
+      "mame_device": "h8h_dma",
+      "ignore_reason": "On-die DMA controller block of a Hitachi H8/300H-family microcontroller."
+    },
+    {
+      "mame_device": "h8h_dma_channel",
+      "ignore_reason": "On-die DMA channel of a Hitachi H8/300H-family microcontroller."
+    },
+    {
+      "mame_device": "h8h_intc",
+      "ignore_reason": "On-die interrupt controller block of a Hitachi H8/300H-family microcontroller."
+    },
+    {
+      "mame_device": "h8h_timer16_channel",
+      "ignore_reason": "On-die 16-bit timer channel of a Hitachi H8/300H-family microcontroller."
+    },
+    {
+      "mame_device": "h8h_timer8_channel",
+      "ignore_reason": "On-die 8-bit timer channel of a Hitachi H8/300H-family microcontroller."
+    },
+    {
+      "mame_device": "h8s_timer16_channel",
+      "ignore_reason": "On-die 16-bit timer channel of a Hitachi H8S-family microcontroller."
+    },
+    {
+      "mame_device": "harddisk_image",
+      "ignore_reason": "Hard-disk drive/media image; a drive assembly, not a chip."
+    },
+    {
+      "mame_device": "hc259",
+      "chip_id": "74hc259"
+    },
+    {
+      "mame_device": "hd44780",
+      "chip_id": "hd44780"
+    },
+    {
+      "mame_device": "hd6845s",
+      "chip_id": "hd6845s"
+    },
+    {
+      "mame_device": "i80186",
+      "chip_id": "i80186"
+    },
+    {
+      "mame_device": "i8032",
+      "chip_id": "i8032",
+      "note": "ROMless MCS-51; classified cpu per taxonomy TB2 (external program fetch)."
+    },
+    {
+      "mame_device": "i8035",
+      "chip_id": "i8035",
+      "note": "ROMless MCS-48; classified cpu per taxonomy TB2 (external program fetch)."
+    },
+    {
+      "mame_device": "i8041a",
+      "chip_id": "i8041a"
+    },
+    {
+      "mame_device": "i8042ah",
+      "chip_id": "i8042ah"
+    },
+    {
+      "mame_device": "i8051",
+      "chip_id": "i8051"
+    },
+    {
+      "mame_device": "i8080",
+      "chip_id": "i8080"
+    },
+    {
+      "mame_device": "i8085a",
+      "chip_id": "i8085a"
+    },
+    {
+      "mame_device": "i8088",
+      "chip_id": "i8088"
+    },
+    {
+      "mame_device": "i8251",
+      "chip_id": "i8251"
+    },
+    {
+      "mame_device": "i8255",
+      "chip_id": "i8255"
+    },
+    {
+      "mame_device": "i8274_channel",
+      "ignore_reason": "Per-channel sub-device of an 8274/µPD7201-class serial controller."
+    },
+    {
+      "mame_device": "ide_gdrom",
+      "ignore_reason": "GD-ROM drive on the IDE bus; a drive assembly, not a chip."
+    },
+    {
+      "mame_device": "idectrl32",
+      "ignore_reason": "IDE controller function modelled as a bus abstraction; no discrete identified part."
+    },
+    {
+      "mame_device": "idectrl32bm",
+      "ignore_reason": "IDE controller function modelled as a bus abstraction (typically a chipset function block); no discrete identified part."
+    },
+    {
+      "mame_device": "idehd",
+      "ignore_reason": "IDE hard-disk drive; a drive assembly, not a chip."
+    },
+    {
+      "mame_device": "ieee488_slot",
+      "ignore_reason": "IEEE-488 bus slot abstraction."
+    },
+    {
+      "mame_device": "igs027a",
+      "chip_id": "igs027a"
+    },
+    {
+      "mame_device": "input_buffer",
+      "ignore_reason": "Generic input-buffer helper; does not identify a physical part."
+    },
+    {
+      "mame_device": "intel_te28f160",
+      "chip_id": "te28f160"
+    },
+    {
+      "mame_device": "ipt_merge_all_hi",
+      "ignore_reason": "Input-line merger helper internal to MAME's input system; not hardware."
+    },
+    {
+      "mame_device": "ipt_merge_any_hi",
+      "ignore_reason": "Input-line merger helper internal to MAME's input system; not hardware."
+    },
+    {
+      "mame_device": "ipt_merge_any_lo",
+      "ignore_reason": "Input-line merger helper internal to MAME's input system; not hardware."
+    },
+    {
+      "mame_device": "isa16",
+      "ignore_reason": "ISA bus abstraction."
+    },
+    {
+      "mame_device": "isa16_slot",
+      "ignore_reason": "ISA bus slot abstraction."
+    },
+    {
+      "mame_device": "isa8_slot",
+      "ignore_reason": "ISA bus slot abstraction."
+    },
+    {
+      "mame_device": "jvs13551",
+      "ignore_reason": "Sega 837-13551 JVS I/O board: a PCB assembly, not a chip; its parts (315-6146 MIE, TMP90PH44) are mapped via their own devices."
+    },
+    {
+      "mame_device": "jvs_port",
+      "ignore_reason": "JVS bus port/connector abstraction."
+    },
+    {
+      "mame_device": "k053252",
+      "chip_id": "k053252"
+    },
+    {
+      "mame_device": "k054539",
+      "chip_id": "k054539"
+    },
+    {
+      "mame_device": "k055555",
+      "chip_id": "k055555"
+    },
+    {
+      "mame_device": "k056832",
+      "chip_id": "k056832"
+    },
+    {
+      "mame_device": "k572cassslot",
+      "ignore_reason": "Konami System 573 security-cassette slot abstraction."
+    },
+    {
+      "mame_device": "kb_ms_natural",
+      "ignore_reason": "Keyboard peripheral (Microsoft Natural, HLE)."
+    },
+    {
+      "mame_device": "kbdc8042",
+      "chip_id": "i8042ah",
+      "note": "Legacy HLE of the PC/AT keyboard controller, which is physically an 8042-family MCU."
+    },
+    {
+      "mame_device": "ls259",
+      "chip_id": "74ls259"
+    },
+    {
+      "mame_device": "m3comm",
+      "ignore_reason": "Sega Model 3 communication board: a PCB assembly, not a chip."
+    },
+    {
+      "mame_device": "m48t58",
+      "chip_id": "m48t58"
+    },
+    {
+      "mame_device": "m6502",
+      "chip_id": "m6502"
+    },
+    {
+      "mame_device": "m68000",
+      "chip_id": "m68000"
+    },
+    {
+      "mame_device": "m68ec020",
+      "chip_id": "m68ec020"
+    },
+    {
+      "mame_device": "mahjong_medal_panel",
+      "ignore_reason": "Mahjong medal-game control-panel abstraction."
+    },
+    {
+      "mame_device": "mahjong_panel_connector",
+      "ignore_reason": "Mahjong control-panel connector abstraction."
+    },
+    {
+      "mame_device": "maple_dc",
+      "ignore_reason": "On-die Maple peripheral-bus controller block of the Dreamcast HOLLY system ASIC, whose rendering core is mapped via the powervr2 device."
+    },
+    {
+      "mame_device": "mas3507d",
+      "chip_id": "mas3507d"
+    },
+    {
+      "mame_device": "mb3773",
+      "chip_id": "mb3773"
+    },
+    {
+      "mame_device": "mb8421",
+      "chip_id": "mb8421"
+    },
+    {
+      "mame_device": "mb87078",
+      "chip_id": "mb87078"
+    },
+    {
+      "mame_device": "mbm29f016a",
+      "chip_id": "mbm29f016a"
+    },
+    {
+      "mame_device": "mc1408",
+      "chip_id": "mc1408"
+    },
+    {
+      "mame_device": "mc146818",
+      "chip_id": "mc146818"
+    },
+    {
+      "mame_device": "mc6809",
+      "chip_id": "mc6809"
+    },
+    {
+      "mame_device": "mc6809e",
+      "chip_id": "mc6809e"
+    },
+    {
+      "mame_device": "mc6845",
+      "chip_id": "mc6845"
+    },
+    {
+      "mame_device": "mc68681",
+      "chip_id": "mc68681"
+    },
+    {
+      "mame_device": "mcpx_ohci",
+      "ignore_reason": "On-die USB OHCI block of the Xbox MCPX southbridge ASIC."
+    },
+    {
+      "mame_device": "megadrive_io_port",
+      "ignore_reason": "Mega Drive controller-port interface abstraction; the physical port logic lives in the console's I/O custom, which this device does not identify."
+    },
+    {
+      "mame_device": "midi_port",
+      "ignore_reason": "MIDI port abstraction."
+    },
+    {
+      "mame_device": "midiin",
+      "ignore_reason": "MIDI input peripheral abstraction."
+    },
+    {
+      "mame_device": "midiin_port",
+      "ignore_reason": "MIDI input port abstraction."
+    },
+    {
+      "mame_device": "midiout",
+      "ignore_reason": "MIDI output peripheral abstraction."
+    },
+    {
+      "mame_device": "midiout_port",
+      "ignore_reason": "MIDI output port abstraction."
+    },
+    {
+      "mame_device": "mie",
+      "chip_id": "sega-315-6146",
+      "note": "MAME names the device after Sega's 'MIE' nickname for the 315-6146 I/O controller on the 837-13551-class JVS I/O board."
+    },
+    {
+      "mame_device": "mie_jvs",
+      "ignore_reason": "Second MAME device modelling the JVS-bus side of the Sega 315-6146 MIE, already mapped via the mie device; a row here would double-count the part."
+    },
+    {
+      "mame_device": "mixer",
+      "ignore_reason": "Generic audio mixing bus helper; not a part."
+    },
+    {
+      "mame_device": "mos6522",
+      "chip_id": "mos6522"
+    },
+    {
+      "mame_device": "mos6532",
+      "chip_id": "mos6532"
+    },
+    {
+      "mame_device": "mos6551",
+      "chip_id": "mos6551"
+    },
+    {
+      "mame_device": "mos8520",
+      "chip_id": "mos8520"
+    },
+    {
+      "mame_device": "msm5205",
+      "chip_id": "msm5205"
+    },
+    {
+      "mame_device": "msm6242",
+      "chip_id": "msm6242"
+    },
+    {
+      "mame_device": "msx_general_purpose_port",
+      "ignore_reason": "MSX general-purpose (joystick) port abstraction."
+    },
+    {
+      "mame_device": "msx_joystick",
+      "ignore_reason": "MSX joystick peripheral."
+    },
+    {
+      "mame_device": "msx_slot_cartridge",
+      "ignore_reason": "MSX cartridge slot abstraction."
+    },
+    {
+      "mame_device": "msx_slot_ram",
+      "ignore_reason": "MSX internal RAM slot abstraction."
+    },
+    {
+      "mame_device": "msx_slot_ram_mm",
+      "ignore_reason": "MSX memory-mapper RAM slot abstraction."
+    },
+    {
+      "mame_device": "msx_slot_rom",
+      "ignore_reason": "MSX internal ROM slot abstraction."
+    },
+    {
+      "mame_device": "multibus_slot",
+      "ignore_reason": "Multibus slot abstraction."
+    },
+    {
+      "mame_device": "n82077aa",
+      "chip_id": "n82077aa"
+    },
+    {
+      "mame_device": "namco_c116",
+      "chip_id": "namco-c116"
+    },
+    {
+      "mame_device": "namco_c123tmap",
+      "chip_id": "namco-c123"
+    },
+    {
+      "mame_device": "namco_c148",
+      "chip_id": "namco-c148"
+    },
+    {
+      "mame_device": "naomi_m2_board",
+      "ignore_reason": "Sega NAOMI M2-type cartridge board assembly; its security chip (315-5881) is mapped via its own device."
+    },
+    {
+      "mame_device": "neocart_rom",
+      "ignore_reason": "Neo Geo cartridge ROM carrier abstraction (media, not board silicon)."
+    },
+    {
+      "mame_device": "neogeo_cart_slot",
+      "ignore_reason": "Neo Geo cartridge slot abstraction."
+    },
+    {
+      "mame_device": "neogeo_control_port",
+      "ignore_reason": "Neo Geo controller port abstraction."
+    },
+    {
+      "mame_device": "neogeo_ctrl_edge",
+      "ignore_reason": "Neo Geo edge-connector controller interface abstraction."
+    },
+    {
+      "mame_device": "neogeo_joyac",
+      "ignore_reason": "Neo Geo joystick controller (external peripheral)."
+    },
+    {
+      "mame_device": "neosprite_opt",
+      "chip_id": "lspc2-a2",
+      "note": "MAME's optimized Neo Geo sprite renderer models the LSPC line sprite controller."
+    },
+    {
+      "mame_device": "nes_apu_vt",
+      "ignore_reason": "On-die APU block of a VT-series famiclone system-on-a-chip."
+    },
+    {
+      "mame_device": "nes_zapper_sensor",
+      "ignore_reason": "Light-gun photosensor peripheral abstraction."
+    },
+    {
+      "mame_device": "nesapu",
+      "ignore_reason": "On-die APU block of the Ricoh RP2A03-family CPU, which MAME models as a child device; the CPU package carries it (taxonomy TB1 files the 2A03 as cpu)."
+    },
+    {
+      "mame_device": "netlist_cpu",
+      "ignore_reason": "Netlist-simulation plumbing; part of MAME's circuit-simulation framework, not a part."
+    },
+    {
+      "mame_device": "netlist_sound",
+      "ignore_reason": "Netlist-simulation plumbing; part of MAME's circuit-simulation framework, not a part."
+    },
+    {
+      "mame_device": "ng_memcard",
+      "ignore_reason": "Neo Geo memory card: removable media, not board silicon."
+    },
+    {
+      "mame_device": "nl_logic_in",
+      "ignore_reason": "Netlist-simulation plumbing; not a part."
+    },
+    {
+      "mame_device": "nl_stream_in",
+      "ignore_reason": "Netlist-simulation plumbing; not a part."
+    },
+    {
+      "mame_device": "nl_stream_out",
+      "ignore_reason": "Netlist-simulation plumbing; not a part."
+    },
+    {
+      "mame_device": "ns16550",
+      "chip_id": "ns16550"
+    },
+    {
+      "mame_device": "nscsi_bus",
+      "ignore_reason": "SCSI bus abstraction."
+    },
+    {
+      "mame_device": "nscsi_connector",
+      "ignore_reason": "SCSI bus connector abstraction."
+    },
+    {
+      "mame_device": "nvram",
+      "ignore_reason": "Models the persistence of battery-backed RAM contents without identifying the storage part; where the part is known MAME instantiates it separately (e.g. m48t58)."
+    },
+    {
+      "mame_device": "okim6295",
+      "chip_id": "msm6295"
+    },
+    {
+      "mame_device": "output_latch",
+      "ignore_reason": "Generic output-line latch helper; does not identify a physical part."
+    },
+    {
+      "mame_device": "palette",
+      "ignore_reason": "MAME palette/colour-resolution helper; physical palette storage belongs to the video chips that implement it."
+    },
+    {
+      "mame_device": "paula_8364",
+      "chip_id": "mos8364"
+    },
+    {
+      "mame_device": "paula_fdc",
+      "ignore_reason": "On-die floppy-controller block of the Amiga Paula custom (mapped via the paula_8364 device)."
+    },
+    {
+      "mame_device": "pc98_cbus_slot",
+      "ignore_reason": "PC-98 C-bus expansion slot abstraction."
+    },
+    {
+      "mame_device": "pc_kbdc",
+      "ignore_reason": "PC keyboard connector abstraction."
+    },
+    {
+      "mame_device": "pc_lpt",
+      "ignore_reason": "PC parallel (LPT) port abstraction; not an identified part."
+    },
+    {
+      "mame_device": "pccard",
+      "ignore_reason": "PC Card slot abstraction."
+    },
+    {
+      "mame_device": "pci_bridge",
+      "ignore_reason": "Generic PCI-PCI bridge modelling bus topology; not an identified part."
+    },
+    {
+      "mame_device": "pci_root",
+      "ignore_reason": "PCI bus root abstraction."
+    },
+    {
+      "mame_device": "pci_slot",
+      "ignore_reason": "PCI bus slot abstraction."
+    },
+    {
+      "mame_device": "pentium3",
+      "chip_id": "pentium3"
+    },
+    {
+      "mame_device": "pia6821",
+      "chip_id": "mc6821"
+    },
+    {
+      "mame_device": "pic16c622",
+      "chip_id": "pic16c622"
+    },
+    {
+      "mame_device": "pic8259",
+      "chip_id": "i8259a"
+    },
+    {
+      "mame_device": "pit8253",
+      "chip_id": "i8253"
+    },
+    {
+      "mame_device": "pit8254",
+      "chip_id": "i8254"
+    },
+    {
+      "mame_device": "pit_counter",
+      "ignore_reason": "Per-channel counter sub-device of an 8253/8254-family programmable interval timer; the PIT itself is mapped via its own device."
+    },
+    {
+      "mame_device": "pla",
+      "ignore_reason": "Generic programmable-logic-array netlist device; in the filtered set it overwhelmingly models the on-die output PLA of TMS1xxx-class MCUs, loaded as a separate dump, not a discrete part."
+    },
+    {
+      "mame_device": "pokey",
+      "chip_id": "pokey"
+    },
+    {
+      "mame_device": "powervr2",
+      "chip_id": "powervr2",
+      "note": "The rendering core of the HOLLY system ASIC; HOLLY's Maple and G2 bus blocks are separate MAME devices, ignored as on-die."
+    },
+    {
+      "mame_device": "ppu2c03b",
+      "chip_id": "ppu2c03b"
+    },
+    {
+      "mame_device": "ppu_vt03",
+      "ignore_reason": "On-die NES-compatible PPU block of a VT-series famiclone system-on-a-chip."
+    },
+    {
+      "mame_device": "ppu_vt3xx",
+      "ignore_reason": "On-die NES-compatible PPU block of a VT3xx-series famiclone system-on-a-chip."
+    },
+    {
+      "mame_device": "printer_image",
+      "ignore_reason": "Printer peripheral/media abstraction."
+    },
+    {
+      "mame_device": "ps2timer",
+      "ignore_reason": "On-die timer block of the PlayStation 2 Emotion Engine."
+    },
+    {
+      "mame_device": "psxdma",
+      "ignore_reason": "On-die DMA controller block of the PlayStation-architecture main CPU (CXD8530-class)."
+    },
+    {
+      "mame_device": "psxirq",
+      "ignore_reason": "On-die interrupt controller block of the PlayStation-architecture main CPU (CXD8530-class)."
+    },
+    {
+      "mame_device": "psxmdec",
+      "ignore_reason": "On-die macroblock decoder (MDEC) of the PlayStation-architecture main CPU (CXD8530-class)."
+    },
+    {
+      "mame_device": "psxrcnt",
+      "ignore_reason": "On-die root-counter (timer) block of the PlayStation-architecture main CPU (CXD8530-class)."
+    },
+    {
+      "mame_device": "psxsio0",
+      "ignore_reason": "On-die serial port SIO0 of the PlayStation-architecture main CPU (CXD8530-class)."
+    },
+    {
+      "mame_device": "psxsio1",
+      "ignore_reason": "On-die serial port SIO1 of the PlayStation-architecture main CPU (CXD8530-class)."
+    },
+    {
+      "mame_device": "psxspu",
+      "chip_id": "psx-spu",
+      "note": "A discrete SPU package (CXD2922-class) on early PlayStation-architecture boards, integrated into combined parts on later revisions; mapped to the architectural SPU."
+    },
+    {
+      "mame_device": "pwm_display",
+      "ignore_reason": "PWM display-multiplexing helper for LED/VFD/LCD segment displays; models the display matrix, not a driver chip."
+    },
+    {
+      "mame_device": "qsound_hle",
+      "chip_id": "qsound",
+      "note": "High-level emulation of the DL-1425 QSound DSP."
+    },
+    {
+      "mame_device": "quickload",
+      "ignore_reason": "Software quick-load helper; not hardware."
+    },
+    {
+      "mame_device": "r5000le",
+      "chip_id": "r5000",
+      "note": "MAME's little-endian R5000 core device."
+    },
+    {
+      "mame_device": "r65c02",
+      "chip_id": "r65c02"
+    },
+    {
+      "mame_device": "ram",
+      "ignore_reason": "Configurable RAM abstraction: models memory capacity, not identified memory parts."
+    },
+    {
+      "mame_device": "ramdac",
+      "ignore_reason": "Generic palette RAMDAC stand-in; the actual part (Bt471-class and similar) varies per board and is not identified by this device."
+    },
+    {
+      "mame_device": "rp2a03_core",
+      "ignore_reason": "6502-family CPU core sub-device instantiated inside famiclone system-on-chip models; not a discrete RP2A03 package."
+    },
+    {
+      "mame_device": "rp2a03_core_swap_op_d5_d6",
+      "ignore_reason": "6502-family CPU core sub-device (with opcode bitswap) instantiated inside famiclone system-on-chip models; not a discrete package."
+    },
+    {
+      "mame_device": "rp2a03g",
+      "chip_id": "rp2a03g"
+    },
+    {
+      "mame_device": "rp5c01",
+      "chip_id": "rp5c01"
+    },
+    {
+      "mame_device": "rp5h01",
+      "chip_id": "rp5h01"
+    },
+    {
+      "mame_device": "rs232",
+      "ignore_reason": "RS-232 port/connector abstraction."
+    },
+    {
+      "mame_device": "rs232_mouse_hle_logitech",
+      "ignore_reason": "Serial mouse peripheral (HLE)."
+    },
+    {
+      "mame_device": "s100_slot",
+      "ignore_reason": "S-100 bus slot abstraction."
+    },
+    {
+      "mame_device": "s2636",
+      "chip_id": "s2636"
+    },
+    {
+      "mame_device": "s2650",
+      "chip_id": "s2650"
+    },
+    {
+      "mame_device": "samples",
+      "ignore_reason": "Plays recorded sound samples in place of unemulated (usually discrete/analog) audio; not a part."
+    },
+    {
+      "mame_device": "samsung_k9f2808u0b",
+      "chip_id": "k9f2808u0b"
+    },
+    {
+      "mame_device": "saturn_scu",
+      "chip_id": "saturn-scu"
+    },
+    {
+      "mame_device": "scc8530",
+      "chip_id": "z8530"
+    },
+    {
+      "mame_device": "scc85c30",
+      "chip_id": "z85c30"
+    },
+    {
+      "mame_device": "scn2681",
+      "chip_id": "scn2681"
+    },
+    {
+      "mame_device": "screen",
+      "ignore_reason": "Display abstraction (CRT/LCD raster target); not a chip."
+    },
+    {
+      "mame_device": "scsi_harddisk",
+      "ignore_reason": "SCSI hard-disk drive; a drive assembly, not a chip."
+    },
+    {
+      "mame_device": "scsi_slot",
+      "ignore_reason": "SCSI bus slot abstraction."
+    },
+    {
+      "mame_device": "scsp",
+      "chip_id": "ymf292"
+    },
+    {
+      "mame_device": "scudsp",
+      "ignore_reason": "On-die DSP block of the Sega Saturn SCU (mapped via the saturn_scu device)."
+    },
+    {
+      "mame_device": "sega315_5246",
+      "chip_id": "sega-315-5246"
+    },
+    {
+      "mame_device": "sega315_5313",
+      "chip_id": "sega-315-5313"
+    },
+    {
+      "mame_device": "sega315_5881",
+      "chip_id": "sega-315-5881"
+    },
+    {
+      "mame_device": "sega315_6154",
+      "chip_id": "sega-315-6154"
+    },
+    {
+      "mame_device": "segabill",
+      "ignore_reason": "Sega bill validator; an electromechanical peripheral."
+    },
+    {
+      "mame_device": "segadimm",
+      "ignore_reason": "Sega NAOMI DIMM board: a PCB assembly, not a chip."
+    },
+    {
+      "mame_device": "segaic16_video",
+      "ignore_reason": "MAME aggregate renderer for Sega 16-bit video hardware; an emulation container that does not identify the underlying Sega custom parts."
+    },
+    {
+      "mame_device": "segapsg",
+      "ignore_reason": "On-die SN76489-compatible PSG section of a Sega VDP (315-5124/315-5246/315-5313 family); the VDP package carries it and is mapped via its own device."
+    },
+    {
+      "mame_device": "sensorboard",
+      "ignore_reason": "Chess-computer sensor board: a switch-matrix peripheral, not board silicon."
+    },
+    {
+      "mame_device": "serial_terminal",
+      "ignore_reason": "Serial terminal peripheral abstraction."
+    },
+    {
+      "mame_device": "sh2_7604",
+      "chip_id": "sh7604"
+    },
+    {
+      "mame_device": "sh7091",
+      "chip_id": "sh7091"
+    },
+    {
+      "mame_device": "sm510",
+      "chip_id": "sm510"
+    },
+    {
+      "mame_device": "sn76489",
+      "chip_id": "sn76489"
+    },
+    {
+      "mame_device": "sn76489a",
+      "chip_id": "sn76489a"
+    },
+    {
+      "mame_device": "software_list",
+      "ignore_reason": "Software-list metadata container; not hardware."
+    },
+    {
+      "mame_device": "speaker",
+      "ignore_reason": "Output abstraction for the cabinet or console loudspeaker; a transducer, not board silicon."
+    },
+    {
+      "mame_device": "speaker_sound_device",
+      "ignore_reason": "Models a CPU-driven speaker line (level-toggle audio); there is no DAC or sound chip behind it."
+    },
+    {
+      "mame_device": "spg24x",
+      "chip_id": "spg240",
+      "note": "MAME's device for the SPG240-series SoC."
+    },
+    {
+      "mame_device": "spg24x_io",
+      "ignore_reason": "On-die function block of the Sunplus SPG2xx system-on-a-chip (mapped via the spg24x device)."
+    },
+    {
+      "mame_device": "spg24x_video",
+      "ignore_reason": "On-die video block of the Sunplus SPG2xx system-on-a-chip (mapped via the spg24x device)."
+    },
+    {
+      "mame_device": "spg2xx_audio",
+      "ignore_reason": "On-die audio block of the Sunplus SPG2xx system-on-a-chip (mapped via the spg24x device)."
+    },
+    {
+      "mame_device": "spg2xx_sysdma",
+      "ignore_reason": "On-die DMA block of the Sunplus SPG2xx system-on-a-chip (mapped via the spg24x device)."
+    },
+    {
+      "mame_device": "spg_renderer",
+      "ignore_reason": "On-die renderer block of the Sunplus SPG2xx system-on-a-chip (mapped via the spg24x device)."
+    },
+    {
+      "mame_device": "sys573_jvs_host",
+      "ignore_reason": "Konami System 573 JVS host-interface abstraction; not an identified part."
+    },
+    {
+      "mame_device": "tc0140syt",
+      "chip_id": "tc0140syt"
+    },
+    {
+      "mame_device": "ticket_dispenser",
+      "ignore_reason": "Electromechanical ticket dispenser."
+    },
+    {
+      "mame_device": "tilemap",
+      "ignore_reason": "MAME's generic tilemap renderer helper; where the physical tilemap hardware is identified it is modelled by a dedicated device."
+    },
+    {
+      "mame_device": "timer",
+      "ignore_reason": "MAME scheduler timer helper; models emulation timing, not a physical timer part."
+    },
+    {
+      "mame_device": "tmp68301",
+      "chip_id": "tmp68301"
+    },
+    {
+      "mame_device": "tmp90ph44",
+      "chip_id": "tmp90ph44",
+      "note": "Fitted on the Sega 837-13551-class JVS I/O boards instantiated by NAOMI, Chihiro and Hikaru machines."
+    },
+    {
+      "mame_device": "tmpz84c011",
+      "chip_id": "tmpz84c011"
+    },
+    {
+      "mame_device": "tms34010",
+      "chip_id": "tms34010"
+    },
+    {
+      "mame_device": "tms57002",
+      "chip_id": "tms57002"
+    },
+    {
+      "mame_device": "ttl166",
+      "chip_id": "74166"
+    },
+    {
+      "mame_device": "upd4990a",
+      "chip_id": "upd4990a"
+    },
+    {
+      "mame_device": "upd765a",
+      "chip_id": "upd765a"
+    },
+    {
+      "mame_device": "upd7759",
+      "chip_id": "upd7759"
+    },
+    {
+      "mame_device": "usb_connector",
+      "ignore_reason": "USB connector abstraction."
+    },
+    {
+      "mame_device": "v30",
+      "chip_id": "v30"
+    },
+    {
+      "mame_device": "v9938",
+      "chip_id": "v9938"
+    },
+    {
+      "mame_device": "va_lpf4",
+      "ignore_reason": "Virtual-analog filter block used by MAME's synthesizer emulation; not a part."
+    },
+    {
+      "mame_device": "va_rc_eg",
+      "ignore_reason": "Virtual-analog envelope-generator block used by MAME's synthesizer emulation; not a part."
+    },
+    {
+      "mame_device": "vt1682timer",
+      "ignore_reason": "On-die timer block of the VT1682 system-on-a-chip."
+    },
+    {
+      "mame_device": "vt369_soc",
+      "chip_id": "vt369"
+    },
+    {
+      "mame_device": "vt369adpcm",
+      "ignore_reason": "On-die ADPCM sound block of the VT369 famiclone system-on-a-chip (mapped via the vt369_soc device)."
+    },
+    {
+      "mame_device": "vt3xx_spu",
+      "ignore_reason": "On-die sound-processor block of a VT3xx famiclone system-on-a-chip."
+    },
+    {
+      "mame_device": "watchdog",
+      "ignore_reason": "Models the board's watchdog-reset behaviour generically; the physical realization (counter, RC network, supervisor IC) varies per board and is not identified."
+    },
+    {
+      "mame_device": "x1_001",
+      "chip_id": "x1-001",
+      "note": "MAME models the X1-001/X1-002 sprite pair as one device; mapped to the X1-001."
+    },
+    {
+      "mame_device": "x1_010",
+      "chip_id": "x1-010"
+    },
+    {
+      "mame_device": "x2212",
+      "chip_id": "x2212"
+    },
+    {
+      "mame_device": "x76f100",
+      "chip_id": "x76f100"
+    },
+    {
+      "mame_device": "xavix",
+      "chip_id": "xavix"
+    },
+    {
+      "mame_device": "xavix_adc",
+      "ignore_reason": "On-die A/D converter block of the XaviX system-on-a-chip (mapped via the xavix device)."
+    },
+    {
+      "mame_device": "xavix_anport",
+      "ignore_reason": "On-die analog port block of the XaviX system-on-a-chip (mapped via the xavix device)."
+    },
+    {
+      "mame_device": "xavix_math",
+      "ignore_reason": "On-die math block of the XaviX system-on-a-chip (mapped via the xavix device)."
+    },
+    {
+      "mame_device": "xavix_sound",
+      "ignore_reason": "On-die sound block of the XaviX system-on-a-chip (mapped via the xavix device)."
+    },
+    {
+      "mame_device": "ym2149",
+      "chip_id": "ym2149"
+    },
+    {
+      "mame_device": "ym2151",
+      "chip_id": "ym2151"
+    },
+    {
+      "mame_device": "ym2203",
+      "chip_id": "ym2203"
+    },
+    {
+      "mame_device": "ym2413",
+      "chip_id": "ym2413"
+    },
+    {
+      "mame_device": "ym2610",
+      "chip_id": "ym2610"
+    },
+    {
+      "mame_device": "ym2612",
+      "chip_id": "ym2612"
+    },
+    {
+      "mame_device": "ym3438",
+      "chip_id": "ym3438"
+    },
+    {
+      "mame_device": "ym3812",
+      "chip_id": "ym3812"
+    },
+    {
+      "mame_device": "ymz280b",
+      "chip_id": "ymz280b"
+    },
+    {
+      "mame_device": "z180asci_channel_0",
+      "ignore_reason": "On-die ASCI serial channel of a Z180-family CPU."
+    },
+    {
+      "mame_device": "z180asci_channel_1",
+      "ignore_reason": "On-die ASCI serial channel of a Z180-family CPU."
+    },
+    {
+      "mame_device": "z180csio",
+      "ignore_reason": "On-die clocked serial I/O block of a Z180-family CPU."
+    },
+    {
+      "mame_device": "z80",
+      "chip_id": "z80"
+    },
+    {
+      "mame_device": "z80ctc",
+      "chip_id": "z80ctc"
+    },
+    {
+      "mame_device": "z80ctc_channel",
+      "ignore_reason": "Per-channel sub-device of a Z80 CTC (or of the CTC section integrated in TMPZ84C011-class parts); the CTC is mapped via its own device."
+    },
+    {
+      "mame_device": "z80dart_channel",
+      "ignore_reason": "Per-channel sub-device of a Z80 DART/SIO."
+    },
+    {
+      "mame_device": "z80pio",
+      "chip_id": "z80pio"
+    },
+    {
+      "mame_device": "z80scc_channel",
+      "ignore_reason": "Per-channel sub-device of a Z8030/Z8530-family serial communications controller."
+    },
+    {
+      "mame_device": "z80sio",
+      "chip_id": "z80sio"
+    },
+    {
+      "mame_device": "z80sio_channel",
+      "ignore_reason": "Per-channel sub-device of a Z80 SIO/DART."
+    }
+  ]
+}

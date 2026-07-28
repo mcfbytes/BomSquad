@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "arm7",
+      "display_name": "ARM7",
+      "function_id": "cpu",
+      "family_id": "arm",
+      "description": "ARM7-family 32-bit RISC core, designed by Advanced RISC Machines and embedded as a licensed core inside many ASICs and systems-on-chip (e.g. the ARM7DI inside the Yamaha AICA, the core of the IGS 027A).",
+      "notes": "Not a standalone package on most boards that list it: MAME instantiates the execution core separately from its host chip."
+    }
+  ]
+}

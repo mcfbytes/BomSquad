@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "es5510",
+      "display_name": "ES5510",
+      "function_id": "dsp",
+      "manufacturer_id": "ensoniq",
+      "description": "'ESP' effects signal processor, paired with the ES5505/ES5506 sample players."
+    }
+  ]
+}

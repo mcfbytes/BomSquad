@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "lspc2-a2",
+      "display_name": "LSPC2-A2",
+      "function_id": "video-sprite",
+      "manufacturer_id": "snk",
+      "description": "Neo Geo line sprite controller: fetches, scales and line-buffers sprites and the fix layer and generates video timing (taxonomy §4.19 example).",
+      "notes": "Board revisions vary (the earliest boards carry the LSPC-A0 lineage); mapped to the canonical LSPC2-A2 that §4.19 names."
+    }
+  ]
+}

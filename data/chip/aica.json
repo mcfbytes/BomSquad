@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "aica",
+      "display_name": "AICA",
+      "function_id": "cpu",
+      "manufacturer_id": "yamaha",
+      "description": "Dreamcast/NAOMI sound chip: 64-voice PCM/ADPCM engine and effects DSP with an integrated ARM7DI RISC core that executes the sound program from external RAM.",
+      "notes": "Taxonomy TB1 (instruction execution absorbs everything on the die) classifies this part as cpu even though its reason for being is sound; MAME models the sound engine (aica) and the embedded ARM7DI (arm7_le) as separate devices of the same package."
+    }
+  ]
+}

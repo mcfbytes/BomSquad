@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "mc1408",
+      "display_name": "MC1408",
+      "function_id": "sound-dac",
+      "manufacturer_id": "motorola",
+      "description": "8-bit multiplying digital-to-analog converter."
+    }
+  ]
+}

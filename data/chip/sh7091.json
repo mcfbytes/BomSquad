@@ -1,0 +1,14 @@
+{
+  "chip": [
+    {
+      "chip_id": "sh7091",
+      "display_name": "SH7091",
+      "function_id": "cpu",
+      "manufacturer_id": "hitachi",
+      "family_id": "superh",
+      "model": "HD6417091",
+      "description": "SH-4 32-bit RISC CPU with on-die FPU and MMU; the Sega Dreamcast/NAOMI main processor.",
+      "typical_clock_hz": 200000000
+    }
+  ]
+}

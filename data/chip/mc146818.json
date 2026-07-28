@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "mc146818",
+      "display_name": "MC146818",
+      "function_id": "rtc",
+      "manufacturer_id": "motorola",
+      "description": "Real-time clock with battery-backed CMOS RAM; the original PC/AT clock chip."
+    }
+  ]
+}

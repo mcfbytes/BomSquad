@@ -1,0 +1,19 @@
+{
+  "chip": [
+    {
+      "chip_id": "powervr2",
+      "display_name": "PowerVR2",
+      "function_id": "video-blitter",
+      "manufacturer_id": "nec",
+      "description": "PowerVR2 (CLX2) tile-based deferred 3D renderer at the core of the Dreamcast/NAOMI HOLLY system ASIC; draws from display lists into a framebuffer (V2).",
+      "notes": "Designed by VideoLogic (Imagination Technologies), fabricated by NEC. The HOLLY package also carries the Maple and G2 bus controllers, which MAME models as separate devices (ignored here as on-die blocks)."
+    }
+  ],
+  "chip_name": [
+    {
+      "chip_id": "powervr2",
+      "name": "CLX2",
+      "kind": "alias"
+    }
+  ]
+}

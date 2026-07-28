@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "tmp90ph44",
+      "display_name": "TMP90PH44",
+      "function_id": "mcu",
+      "manufacturer_id": "toshiba",
+      "description": "8-bit TLCS-90-family microcontroller with on-chip program ROM; fitted on Sega's NAOMI-era JVS I/O boards."
+    }
+  ]
+}

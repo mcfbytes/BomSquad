@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "i8251",
+      "display_name": "Intel 8251",
+      "function_id": "io",
+      "manufacturer_id": "intel",
+      "description": "Programmable USART serial communications interface."
+    }
+  ]
+}

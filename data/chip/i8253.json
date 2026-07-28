@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "i8253",
+      "display_name": "Intel 8253",
+      "function_id": "timer",
+      "manufacturer_id": "intel",
+      "description": "Programmable interval timer: three independent 16-bit counters."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "ym2413",
+      "display_name": "YM2413",
+      "function_id": "sound-fm",
+      "manufacturer_id": "yamaha",
+      "family_id": "opl",
+      "description": "Cost-reduced two-operator FM synthesizer (OPLL) with 15 preset instrument patches and rhythm mode; TB3 — the instrument ROM holds FM parameters, not waveforms."
+    }
+  ]
+}

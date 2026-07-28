@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "ym3812",
+      "display_name": "YM3812",
+      "function_id": "sound-fm",
+      "manufacturer_id": "yamaha",
+      "family_id": "opl",
+      "description": "Nine-channel, two-operator FM synthesizer (OPL2)."
+    }
+  ]
+}

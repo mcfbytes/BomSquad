@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "upd7759",
+      "display_name": "µPD7759",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "nec",
+      "description": "ADPCM speech/sample player, playing from its own ROM interface or CPU-fed in slave mode."
+    }
+  ]
+}

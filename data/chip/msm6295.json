@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "msm6295",
+      "display_name": "MSM6295",
+      "function_id": "sound-pcm",
+      "manufacturer_id": "oki",
+      "description": "Four-voice ADPCM sample player reading 4-bit OKI ADPCM from external ROM."
+    }
+  ]
+}

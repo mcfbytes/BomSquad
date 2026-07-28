@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "i8088",
+      "display_name": "Intel 8088",
+      "function_id": "cpu",
+      "manufacturer_id": "intel",
+      "description": "8086 core with an 8-bit external data bus; the original IBM PC processor.",
+      "year_introduced": 1979
+    }
+  ]
+}

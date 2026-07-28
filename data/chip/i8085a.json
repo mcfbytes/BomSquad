@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "i8085a",
+      "display_name": "Intel 8085A",
+      "function_id": "cpu",
+      "manufacturer_id": "intel",
+      "description": "8080-compatible 8-bit CPU with a single 5 V supply and on-chip clock generation.",
+      "year_introduced": 1976
+    }
+  ]
+}

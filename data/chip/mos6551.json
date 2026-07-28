@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "mos6551",
+      "display_name": "MOS 6551",
+      "function_id": "io",
+      "manufacturer_id": "mos-technology",
+      "description": "Asynchronous communications interface adapter with on-chip baud-rate generator."
+    }
+  ]
+}

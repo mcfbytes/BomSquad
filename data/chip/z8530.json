@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "z8530",
+      "display_name": "Z8530",
+      "function_id": "io",
+      "manufacturer_id": "zilog",
+      "description": "Serial communications controller (SCC): dual-channel, SDLC/HDLC-capable."
+    }
+  ]
+}

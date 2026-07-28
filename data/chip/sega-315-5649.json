@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5649",
+      "display_name": "Sega 315-5649",
+      "function_id": "io",
+      "manufacturer_id": "sega",
+      "description": "I/O controller custom on 1990s Sega arcade hardware."
+    }
+  ]
+}

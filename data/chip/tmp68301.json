@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "tmp68301",
+      "display_name": "TMP68301",
+      "function_id": "cpu",
+      "manufacturer_id": "toshiba",
+      "description": "68000-core microcontroller with on-die interrupt controller, timers and serial ports, executing from external memory.",
+      "notes": "Taxonomy TB2: ROMless, so cpu rather than mcu."
+    }
+  ]
+}

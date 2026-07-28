@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "x76f100",
+      "display_name": "X76F100",
+      "function_id": "protection",
+      "manufacturer_id": "xicor",
+      "description": "Secure serial flash with password-gated read/write access, from Xicor's PASS (Password Access Security Supervisor) line; deployed as a security/key chip on Sega NAOMI hardware and Konami System 573 carts.",
+      "notes": "Q3: password-gated access control is the part's designed purpose (it is what distinguishes it from a plain serial EEPROM), so protection rather than memory."
+    }
+  ]
+}

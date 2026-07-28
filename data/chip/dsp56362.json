@@ -1,0 +1,11 @@
+{
+  "chip": [
+    {
+      "chip_id": "dsp56362",
+      "display_name": "DSP56362",
+      "function_id": "dsp",
+      "manufacturer_id": "motorola",
+      "description": "24-bit audio DSP of the DSP56300 family."
+    }
+  ]
+}

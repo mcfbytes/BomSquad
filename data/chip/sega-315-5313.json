@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5313",
+      "display_name": "Sega 315-5313",
+      "function_id": "video-ppu",
+      "manufacturer_id": "sega",
+      "description": "Mega Drive VDP: tilemap layers, sprites, DMA and raster timing with an integrated SN76489-compatible PSG section (taxonomy §4.20 example); also fitted to Sega System 18 and System C-2 arcade boards.",
+      "notes": "MAME models the integrated PSG section as the separate segapsg device, which is ignored as on-die."
+    }
+  ]
+}
