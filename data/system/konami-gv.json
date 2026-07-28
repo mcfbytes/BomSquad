@@ -1,0 +1,44 @@
+{
+  "system": [
+    {
+      "system_id": "konami-gv",
+      "name": "Konami GV",
+      "kind_id": "arcade",
+      "manufacturer_id": "konami",
+      "year_introduced": 1995,
+      "description": "PlayStation-based arcade board loading its game from CD-ROM."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "konami-gv",
+      "role_id": "io",
+      "chip_id": "i8251",
+      "quantity": 2
+    },
+    {
+      "system_id": "konami-gv",
+      "role_id": "memory",
+      "chip_id": "93c46"
+    },
+    {
+      "system_id": "konami-gv",
+      "role_id": "sound",
+      "chip_id": "psx-spu",
+      "clock_hz": 33868800
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "konami/konamigv.cpp",
+      "system_id": "konami-gv"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "konami-gv",
+      "name": "System GV",
+      "kind": "alias"
+    }
+  ]
+}

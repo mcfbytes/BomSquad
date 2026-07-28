@@ -1,0 +1,52 @@
+{
+  "system": [
+    {
+      "system_id": "sega-system16b",
+      "name": "Sega System 16B",
+      "kind_id": "arcade",
+      "manufacturer_id": "sega",
+      "year_introduced": 1987,
+      "description": "The second System 16 revision: a single 68000 with the 315-5195 memory mapper, a Z80 sound section and uPD7759 ADPCM."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "sega-system16b",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 5000000
+    },
+    {
+      "system_id": "sega-system16b",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 10000000,
+      "note": "Protected sets fit the same 68000 inside an FD1089 or FD1094 encryption module."
+    },
+    {
+      "system_id": "sega-system16b",
+      "role_id": "sound",
+      "chip_id": "upd7759",
+      "clock_hz": 640000
+    },
+    {
+      "system_id": "sega-system16b",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 4000000
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "sega/segas16b.cpp",
+      "system_id": "sega-system16b"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "sega-system16b",
+      "name": "System 16B",
+      "kind": "alias"
+    }
+  ]
+}

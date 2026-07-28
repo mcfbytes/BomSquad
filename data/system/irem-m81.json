@@ -1,0 +1,50 @@
+{
+  "system": [
+    {
+      "system_id": "irem-m81",
+      "name": "Irem M81",
+      "kind_id": "arcade",
+      "manufacturer_id": "irem",
+      "year_introduced": 1989,
+      "description": "Two-board M72 successor used by X Multiply, Dragon Breed and Hammerin' Harry."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "irem-m81",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 3579545
+    },
+    {
+      "system_id": "irem-m81",
+      "role_id": "io",
+      "chip_id": "i8259a",
+      "note": "uPD71059C interrupt controller."
+    },
+    {
+      "system_id": "irem-m81",
+      "role_id": "maincpu",
+      "chip_id": "v30",
+      "clock_hz": 8000000
+    },
+    {
+      "system_id": "irem-m81",
+      "role_id": "sound",
+      "chip_id": "dac-8bit-r2r"
+    },
+    {
+      "system_id": "irem-m81",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 3579545
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "irem-m81",
+      "name": "M81",
+      "kind": "alias"
+    }
+  ]
+}

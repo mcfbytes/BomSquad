@@ -1,0 +1,19 @@
+{
+  "system": [
+    {
+      "system_id": "nintendo-game-boy-color",
+      "name": "Nintendo Game Boy Color",
+      "kind_id": "handheld",
+      "manufacturer_id": "nintendo",
+      "year_introduced": 1998,
+      "description": "Colour Game Boy successor with a faster CPU mode, more RAM and a colour palette; MAME implements it in the Game Boy driver."
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "nintendo-game-boy-color",
+      "name": "Game Boy Color",
+      "kind": "alias"
+    }
+  ]
+}

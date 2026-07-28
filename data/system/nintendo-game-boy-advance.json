@@ -1,0 +1,39 @@
+{
+  "system": [
+    {
+      "system_id": "nintendo-game-boy-advance",
+      "name": "Nintendo Game Boy Advance",
+      "kind_id": "handheld",
+      "manufacturer_id": "nintendo",
+      "year_introduced": 2001,
+      "description": "ARM7TDMI handheld with a 240x160 colour LCD, backward-compatible with Game Boy cartridges."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "nintendo-game-boy-advance",
+      "role_id": "maincpu",
+      "chip_id": "arm7",
+      "clock_hz": 16777216,
+      "note": "The ARM7TDMI core of the CPU AGB system-on-chip."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "nintendo/gba.cpp",
+      "system_id": "nintendo-game-boy-advance"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "nintendo-game-boy-advance",
+      "name": "GBA",
+      "kind": "alias"
+    },
+    {
+      "system_id": "nintendo-game-boy-advance",
+      "name": "Game Boy Advance",
+      "kind": "alias"
+    }
+  ]
+}

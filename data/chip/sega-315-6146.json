@@ -3,9 +3,10 @@
     {
       "chip_id": "sega-315-6146",
       "display_name": "Sega 315-6146",
-      "function_id": "cpu",
+      "function_id": "mcu",
       "manufacturer_id": "sega",
-      "description": "'MIE' I/O controller: Z80-compatible core with integrated peripherals executing external firmware; fitted on Sega's NAOMI-era JVS I/O boards."
+      "description": "'MIE' MAPLE-JVS bridge: Z80-based microcontroller with a 2 KB internal mask ROM and integrated peripherals; fitted on Sega's NAOMI-era JVS I/O boards.",
+      "notes": "Identification from MAME src/mame/sega/mie.cpp ('MIE aka Sega 315-6146, MAPLE-JVS bridge Z80-based MCU'), whose device_rom_region loads the 315-6146 internal mask ROM. TB2: it normally runs from its on-die ROM, so mcu — one board (837-13844) feeding it external code does not change that."
     }
   ],
   "chip_name": [

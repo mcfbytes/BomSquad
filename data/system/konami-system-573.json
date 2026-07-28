@@ -1,0 +1,61 @@
+{
+  "system": [
+    {
+      "system_id": "konami-system-573",
+      "name": "Konami System 573",
+      "kind_id": "arcade",
+      "manufacturer_id": "konami",
+      "year_introduced": 1997,
+      "description": "PlayStation-based arcade platform behind Dance Dance Revolution and the Bemani series."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "konami-system-573",
+      "role_id": "io",
+      "chip_id": "adc0834"
+    },
+    {
+      "system_id": "konami-system-573",
+      "role_id": "maincpu",
+      "chip_id": "cxd8530cq",
+      "clock_hz": 67737600
+    },
+    {
+      "system_id": "konami-system-573",
+      "role_id": "memory",
+      "chip_id": "mbm29f016a",
+      "note": "Onboard program flash; the number fitted varies by configuration."
+    },
+    {
+      "system_id": "konami-system-573",
+      "role_id": "rtc",
+      "chip_id": "m48t58",
+      "note": "Battery-backed timekeeper holding per-machine settings."
+    },
+    {
+      "system_id": "konami-system-573",
+      "role_id": "sound",
+      "chip_id": "psx-spu",
+      "clock_hz": 33868800
+    },
+    {
+      "system_id": "konami-system-573",
+      "role_id": "video",
+      "chip_id": "cxd8561q"
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "konami/ksys573.cpp",
+      "system_id": "konami-system-573"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "konami-system-573",
+      "name": "System 573",
+      "kind": "alias"
+    }
+  ]
+}

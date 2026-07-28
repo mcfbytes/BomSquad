@@ -1,0 +1,44 @@
+{
+  "system": [
+    {
+      "system_id": "sega-dreamcast",
+      "name": "Sega Dreamcast",
+      "kind_id": "console",
+      "manufacturer_id": "sega",
+      "year_introduced": 1998,
+      "description": "SH-4 console with PowerVR2 graphics, the AICA sound processor and GD-ROM media."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "sega-dreamcast",
+      "role_id": "maincpu",
+      "chip_id": "sh7091",
+      "clock_hz": 200000000
+    },
+    {
+      "system_id": "sega-dreamcast",
+      "role_id": "sound",
+      "chip_id": "aica",
+      "clock_hz": 22579200
+    },
+    {
+      "system_id": "sega-dreamcast",
+      "role_id": "video",
+      "chip_id": "powervr2"
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "sega/dccons.cpp",
+      "system_id": "sega-dreamcast"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "sega-dreamcast",
+      "name": "Dreamcast",
+      "kind": "alias"
+    }
+  ]
+}

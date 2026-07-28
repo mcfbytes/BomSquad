@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5292",
+      "display_name": "Sega 315-5292",
+      "function_id": "video-tilemap",
+      "manufacturer_id": "sega",
+      "description": "Tilemap generator custom (QFP160) on Sega System 24, System M1, Model 1 and Model 2 boards.",
+      "notes": "Identification from MAME src/mame/sega/segas24.cpp ('315-5292: Custom Sega IC, QFP160, Tilemap Generator'), corroborated by model1.cpp; MAME's segas24_tile device is instantiated by all four drivers."
+    }
+  ]
+}

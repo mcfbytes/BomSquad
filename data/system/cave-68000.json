@@ -1,0 +1,52 @@
+{
+  "system": [
+    {
+      "system_id": "cave-68000",
+      "name": "Cave 68000",
+      "kind_id": "arcade",
+      "manufacturer_id": "cave",
+      "year_introduced": 1994,
+      "description": "Cave's 68000 danmaku board, with the 013 sprite chip, 038 tilemap chips and YMZ280B or OKI sample playback."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "cave-68000",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 16000000,
+      "note": "A few earlier boards run the 68000 at 14 MHz."
+    },
+    {
+      "system_id": "cave-68000",
+      "role_id": "memory",
+      "chip_id": "93c46"
+    },
+    {
+      "system_id": "cave-68000",
+      "role_id": "sound",
+      "chip_id": "msm6295",
+      "note": "One or two fitted; clocked between 1 and 3 MHz depending on the board."
+    },
+    {
+      "system_id": "cave-68000",
+      "role_id": "sound",
+      "chip_id": "ymz280b",
+      "clock_hz": 16934400,
+      "note": "Fitted on the boards that do not use OKI ADPCM alone."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "atlus/cave.cpp",
+      "system_id": "cave-68000"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "cave-68000",
+      "name": "Cave first-generation hardware",
+      "kind": "alias"
+    }
+  ]
+}

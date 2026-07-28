@@ -1,0 +1,65 @@
+{
+  "system": [
+    {
+      "system_id": "sega-hangon",
+      "name": "Sega Hang-On hardware",
+      "kind_id": "arcade",
+      "manufacturer_id": "sega",
+      "year_introduced": 1985,
+      "description": "Sega's first 68000 super-scaler board, shared by Hang-On, Space Harrier and Enduro Racer."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "sega-hangon",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 4000000
+    },
+    {
+      "system_id": "sega-hangon",
+      "role_id": "io",
+      "chip_id": "i8255",
+      "quantity": 2
+    },
+    {
+      "system_id": "sega-hangon",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "note": "Clocked at 6.2937 MHz on Hang-On and 10 MHz on Space Harrier and Enduro Racer."
+    },
+    {
+      "system_id": "sega-hangon",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 4000000,
+      "note": "Fitted on Enduro Racer in place of the YM2203."
+    },
+    {
+      "system_id": "sega-hangon",
+      "role_id": "sound",
+      "chip_id": "ym2203",
+      "clock_hz": 4000000,
+      "note": "Fitted on Hang-On and Space Harrier."
+    },
+    {
+      "system_id": "sega-hangon",
+      "role_id": "subcpu",
+      "chip_id": "m68000",
+      "note": "Clocked at 6.2937 MHz on Hang-On and 10 MHz on Space Harrier and Enduro Racer."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "sega/segahang.cpp",
+      "system_id": "sega-hangon"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "sega-hangon",
+      "name": "Sega Space Harrier hardware",
+      "kind": "alias"
+    }
+  ]
+}

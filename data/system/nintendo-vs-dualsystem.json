@@ -1,0 +1,29 @@
+{
+  "system": [
+    {
+      "system_id": "nintendo-vs-dualsystem",
+      "name": "Nintendo VS. DualSystem",
+      "kind_id": "arcade",
+      "manufacturer_id": "nintendo",
+      "year_introduced": 1984,
+      "description": "Two complete VS. UniSystem boards in one cabinet, sharing coin logic and driving two screens."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "nintendo-vs-dualsystem",
+      "role_id": "maincpu",
+      "chip_id": "rp2a03g",
+      "quantity": 2,
+      "clock_hz": 1789772,
+      "note": "One per screen. MAME instantiates a generic RP2A03 here; the catalogued part is the RP2A03G and the revision actually fitted varies between boards."
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "nintendo-vs-dualsystem",
+      "name": "VS. DualSystem",
+      "kind": "alias"
+    }
+  ]
+}

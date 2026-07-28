@@ -1,0 +1,44 @@
+{
+  "system": [
+    {
+      "system_id": "irem-m90",
+      "name": "Irem M90",
+      "kind_id": "arcade",
+      "manufacturer_id": "irem",
+      "year_introduced": 1991,
+      "description": "V35-based board carrying the M72 sound section; used by Hasamu, Bomberman and Quiz F1."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "irem-m90",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 3579545
+    },
+    {
+      "system_id": "irem-m90",
+      "role_id": "sound",
+      "chip_id": "dac-8bit-r2r"
+    },
+    {
+      "system_id": "irem-m90",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 3579545
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "irem/m90.cpp",
+      "system_id": "irem-m90"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "irem-m90",
+      "name": "M90",
+      "kind": "alias"
+    }
+  ]
+}

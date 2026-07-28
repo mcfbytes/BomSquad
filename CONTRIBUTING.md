@@ -328,7 +328,7 @@ what actually passes `npm run validate`):
   ],
   "system_driver": [
     {
-      "mame_sourcefile": "sega/system16a.cpp",
+      "mame_sourcefile": "sega/segas16a.cpp",
       "system_id": "sega-system16a"
     }
   ],

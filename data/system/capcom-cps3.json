@@ -1,0 +1,39 @@
+{
+  "system": [
+    {
+      "system_id": "capcom-cps3",
+      "name": "Capcom CPS-3",
+      "kind_id": "arcade",
+      "manufacturer_id": "capcom",
+      "year_introduced": 1996,
+      "description": "SH-2 based board loading its game from CD-ROM into flash SIMMs, with a custom Capcom sound ASIC."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "capcom-cps3",
+      "role_id": "maincpu",
+      "chip_id": "sh7604",
+      "clock_hz": 25000000
+    },
+    {
+      "system_id": "capcom-cps3",
+      "role_id": "memory",
+      "chip_id": "mbm29f016a",
+      "note": "Flash devices on the game SIMM modules; the number fitted varies by title."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "capcom/cps3.cpp",
+      "system_id": "capcom-cps3"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "capcom-cps3",
+      "name": "CPS-3",
+      "kind": "alias"
+    }
+  ]
+}

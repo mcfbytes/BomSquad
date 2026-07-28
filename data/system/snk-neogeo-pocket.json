@@ -1,0 +1,40 @@
+{
+  "system": [
+    {
+      "system_id": "snk-neogeo-pocket",
+      "name": "SNK Neo Geo Pocket",
+      "kind_id": "handheld",
+      "manufacturer_id": "snk",
+      "year_introduced": 1998,
+      "description": "Monochrome and colour handheld with a TLCS-900/H main CPU and a Z80 sound CPU."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "snk-neogeo-pocket",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 3072000
+    },
+    {
+      "system_id": "snk-neogeo-pocket",
+      "role_id": "sound",
+      "chip_id": "dac-8bit-r2r",
+      "quantity": 2,
+      "note": "Left and right output DACs."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "snk/ngp.cpp",
+      "system_id": "snk-neogeo-pocket"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "snk-neogeo-pocket",
+      "name": "Neo Geo Pocket",
+      "kind": "alias"
+    }
+  ]
+}

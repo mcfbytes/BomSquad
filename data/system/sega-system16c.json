@@ -1,0 +1,45 @@
+{
+  "system": [
+    {
+      "system_id": "sega-system16c",
+      "name": "Sega System 16C",
+      "kind_id": "arcade",
+      "manufacturer_id": "sega",
+      "year_introduced": 2008,
+      "description": "A late System 16B variant with a different ROM board, used by the 2008 System 16C release of Fantasy Zone II."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "sega-system16c",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 5000000
+    },
+    {
+      "system_id": "sega-system16c",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 10000000
+    },
+    {
+      "system_id": "sega-system16c",
+      "role_id": "sound",
+      "chip_id": "upd7759",
+      "clock_hz": 640000
+    },
+    {
+      "system_id": "sega-system16c",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 4000000
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "sega-system16c",
+      "name": "System 16C",
+      "kind": "alias"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "system": [
+    {
+      "system_id": "taito-f2",
+      "name": "Taito F2 System",
+      "kind_id": "arcade",
+      "manufacturer_id": "taito",
+      "year_introduced": 1988,
+      "description": "68000 board with the TC0100SCN tilemap generator and a Z80/YM2610 sound section."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "taito-f2",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 4000000
+    },
+    {
+      "system_id": "taito-f2",
+      "role_id": "io",
+      "chip_id": "tc0140syt",
+      "note": "Main-CPU to sound-CPU communication."
+    },
+    {
+      "system_id": "taito-f2",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 12000000
+    },
+    {
+      "system_id": "taito-f2",
+      "role_id": "sound",
+      "chip_id": "ym2610",
+      "clock_hz": 8000000
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "taito/taito_f2.cpp",
+      "system_id": "taito-f2"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "taito-f2",
+      "name": "Taito F2",
+      "kind": "alias"
+    }
+  ]
+}

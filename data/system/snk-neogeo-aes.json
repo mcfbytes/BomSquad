@@ -1,0 +1,55 @@
+{
+  "system": [
+    {
+      "system_id": "snk-neogeo-aes",
+      "name": "SNK Neo Geo AES",
+      "kind_id": "console",
+      "manufacturer_id": "snk",
+      "year_introduced": 1990,
+      "description": "The home form of the Neo Geo: the same 68000/Z80/YM2610/LSPC hardware without the MVS coin and calendar circuitry."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "snk-neogeo-aes",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 4000000
+    },
+    {
+      "system_id": "snk-neogeo-aes",
+      "role_id": "glue",
+      "chip_id": "74hc259",
+      "note": "System control latch."
+    },
+    {
+      "system_id": "snk-neogeo-aes",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 12000000
+    },
+    {
+      "system_id": "snk-neogeo-aes",
+      "role_id": "sound",
+      "chip_id": "ym2610",
+      "clock_hz": 8000000
+    },
+    {
+      "system_id": "snk-neogeo-aes",
+      "role_id": "sprite",
+      "chip_id": "lspc2-a2"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "snk-neogeo-aes",
+      "name": "Advanced Entertainment System",
+      "kind": "alias"
+    },
+    {
+      "system_id": "snk-neogeo-aes",
+      "name": "Neo Geo AES",
+      "kind": "alias"
+    }
+  ]
+}

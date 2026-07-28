@@ -297,7 +297,7 @@ what HDL already exists for System 16A. No other table needs touching.
 
 | Column            | Type | Null | Key                                 | Meaning                                |
 | ----------------- | ---- | ---- | ----------------------------------- | -------------------------------------- |
-| `mame_sourcefile` | TEXT | no   | PK                                  | e.g. `sega/system16a.cpp`              |
+| `mame_sourcefile` | TEXT | no   | PK                                  | e.g. `sega/segas16a.cpp`               |
 | `system_id`       | TEXT | no   | FK → `system` **ON DELETE CASCADE** | default system for every machine in it |
 
 The PK is `mame_sourcefile` **alone**, not `(system_id, mame_sourcefile)`, and the rule it states is
@@ -1018,7 +1018,7 @@ The two invariants:
     },
   ],
   "system_name": [{ "system_id": "sega-system16a", "name": "System 16A", "kind": "alias" }],
-  "system_driver": [{ "mame_sourcefile": "sega/system16a.cpp", "system_id": "sega-system16a" }],
+  "system_driver": [{ "mame_sourcefile": "sega/segas16a.cpp", "system_id": "sega-system16a" }],
   "system_chip": [
     {
       "system_id": "sega-system16a",

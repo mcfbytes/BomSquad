@@ -1,0 +1,101 @@
+{
+  "system": [
+    {
+      "system_id": "toaplan-version2",
+      "name": "Toaplan Version 2",
+      "kind_id": "arcade",
+      "manufacturer_id": "toaplan",
+      "year_introduced": 1991,
+      "description": "68000 board built around the GP9001 video display processor; the sound CPU is an HD647180X, a V25 or a plain Z80 depending on the title."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "toaplan-version2",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "note": "Clocked at 10, 12.5 or 16 MHz depending on the board."
+    },
+    {
+      "system_id": "toaplan-version2",
+      "role_id": "sound",
+      "chip_id": "msm6295",
+      "note": "Clocked between 1 and 4 MHz depending on the board."
+    },
+    {
+      "system_id": "toaplan-version2",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 3375000
+    },
+    {
+      "system_id": "toaplan-version2",
+      "role_id": "sound",
+      "chip_id": "ym3812",
+      "clock_hz": 3375000,
+      "note": "Fitted on Teki Paki and Pipi & Bibis in place of the YM2151."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "toaplan/batsugun.cpp",
+      "system_id": "toaplan-version2"
+    },
+    {
+      "mame_sourcefile": "toaplan/dogyuun.cpp",
+      "system_id": "toaplan-version2"
+    },
+    {
+      "mame_sourcefile": "toaplan/dt7.cpp",
+      "system_id": "toaplan-version2"
+    },
+    {
+      "mame_sourcefile": "toaplan/enmadaio.cpp",
+      "system_id": "toaplan-version2"
+    },
+    {
+      "mame_sourcefile": "toaplan/fixeight.cpp",
+      "system_id": "toaplan-version2"
+    },
+    {
+      "mame_sourcefile": "toaplan/ghox.cpp",
+      "system_id": "toaplan-version2"
+    },
+    {
+      "mame_sourcefile": "toaplan/kbash.cpp",
+      "system_id": "toaplan-version2"
+    },
+    {
+      "mame_sourcefile": "toaplan/pipibibi.cpp",
+      "system_id": "toaplan-version2"
+    },
+    {
+      "mame_sourcefile": "toaplan/snowbro2.cpp",
+      "system_id": "toaplan-version2"
+    },
+    {
+      "mame_sourcefile": "toaplan/tekipaki.cpp",
+      "system_id": "toaplan-version2"
+    },
+    {
+      "mame_sourcefile": "toaplan/truxton2.cpp",
+      "system_id": "toaplan-version2"
+    },
+    {
+      "mame_sourcefile": "toaplan/vfive.cpp",
+      "system_id": "toaplan-version2"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "toaplan-version2",
+      "name": "GP9001 hardware",
+      "kind": "alias"
+    },
+    {
+      "system_id": "toaplan-version2",
+      "name": "Toaplan V2",
+      "kind": "alias"
+    }
+  ]
+}

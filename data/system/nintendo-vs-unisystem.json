@@ -1,0 +1,39 @@
+{
+  "system": [
+    {
+      "system_id": "nintendo-vs-unisystem",
+      "name": "Nintendo VS. UniSystem",
+      "kind_id": "arcade",
+      "manufacturer_id": "nintendo",
+      "year_introduced": 1984,
+      "description": "Arcade conversion of the Famicom hardware: one RP2A03 and one RP2C04/RP2C05 PPU per cabinet."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "nintendo-vs-unisystem",
+      "role_id": "maincpu",
+      "chip_id": "rp2a03g",
+      "clock_hz": 1789772,
+      "note": "MAME instantiates a generic RP2A03 here; the catalogued part is the RP2A03G and the revision actually fitted varies between boards."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "nintendo/vsnes.cpp",
+      "system_id": "nintendo-vs-unisystem"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "nintendo-vs-unisystem",
+      "name": "Nintendo VS System",
+      "kind": "alias"
+    },
+    {
+      "system_id": "nintendo-vs-unisystem",
+      "name": "VS. UniSystem",
+      "kind": "alias"
+    }
+  ]
+}

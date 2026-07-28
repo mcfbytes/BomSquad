@@ -1,0 +1,72 @@
+{
+  "system": [
+    {
+      "system_id": "sega-megatech",
+      "name": "Sega Mega-Tech",
+      "kind_id": "arcade",
+      "manufacturer_id": "sega",
+      "year_introduced": 1989,
+      "description": "Coin-timed arcade cabinet running Mega Drive and Master System cartridges under a Z80 BIOS board."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "sega-megatech",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 3579545
+    },
+    {
+      "system_id": "sega-megatech",
+      "role_id": "io",
+      "chip_id": "cxd1095",
+      "quantity": 2
+    },
+    {
+      "system_id": "sega-megatech",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 7670453
+    },
+    {
+      "system_id": "sega-megatech",
+      "role_id": "sound",
+      "chip_id": "ym2612",
+      "clock_hz": 7670453
+    },
+    {
+      "system_id": "sega-megatech",
+      "role_id": "subcpu",
+      "chip_id": "z80",
+      "clock_hz": 3579540,
+      "note": "BIOS/menu CPU on the Mega-Tech board."
+    },
+    {
+      "system_id": "sega-megatech",
+      "role_id": "video",
+      "chip_id": "sega-315-5246",
+      "clock_hz": 10738620,
+      "note": "Master System VDP, for SMS titles and the menu."
+    },
+    {
+      "system_id": "sega-megatech",
+      "role_id": "video",
+      "chip_id": "sega-315-5313",
+      "clock_hz": 53693175,
+      "note": "Mega Drive VDP."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "sega/megatech.cpp",
+      "system_id": "sega-megatech"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "sega-megatech",
+      "name": "Mega-Tech",
+      "kind": "alias"
+    }
+  ]
+}

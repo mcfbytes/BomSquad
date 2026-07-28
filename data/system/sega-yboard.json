@@ -1,0 +1,65 @@
+{
+  "system": [
+    {
+      "system_id": "sega-yboard",
+      "name": "Sega Y Board",
+      "kind_id": "arcade",
+      "manufacturer_id": "sega",
+      "year_introduced": 1988,
+      "description": "Triple-68000 super-scaler board used by Galaxy Force, Power Drift and G-LOC."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "sega-yboard",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 4026987
+    },
+    {
+      "system_id": "sega-yboard",
+      "role_id": "glue",
+      "chip_id": "mb3773",
+      "note": "Power-supply monitor used as the board watchdog."
+    },
+    {
+      "system_id": "sega-yboard",
+      "role_id": "io",
+      "chip_id": "sega-315-5296"
+    },
+    {
+      "system_id": "sega-yboard",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 12500000,
+      "note": "MAME models the Y Board 68000s with its m68000msh variant device, so this row does not appear in the machine-level BOM."
+    },
+    {
+      "system_id": "sega-yboard",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 4026987
+    },
+    {
+      "system_id": "sega-yboard",
+      "role_id": "subcpu",
+      "chip_id": "m68000",
+      "quantity": 2,
+      "clock_hz": 12500000,
+      "note": "Two sub-CPUs (subx and suby) beside the master 68000; MAME models them with its m68000msh variant device."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "sega/segaybd.cpp",
+      "system_id": "sega-yboard"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "sega-yboard",
+      "name": "Sega Y-Board",
+      "kind": "alias"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "system": [
+    {
+      "system_id": "toaplan-version1",
+      "name": "Toaplan Version 1",
+      "kind_id": "arcade",
+      "manufacturer_id": "toaplan",
+      "year_introduced": 1988,
+      "description": "68000 board with Toaplan's BCU and FCU video chips and a Z80 driving a YM3812."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "toaplan-version1",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 3500000,
+      "note": "Fire Shark and Zero Wing fit an HD647180X sound MCU in its place."
+    },
+    {
+      "system_id": "toaplan-version1",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 10000000
+    },
+    {
+      "system_id": "toaplan-version1",
+      "role_id": "sound",
+      "chip_id": "ym3812",
+      "clock_hz": 3500000
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "toaplan/fireshrk.cpp",
+      "system_id": "toaplan-version1"
+    },
+    {
+      "mame_sourcefile": "toaplan/toaplan1.cpp",
+      "system_id": "toaplan-version1"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "toaplan-version1",
+      "name": "Toaplan V1",
+      "kind": "alias"
+    }
+  ]
+}

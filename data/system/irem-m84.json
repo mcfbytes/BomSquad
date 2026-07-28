@@ -1,0 +1,38 @@
+{
+  "system": [
+    {
+      "system_id": "irem-m84",
+      "name": "Irem M84",
+      "kind_id": "arcade",
+      "manufacturer_id": "irem",
+      "year_introduced": 1989,
+      "description": "M72-family board used by R-Type II, Cosmic Cop and Lightning Swords; the main CPU is a V30 or a V35 depending on the set."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "irem-m84",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 3579545
+    },
+    {
+      "system_id": "irem-m84",
+      "role_id": "sound",
+      "chip_id": "dac-8bit-r2r"
+    },
+    {
+      "system_id": "irem-m84",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 3579545
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "irem-m84",
+      "name": "M84",
+      "kind": "alias"
+    }
+  ]
+}

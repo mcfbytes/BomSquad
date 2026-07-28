@@ -1,0 +1,49 @@
+{
+  "system": [
+    {
+      "system_id": "sega-systemc",
+      "name": "Sega System C",
+      "kind_id": "arcade",
+      "manufacturer_id": "sega",
+      "year_introduced": 1989,
+      "description": "A Mega Drive-derived arcade board: 68000, 315-5313 VDP and YM3438, without the uPD7759 ADPCM of System C2."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "sega-systemc",
+      "role_id": "io",
+      "chip_id": "sega-315-5296"
+    },
+    {
+      "system_id": "sega-systemc",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 8948862
+    },
+    {
+      "system_id": "sega-systemc",
+      "role_id": "sound",
+      "chip_id": "ym3438",
+      "clock_hz": 7670453
+    },
+    {
+      "system_id": "sega-systemc",
+      "role_id": "video",
+      "chip_id": "sega-315-5313",
+      "clock_hz": 53693175
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "sega-systemc",
+      "name": "Sega System 14",
+      "kind": "alias"
+    },
+    {
+      "system_id": "sega-systemc",
+      "name": "System C",
+      "kind": "alias"
+    }
+  ]
+}

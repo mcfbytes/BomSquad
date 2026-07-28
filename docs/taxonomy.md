@@ -84,10 +84,15 @@ PCM channel → `sound-pcm`.
 
 **TB5 — No dominant function across branches ⇒ `custom`.** If a part spans two or more top-level categories
 (counting all of `video-*` as one category and all of `sound-*` as one) with no dominant one, and it is a
-board-specific ASIC rather than a catalog part, it is `custom`.
+board-specific ASIC rather than a catalog part, it is `custom`. A **catalog part** is one designed as a
+standalone product with its own part identity and reused across unrelated boards — open-market sale is not
+required (Atari POKEY was never sold openly and is catalog). A part designed as one member of a single
+architecture's chipset is board-specific, however many boards that architecture shipped on.
 _Consequences:_ Capcom CPS-B-21 (video mixing/priority + sprite control + per-game protection registers) →
 `custom`. Data East 146 (protection + I/O + interrupt handling) → `custom`. Sega SCU (DMA + DSP + interrupt
-control) → `custom`.
+control) → `custom`. MOS 8364 "Paula" (PCM audio + floppy + serial/interrupts, an Amiga chipset member) →
+`custom`. Atari POKEY (PSG + pot/keyboard scanning + serial) → **not** TB5 — a catalog part; Q5 then gives
+`sound-psg`.
 
 **TB6 — Design intent beats deployment.** A catalog part keeps its catalog function even when a board abuses
 it (P1). Only parts _designed_ as security devices take `protection`.
@@ -108,27 +113,40 @@ counted by `v_system_coverage.unmapped_device_count`, and are queued for curatio
 
 ## 3. Decision guide
 
-Ordered questions. Answer in sequence; stop at the first **yes**. The result is deterministic — two curators
-following this list MUST reach the same value.
+Ordered questions, answered about the part's **primary reason for being** (§1): the reading is "is this what
+the part is for?", never "does the part do this somewhere on the die?". A timekeeper NVRAM contains an
+addressable store, but Q8 is honestly answered no — the clock is what the part is for (§4.8). Q1 is the one
+deliberate exception: TB1 absorbs purpose, so an instruction-executing part is `cpu` or `mcu` whatever it was
+built to do.
 
-| #   | Question                                                                                                                                                                               | Value                                                       |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| 0   | Is the part's function genuinely unknown to you?                                                                                                                                       | **stop** — leave the device unmapped (TB8); write no `chip` |
-| 1   | Does it fetch and execute a general-purpose instruction stream (TB1)?                                                                                                                  | → 1a                                                        |
-| 1a  | …from program memory on its own die, with integrated peripherals (TB2)?                                                                                                                | `mcu`                                                       |
-| 1b  | …from external memory across a bus?                                                                                                                                                    | `cpu`                                                       |
-| 2   | Is it a fixed-function math or signal engine — DSP, FPU, geometry/transform unit — driven by a host CPU?                                                                               | `dsp`                                                       |
-| 3   | Was it designed to enforce security: lockout, decryption, keyed challenge/response, tamper response (TB6)?                                                                             | `protection`                                                |
-| 4   | Does it generate or compose the video signal, or drive the picture pipeline?                                                                                                           | → §3.1                                                      |
-| 5   | Does it generate, mix, or convert audio?                                                                                                                                               | → §3.2                                                      |
-| 6   | Does it manage a mass-storage medium — floppy, hard disk, CD/GD-ROM, SCSI/IDE, tape?                                                                                                   | `storage`                                                   |
-| 7   | Does it move data between memory regions or devices without CPU cycles per transfer?                                                                                                   | `dma`                                                       |
-| 8   | Does it control address decoding, banking, translation, or memory arrays — or is it itself an addressable non-volatile store (EEPROM/NVRAM)?                                           | `memory`                                                    |
-| 9   | Does it keep wall-clock time or a calendar, typically battery-backed?                                                                                                                  | `rtc`                                                       |
-| 10  | Is its purpose generating programmable time intervals, counts, or periodic interrupts?                                                                                                 | `timer`                                                     |
-| 11  | Does it interface the system to peripherals, operators, other boards, or a network — parallel/serial ports, controller reads, interrupt priority, sound latches, coin/ticket handling? | `io`                                                        |
-| 12  | Does it span two or more of the above categories with no dominant one, as a board-specific ASIC (TB5)?                                                                                 | `custom`                                                    |
-| 13  | Otherwise: is it catalog logic — 74-series, PAL/GAL, decoder, latch, buffer, driver, comparator, clock generator, reset supervisor?                                                    | `glue`                                                      |
+**§2 outranks this list.** The tie-break rules exist for exactly the parts where more than one question could
+honestly claim a yes; when you notice that, stop walking and apply §2 in order — a tie-break that fires
+decides the value, and question order never overrules it. Walked blind, the list would file Amiga Paula under
+Q5 as `sound-pcm` and never reach Q12; TB5 files it as `custom`, and TB5 wins. When no tie-break fires —
+which is the catalog-part case TB5 excludes — the sequence itself is the dominance rule: answer in order and
+stop at the first **yes**. That is how POKEY (PSG + pot/keyboard scanning + serial) lands on `sound-psg`, not
+`io`.
+
+The result is deterministic — two curators applying §2 and then this list MUST reach the same value.
+
+| #   | Question                                                                                                                                                                                                                   | Value                                                       |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| 0   | Is the part's function genuinely unknown to you?                                                                                                                                                                           | **stop** — leave the device unmapped (TB8); write no `chip` |
+| 1   | Does it fetch and execute a general-purpose instruction stream (TB1)?                                                                                                                                                      | → 1a                                                        |
+| 1a  | …from program memory on its own die, with integrated peripherals (TB2)?                                                                                                                                                    | `mcu`                                                       |
+| 1b  | …from external memory across a bus?                                                                                                                                                                                        | `cpu`                                                       |
+| 2   | Is it a math or signal engine — DSP, FPU, geometry/transform unit — driven by a host CPU, with its algorithm in microcode or firmware the part executes? (A fixed-silicon decoder for a published format is not one — A2.) | `dsp`                                                       |
+| 3   | Was it designed to enforce security: lockout, decryption, keyed challenge/response, tamper response (TB6)?                                                                                                                 | `protection`                                                |
+| 4   | Does it generate or compose the video signal, or drive the picture pipeline?                                                                                                                                               | → §3.1                                                      |
+| 5   | Does it generate, mix, or convert audio?                                                                                                                                                                                   | → §3.2                                                      |
+| 6   | Does it manage a mass-storage medium — floppy, hard disk, CD/GD-ROM, SCSI/IDE, tape?                                                                                                                                       | `storage`                                                   |
+| 7   | Does it move data between memory regions or devices without CPU cycles per transfer?                                                                                                                                       | `dma`                                                       |
+| 8   | Does it control address decoding, banking, translation, or memory arrays — or is it itself an addressable non-volatile store (EEPROM/NVRAM)?                                                                               | `memory`                                                    |
+| 9   | Does it keep wall-clock time or a calendar, typically battery-backed?                                                                                                                                                      | `rtc`                                                       |
+| 10  | Is its purpose generating programmable time intervals, counts, or periodic interrupts?                                                                                                                                     | `timer`                                                     |
+| 11  | Does it interface the system to peripherals, operators, other boards, or a network — parallel/serial ports, controller reads, interrupt priority, sound latches, coin/ticket handling?                                     | `io`                                                        |
+| 12  | Does it span two or more of the above categories with no dominant one, as a board-specific ASIC (TB5)?                                                                                                                     | `custom`                                                    |
+| 13  | Otherwise: is it catalog logic — 74-series, PAL/GAL, decoder, latch, buffer, driver, comparator, clock generator, reset supervisor?                                                                                        | `glue`                                                      |
 
 If you reach the end without a yes, re-read Q0 — the honest answer is usually that the function is not
 actually known.
@@ -145,6 +163,12 @@ actually known.
 | V6  | Does it generate raster timing — H/V sync, blanking, display addresses — without generating pixel content?                | `video-crtc`    |
 | V7  | Does it convert digital pixel data to analog video, or encode RGB to composite/S-video/component?                         | `video-dac`     |
 
+V1's three parts are all load-bearing, and "tile layers" means scrolling tilemaps in V3's sense. A dominant
+sprite engine that also emits sync and a fixed character overlay — the SNK LSPC2-A2, whose fix layer neither
+scrolls nor forms the background — stays `video-sprite`: TB3 classifies by the defining stage, and TB4 keeps
+the timing with its master. V1 is for parts where the integrated whole, not one stage plus its servants, is
+the product.
+
 ### 3.2 Audio sub-guide (reached from Q5)
 
 | #   | Question                                                                                                                     | Value             |
@@ -156,6 +180,11 @@ actually known.
 | A5  | Does it generate tones from fixed square/pulse/triangle/noise generators with envelopes?                                     | `sound-psg`       |
 | A6  | Is it purely a digital-to-analog converter for an audio stream?                                                              | `sound-dac`       |
 | A7  | Is it an analog or discrete audio circuit — op-amp, filter, VCO/timer used as an oscillator, power amplifier?                | `sound-analog`    |
+
+Q2 precedes this sub-guide, so a programmable engine running signal-processing microcode never reaches A1–A7:
+QSound (a DSP16A core running the DL-1425 program), ES5510, TMS57002 and DSP56362 are all `dsp`, whatever
+their output jacks carry. A2's "MP3-era codecs" means the opposite kind of part — a fixed-silicon decoder for
+a published format (Micronas MAS3507D), where an implementation reproduces the format, not the firmware.
 
 ---
 
@@ -198,10 +227,12 @@ controllers · Microchip PIC16C57 · Dallas DS5002FP (TB6).
 ### 4.3 `dsp` — DSP / coprocessor · band `hard`
 
 **Definition.** A fixed-purpose math or signal coprocessor driven by a host CPU: digital signal processors,
-floating-point units, geometry/transform engines, and 3D matrix processors.
+floating-point units, geometry/transform engines, and 3D matrix processors. The algorithm is the part's
+program — microcode or firmware an implementation must reproduce.
 
 **Examples.** Texas Instruments TMS32010 · Texas Instruments TMS320C31 · Analog Devices ADSP-2105 · NEC
-µPD77C25 (Nintendo DSP-1) · Fujitsu MB86233 (Sega Model 2 TGP) · Motorola MC68881 (FPU).
+µPD77C25 (Nintendo DSP-1) · Fujitsu MB86233 (Sega Model 2 TGP) · Motorola MC68881 (FPU) · Capcom QSound
+(DL-1425, a DSP16A core running mask microcode).
 
 **Confused with.**
 
@@ -210,6 +241,9 @@ floating-point units, geometry/transform engines, and 3D matrix processors.
 - `mcu` — DSPs often boot from internal ROM too; the discriminator is the workload (multiply-accumulate math
   on a data stream) not the memory topology. Q2 sits after Q1, so a part that also serves as a general
   processor takes `cpu`/`mcu`.
+- `sound-pcm` — the split is where the algorithm lives (Q2). A microcode engine whose output happens to be
+  audio (QSound, ES5510, TMS57002, DSP56362) is `dsp`; a fixed-silicon decoder for a published format
+  (MAS3507D) is `sound-pcm` under A2.
 - `custom` — a documented math engine is `dsp` even when it is a board-specific part.
 
 **Band.** `hard` — the parts are usually undocumented microcode engines whose firmware must be reproduced
@@ -401,6 +435,8 @@ generators that exist only to drive them (TB4).
 - `sound-wavetable` — §4.13.
 - `sound-dac` — a PCM chip contains the sample address/decode path; a `sound-dac` receives a finished stream.
 - `sound-speech` — LPC/formant parts synthesize, they do not replay recordings (§4.15).
+- `dsp` — §4.3, Q2: a microcoded audio engine (QSound, ES5510) never reaches A2; a fixed-silicon decoder for
+  a published format (MAS3507D, MP3) belongs here.
 
 ### 4.15 `sound-speech` — Speech synthesis · band `medium`
 
@@ -429,6 +465,11 @@ ladders modelled as a device, and the floating-point DACs sold as FM companions.
 
 - `sound-pcm` — TB7. If the part sequences samples, it is `sound-pcm`.
 - `sound-analog` — a DAC converts; an op-amp/filter/amplifier shapes or drives what came out of it.
+
+**Note.** A discrete resistor ladder earns a chip row exactly when MAME models it as a DAC device: the device
+carries real instance counts on machine BOMs, and a generic row (`dac-8bit-r2r` and kin) records them honestly
+even though no single physical IC exists. A ladder MAME folds into `discrete` or `netlist` gets no row (§4.17
+note). The same rule governs the video side (§4.24).
 
 ### 4.17 `sound-analog` — Analog audio · band `soft`
 
@@ -471,7 +512,7 @@ Taito TC0480SCP.
 **Definition.** Fetch, position, size, zoom, and line-buffering of movable objects.
 
 **Examples.** Konami K053246/K053247 sprite pair · Konami K051960 · Taito TC0080VCO · SNK LSPC2-A2 (Neo Geo
-sprite controller) · Namco C355.
+sprite controller; also emits the fix overlay and sync — §3.1) · Namco C355.
 
 **Confused with.**
 
@@ -491,7 +532,8 @@ Instruments TMS9918A · Yamaha V9938 · Nintendo S-PPU1/S-PPU2 pair.
 
 **Confused with.**
 
-- `video-tilemap` / `video-sprite` — V1 is the whole test: does one part make the entire picture?
+- `video-tilemap` / `video-sprite` — V1 is the whole test: does one part make the entire picture? A sprite
+  engine whose extras are sync and a fixed overlay (LSPC2-A2) fails it — §3.1.
 - `custom` — TB3: a VDP's many functions are all `video-*`, so it never reaches TB5.
 - `cpu` — TB1 outranks: a CPU die with a PPU bolted on is `cpu`.
 
@@ -555,7 +597,8 @@ encoder/palette DAC).
 **Confused with.**
 
 - `video-mixer` — §4.22, TB7.
-- `glue` — a discrete resistor-ladder DAC with no IC is not a chip and gets no row; an encoder IC does.
+- `glue` — an encoder IC is always a chip. A discrete resistor ladder follows §4.16's rule: a chip row when
+  MAME models it as a device, no row when it is buried in a schematic MAME never modelled.
 
 **Band.** `soft`, and deliberately the one `video-*` row that is: an FPGA platform replaces the output stage
 with its own rather than reimplementing the part. This is why the band is a column read per row and MUST NOT
@@ -623,6 +666,19 @@ Two rules that follow from the column being per-row:
   carries them as `v_system_coverage.unmapped_device_count`, which the ranking sorts ascending — a system with
   unmapped devices is less trustworthy than one without, whatever its band mix.
 
+**The band is a property of the function, not of the part.** `prospector_band` rides the `chip_function` row,
+so every chip inherits its function's band — and a correct classification can carry a misleading difficulty
+signal, in both directions. An HD44780 character-LCD controller is honestly `video-tilemap` (band `hard`) yet
+is trivial in HDL; the Yamaha AICA is `cpu` by TB1 (band `medium`) yet carries a 64-voice sample engine and an
+effects DSP that are anything but. Do not bend a classification to repair its band — the function value MUST
+stay honest, and §6 binds the parts it names. The one legitimate reach for `custom` is TB5 taken at face
+value: when a board-specific ASIC genuinely spans branches with no dominant function, file it `custom` (band
+`hard`) rather than crowning a "dominant" function whose band understates the part. The Prospector's weighting
+(T6.3) MUST treat the band as a prior over the function, never as a per-part measurement, and SHOULD
+corroborate it with per-part signals — known implementations, documentation — before ranking on it. If such
+mislabels accumulate, the right long-term fix is an optional per-chip difficulty override on `chip`; that is a
+schema change, recorded here as a recommendation and deliberately not made.
+
 Changing a row's band is a data change: edit `data/lookup/chip_function.json` and the table above in the same
 PR.
 
@@ -632,29 +688,36 @@ PR.
 
 Reference decisions. These are normative for the parts named; contributors MUST NOT relitigate them per-board.
 
-| Part                         | Competing values                               | Value           | Rule                                                         |
-| ---------------------------- | ---------------------------------------------- | --------------- | ------------------------------------------------------------ |
-| Ricoh 2A03                   | `cpu` / `sound-psg`                            | `cpu`           | TB1 — 6502 core executes the game                            |
-| Hudson HuC6280               | `cpu` / `sound-wavetable` / `memory`           | `cpu`           | TB1                                                          |
-| Ricoh 5A22                   | `cpu` / `dma`                                  | `cpu`           | TB1                                                          |
-| Taito TC0090LVC              | `cpu` / `custom`                               | `cpu`           | TB1 outranks TB5                                             |
-| Sega FD1094                  | `cpu` / `protection`                           | `cpu`           | TB1, TB6 — an encrypted 68000 is a 68000                     |
-| Dallas DS5002FP              | `mcu` / `protection`                           | `mcu`           | TB6 — catalog part, secure variant                           |
-| Nintendo CIC                 | `protection` / `mcu`                           | `protection`    | TB6 — lockout is the entire purpose                          |
-| Yamaha YM2610                | `sound-fm` / `sound-pcm` / `sound-psg`         | `sound-fm`      | TB3 — one branch, FM defines it                              |
-| Yamaha YM2413                | `sound-fm` / `sound-wavetable`                 | `sound-fm`      | TB3 — the instrument ROM holds FM parameters, not waveforms  |
-| Yamaha YM3012                | `sound-fm` / `sound-dac`                       | `sound-dac`     | TB7 — separate die, conversion only                          |
-| Sega 315-5313                | `video-ppu` / `video-tilemap` / `video-sprite` | `video-ppu`     | TB3, V1 — one die makes the whole picture                    |
-| Sega 315-5124                | `video-ppu` / `sound-psg`                      | `video-ppu`     | TB3 — the PSG section rides along; the VDP is the part       |
-| Commodore Agnus              | `video-blitter` / `dma` / `video-crtc`         | `video-blitter` | TB4 — DMA and timing serve the display                       |
-| Capcom CPS-B-21              | `video-mixer` / `protection` / `custom`        | `custom`        | TB5 — per-game keying makes video and protection inseparable |
-| Konami K051316               | `video-tilemap` / `video-blitter`              | `video-tilemap` | V3 — an affine tile layer is still a tile layer              |
-| Motorola MC6845              | `video-crtc` / `video-ppu` / `timer`           | `video-crtc`    | V6 — timing only, no pixels                                  |
-| Intel 8259A                  | `io` / `timer`                                 | `io`            | Q11 — no `interrupt` row exists (§4.10)                      |
-| Motorola MC68901             | `io` / `timer`                                 | `io`            | §4.9 — multifunction peripherals resolve to `io`             |
-| SGS-Thomson M48T58           | `rtc` / `memory`                               | `rtc`           | §4.8 — the clock is the reason for the part                  |
-| Signetics NE555 (coin sound) | `sound-analog` / `glue`                        | `sound-analog`  | §4.17 — in the audio path                                    |
-| Nintendo MMC3                | `memory` / `custom`                            | `memory`        | Q8 — a documented mapper                                     |
+| Part                         | Competing values                               | Value           | Rule                                                          |
+| ---------------------------- | ---------------------------------------------- | --------------- | ------------------------------------------------------------- |
+| Ricoh 2A03                   | `cpu` / `sound-psg`                            | `cpu`           | TB1 — 6502 core executes the game                             |
+| Hudson HuC6280               | `cpu` / `sound-wavetable` / `memory`           | `cpu`           | TB1                                                           |
+| Ricoh 5A22                   | `cpu` / `dma`                                  | `cpu`           | TB1                                                           |
+| Taito TC0090LVC              | `cpu` / `custom`                               | `cpu`           | TB1 outranks TB5                                              |
+| Sega FD1094                  | `cpu` / `protection`                           | `cpu`           | TB1, TB6 — an encrypted 68000 is a 68000                      |
+| Yamaha AICA                  | `cpu` / `sound-pcm` / `dsp`                    | `cpu`           | TB1 — the ARM7 core absorbs the sound engine (band: §5)       |
+| Dallas DS5002FP              | `mcu` / `protection`                           | `mcu`           | TB6 — catalog part, secure variant                            |
+| Nintendo CIC                 | `protection` / `mcu`                           | `protection`    | TB6 — lockout is the entire purpose                           |
+| Yamaha YM2610                | `sound-fm` / `sound-pcm` / `sound-psg`         | `sound-fm`      | TB3 — one branch, FM defines it                               |
+| Yamaha YM2413                | `sound-fm` / `sound-wavetable`                 | `sound-fm`      | TB3 — the instrument ROM holds FM parameters, not waveforms   |
+| Yamaha YM3012                | `sound-fm` / `sound-dac`                       | `sound-dac`     | TB7 — separate die, conversion only                           |
+| Capcom QSound (DL-1425)      | `dsp` / `sound-pcm`                            | `dsp`           | Q2 — the algorithm is mask microcode, not a published format  |
+| Micronas MAS3507D            | `sound-pcm` / `dsp`                            | `sound-pcm`     | A2 — fixed-silicon decoder for a published format (MP3)       |
+| Sega 315-5313                | `video-ppu` / `video-tilemap` / `video-sprite` | `video-ppu`     | TB3, V1 — one die makes the whole picture                     |
+| Sega 315-5124                | `video-ppu` / `sound-psg`                      | `video-ppu`     | TB3 — the PSG section rides along; the VDP is the part        |
+| SNK LSPC2-A2                 | `video-sprite` / `video-ppu`                   | `video-sprite`  | TB3 — sprites define it; a fix overlay is not a V1 tile layer |
+| Commodore Agnus              | `video-blitter` / `dma` / `video-crtc`         | `video-blitter` | TB4 — DMA and timing serve the display                        |
+| Capcom CPS-B-21              | `video-mixer` / `protection` / `custom`        | `custom`        | TB5 — per-game keying makes video and protection inseparable  |
+| MOS 8364 "Paula"             | `custom` / `sound-pcm` / `storage` / `io`      | `custom`        | TB5 — audio, floppy and serial with no dominant branch        |
+| Atari POKEY                  | `sound-psg` / `io` / `custom`                  | `sound-psg`     | TB5 inapplicable — catalog part; Q5 fires first               |
+| Konami K051316               | `video-tilemap` / `video-blitter`              | `video-tilemap` | V3 — an affine tile layer is still a tile layer               |
+| Hitachi HD44780              | `video-tilemap` / `video-crtc` / `io`          | `video-tilemap` | V3 — character layer from map + CG ROM (band: §5)             |
+| Motorola MC6845              | `video-crtc` / `video-ppu` / `timer`           | `video-crtc`    | V6 — timing only, no pixels                                   |
+| Intel 8259A                  | `io` / `timer`                                 | `io`            | Q11 — no `interrupt` row exists (§4.10)                       |
+| Motorola MC68901             | `io` / `timer`                                 | `io`            | §4.9 — multifunction peripherals resolve to `io`              |
+| SGS-Thomson M48T58           | `rtc` / `memory`                               | `rtc`           | §4.8 — the clock is the reason for the part                   |
+| Signetics NE555 (coin sound) | `sound-analog` / `glue`                        | `sound-analog`  | §4.17 — in the audio path                                     |
+| Nintendo MMC3                | `memory` / `custom`                            | `memory`        | Q8 — a documented mapper                                      |
 
 A part in this table that later needs reclassifying is a data change to its `chip` row plus an edit to this
 row; the FK to `chip_function` guarantees the new value exists.

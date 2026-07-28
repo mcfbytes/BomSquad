@@ -1,0 +1,71 @@
+{
+  "system": [
+    {
+      "system_id": "taito-f3",
+      "name": "Taito F3 System",
+      "kind_id": "arcade",
+      "manufacturer_id": "taito",
+      "year_introduced": 1992,
+      "description": "68EC020 board paired with the Taito Ensoniq sound board (68000, ES5505 and ES5510)."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "taito-f3",
+      "role_id": "audiocpu",
+      "chip_id": "m68000",
+      "clock_hz": 15238090,
+      "note": "On the Taito Ensoniq sound board."
+    },
+    {
+      "system_id": "taito-f3",
+      "role_id": "dsp",
+      "chip_id": "es5510",
+      "clock_hz": 10000000,
+      "note": "ESP effects processor on the Ensoniq sound board."
+    },
+    {
+      "system_id": "taito-f3",
+      "role_id": "io",
+      "chip_id": "mc68681",
+      "note": "DUART on the Ensoniq sound board."
+    },
+    {
+      "system_id": "taito-f3",
+      "role_id": "maincpu",
+      "chip_id": "m68ec020",
+      "clock_hz": 16000000
+    },
+    {
+      "system_id": "taito-f3",
+      "role_id": "memory",
+      "chip_id": "93c46"
+    },
+    {
+      "system_id": "taito-f3",
+      "role_id": "memory",
+      "chip_id": "mb8421",
+      "note": "Dual-port RAM between the main board and the sound board."
+    },
+    {
+      "system_id": "taito-f3",
+      "role_id": "sound",
+      "chip_id": "es5505",
+      "clock_hz": 15238090,
+      "note": "OTIS sample playback on the Ensoniq sound board."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "taito/taito_f3.cpp",
+      "system_id": "taito-f3"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "taito-f3",
+      "name": "Taito F3",
+      "kind": "alias"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "chip": [
+    {
+      "chip_id": "hd6309e",
+      "display_name": "HD6309E",
+      "function_id": "cpu",
+      "manufacturer_id": "hitachi",
+      "family_id": "m6809",
+      "description": "External-clock variant of the HD6309 CMOS 6809-compatible CPU (as the 6809E is to the 6809).",
+      "notes": "Deliberate manufacturer/family mismatch: Hitachi's CMOS implementation of the Motorola 6809 architecture, filed in the 6809 family."
+    }
+  ]
+}

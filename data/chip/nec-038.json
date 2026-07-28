@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "nec-038",
+      "display_name": "038",
+      "function_id": "video-tilemap",
+      "manufacturer_id": "nec",
+      "description": "Tilemap generator custom marked '038', used on Cave 68000-era arcade boards and Magical Cat Adventure hardware.",
+      "notes": "Identification from MAME src/devices/video/tmap038.cpp: '038 Tilemap generator manufactured by NEC'."
+    }
+  ]
+}

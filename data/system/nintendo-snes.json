@@ -1,0 +1,30 @@
+{
+  "system": [
+    {
+      "system_id": "nintendo-snes",
+      "name": "Super Nintendo Entertainment System",
+      "kind_id": "console",
+      "manufacturer_id": "nintendo",
+      "year_introduced": 1990,
+      "description": "5A22 (65c816-based) console with the S-PPU video pair and the SPC700/S-DSP sound subsystem; sold in Japan as the Super Famicom."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "nintendo/snes.cpp",
+      "system_id": "nintendo-snes"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "nintendo-snes",
+      "name": "SNES",
+      "kind": "alias"
+    },
+    {
+      "system_id": "nintendo-snes",
+      "name": "Super Famicom",
+      "kind": "alias"
+    }
+  ]
+}

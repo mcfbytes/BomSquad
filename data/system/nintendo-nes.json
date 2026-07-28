@@ -1,0 +1,44 @@
+{
+  "system": [
+    {
+      "system_id": "nintendo-nes",
+      "name": "Nintendo Entertainment System",
+      "kind_id": "console",
+      "manufacturer_id": "nintendo",
+      "year_introduced": 1983,
+      "description": "Ricoh RP2A03 console with the RP2C02 picture processing unit; sold in Japan as the Family Computer."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "nintendo-nes",
+      "role_id": "maincpu",
+      "chip_id": "rp2a03g",
+      "clock_hz": 1789772,
+      "note": "NTSC; PAL machines run the CPU at 1.7734 MHz."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "nintendo/nes.cpp",
+      "system_id": "nintendo-nes"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "nintendo-nes",
+      "name": "Famicom",
+      "kind": "alias"
+    },
+    {
+      "system_id": "nintendo-nes",
+      "name": "Family Computer",
+      "kind": "alias"
+    },
+    {
+      "system_id": "nintendo-nes",
+      "name": "NES",
+      "kind": "alias"
+    }
+  ]
+}

@@ -21,7 +21,7 @@
     {
       "function_id": "dsp",
       "label": "DSP / coprocessor",
-      "description": "Fixed-purpose math or signal coprocessor driven by a host CPU, including FPUs and geometry engines.",
+      "description": "Fixed-purpose math or signal coprocessor driven by a host CPU, running its algorithm as microcode or firmware; includes FPUs and geometry engines.",
       "prospector_band": "hard"
     },
     {

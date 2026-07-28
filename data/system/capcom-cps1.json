@@ -1,0 +1,56 @@
+{
+  "system": [
+    {
+      "system_id": "capcom-cps1",
+      "name": "Capcom CPS-1",
+      "kind_id": "arcade",
+      "manufacturer_id": "capcom",
+      "year_introduced": 1988,
+      "description": "Capcom's first Play System: a 68000 A-board with a Z80 sound section driving a YM2151 and an OKI MSM6295."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "capcom-cps1",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 3579545
+    },
+    {
+      "system_id": "capcom-cps1",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 10000000
+    },
+    {
+      "system_id": "capcom-cps1",
+      "role_id": "sound",
+      "chip_id": "msm6295",
+      "clock_hz": 1000000
+    },
+    {
+      "system_id": "capcom-cps1",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 3579545
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "capcom/cps1.cpp",
+      "system_id": "capcom-cps1"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "capcom-cps1",
+      "name": "CPS-1",
+      "kind": "alias"
+    },
+    {
+      "system_id": "capcom-cps1",
+      "name": "Capcom Play System",
+      "kind": "alias"
+    }
+  ]
+}

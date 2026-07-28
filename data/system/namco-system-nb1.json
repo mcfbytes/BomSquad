@@ -1,0 +1,59 @@
+{
+  "system": [
+    {
+      "system_id": "namco-system-nb1",
+      "name": "Namco System NB-1",
+      "kind_id": "arcade",
+      "manufacturer_id": "namco",
+      "year_introduced": 1994,
+      "description": "68EC020 board with the C116 mixer, C123 tilemap generator, C355 sprite engine and C352 PCM."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "namco-system-nb1",
+      "role_id": "maincpu",
+      "chip_id": "m68ec020",
+      "clock_hz": 24192000
+    },
+    {
+      "system_id": "namco-system-nb1",
+      "role_id": "memory",
+      "chip_id": "2816"
+    },
+    {
+      "system_id": "namco-system-nb1",
+      "role_id": "mixer",
+      "chip_id": "namco-c116"
+    },
+    {
+      "system_id": "namco-system-nb1",
+      "role_id": "sound",
+      "chip_id": "c352",
+      "clock_hz": 24192000
+    },
+    {
+      "system_id": "namco-system-nb1",
+      "role_id": "tilemap",
+      "chip_id": "namco-c123"
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "namco/namconb1.cpp",
+      "system_id": "namco-system-nb1"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "namco-system-nb1",
+      "name": "Namco NB-1",
+      "kind": "alias"
+    },
+    {
+      "system_id": "namco-system-nb1",
+      "name": "System NB-1",
+      "kind": "alias"
+    }
+  ]
+}

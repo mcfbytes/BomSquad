@@ -1,0 +1,50 @@
+{
+  "system": [
+    {
+      "system_id": "capcom-cps2",
+      "name": "Capcom CPS-2",
+      "kind_id": "arcade",
+      "manufacturer_id": "capcom",
+      "year_introduced": 1993,
+      "description": "Second-generation Capcom Play System: an encrypted 68000 B-board with QSound audio."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "capcom-cps2",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 8000000
+    },
+    {
+      "system_id": "capcom-cps2",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 16000000
+    },
+    {
+      "system_id": "capcom-cps2",
+      "role_id": "memory",
+      "chip_id": "93c46"
+    },
+    {
+      "system_id": "capcom-cps2",
+      "role_id": "sound",
+      "chip_id": "qsound",
+      "clock_hz": 60000000
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "capcom/cps2.cpp",
+      "system_id": "capcom-cps2"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "capcom-cps2",
+      "name": "CPS-2",
+      "kind": "alias"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "system": [
+    {
+      "system_id": "taito-b",
+      "name": "Taito B System",
+      "kind_id": "arcade",
+      "manufacturer_id": "taito",
+      "year_introduced": 1988,
+      "description": "68000 board built around the TC0180VCU video/sprite chip, with a Z80 and YM2610 sound section."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "taito-b",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 4000000
+    },
+    {
+      "system_id": "taito-b",
+      "role_id": "io",
+      "chip_id": "tc0140syt",
+      "note": "Main-CPU to sound-CPU communication."
+    },
+    {
+      "system_id": "taito-b",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 12000000
+    },
+    {
+      "system_id": "taito-b",
+      "role_id": "sound",
+      "chip_id": "ym2610",
+      "clock_hz": 8000000,
+      "note": "Some boards fit a YM2610B instead; the earliest fit a YM2203."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "taito/taito_b.cpp",
+      "system_id": "taito-b"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "taito-b",
+      "name": "Taito B",
+      "kind": "alias"
+    }
+  ]
+}

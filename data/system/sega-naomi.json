@@ -1,0 +1,57 @@
+{
+  "system": [
+    {
+      "system_id": "sega-naomi",
+      "name": "Sega NAOMI",
+      "kind_id": "arcade",
+      "manufacturer_id": "sega",
+      "year_introduced": 1998,
+      "description": "Dreamcast-derived arcade platform: SH-4, PowerVR2 and AICA, with cartridge or GD-ROM game media."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "sega-naomi",
+      "role_id": "io",
+      "chip_id": "sega-315-6146",
+      "note": "Maple I/O expander (\"MIE\"), with an on-die Z80 core."
+    },
+    {
+      "system_id": "sega-naomi",
+      "role_id": "maincpu",
+      "chip_id": "sh7091",
+      "clock_hz": 200000000
+    },
+    {
+      "system_id": "sega-naomi",
+      "role_id": "memory",
+      "chip_id": "93c46",
+      "quantity": 2,
+      "note": "One on the main board and one behind the MIE; cartridge ROM boards add another."
+    },
+    {
+      "system_id": "sega-naomi",
+      "role_id": "sound",
+      "chip_id": "aica",
+      "clock_hz": 22579200
+    },
+    {
+      "system_id": "sega-naomi",
+      "role_id": "video",
+      "chip_id": "powervr2"
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "sega/naomi.cpp",
+      "system_id": "sega-naomi"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "sega-naomi",
+      "name": "NAOMI",
+      "kind": "alias"
+    }
+  ]
+}

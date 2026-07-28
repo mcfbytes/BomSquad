@@ -5,7 +5,7 @@
       "display_name": "RP5H01",
       "function_id": "memory",
       "manufacturer_id": "ricoh",
-      "description": "Small serial PROM read through an internal address counter; deployed by Nintendo as the VS. System / PlayChoice-10 security PROM.",
+      "description": "Small serial PROM read through an internal address counter; deployed by Nintendo as the security PROM of the PlayChoice-10, Nintendo Super System and Punch-Out!! hardware.",
       "notes": "Taxonomy TB6: a catalog PROM deployed as a security element keeps its storage function."
     }
   ]

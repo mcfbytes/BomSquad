@@ -1,0 +1,25 @@
+{
+  "system": [
+    {
+      "system_id": "nintendo-game-boy",
+      "name": "Nintendo Game Boy",
+      "kind_id": "handheld",
+      "manufacturer_id": "nintendo",
+      "year_introduced": 1989,
+      "description": "Handheld built on the Sharp LR35902 system-on-chip, with a monochrome dot-matrix LCD."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "nintendo/gb.cpp",
+      "system_id": "nintendo-game-boy"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "nintendo-game-boy",
+      "name": "Game Boy",
+      "kind": "alias"
+    }
+  ]
+}

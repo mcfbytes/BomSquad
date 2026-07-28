@@ -14,7 +14,7 @@
   "chip_datasheet": [
     {
       "chip_id": "m68000",
-      "url": "https://www.nxp.com/docs/en/data-sheet/MC68000UM.pdf",
+      "url": "https://www.nxp.com/docs/en/reference-manual/MC68000UM.pdf",
       "title": "MC68000 8-/16-/32-Bit Microprocessors User's Manual"
     }
   ],

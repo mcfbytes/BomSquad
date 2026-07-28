@@ -1,0 +1,56 @@
+{
+  "system": [
+    {
+      "system_id": "irem-m72",
+      "name": "Irem M72",
+      "kind_id": "arcade",
+      "manufacturer_id": "irem",
+      "year_introduced": 1987,
+      "description": "NEC V30 board with a Z80 sound CPU, YM2151 and the M72 sample-playback circuit; the R-Type hardware."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "irem-m72",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 3579545
+    },
+    {
+      "system_id": "irem-m72",
+      "role_id": "io",
+      "chip_id": "i8259a",
+      "note": "uPD71059C interrupt controller."
+    },
+    {
+      "system_id": "irem-m72",
+      "role_id": "maincpu",
+      "chip_id": "v30",
+      "clock_hz": 8000000
+    },
+    {
+      "system_id": "irem-m72",
+      "role_id": "sound",
+      "chip_id": "dac-8bit-r2r"
+    },
+    {
+      "system_id": "irem-m72",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 3579545
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "irem/m72.cpp",
+      "system_id": "irem-m72"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "irem-m72",
+      "name": "M72",
+      "kind": "alias"
+    }
+  ]
+}

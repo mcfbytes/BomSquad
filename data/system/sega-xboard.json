@@ -1,0 +1,63 @@
+{
+  "system": [
+    {
+      "system_id": "sega-xboard",
+      "name": "Sega X Board",
+      "kind_id": "arcade",
+      "manufacturer_id": "sega",
+      "year_introduced": 1987,
+      "description": "Dual-68000 super-scaler board used by After Burner, Thunder Blade and Super Monaco GP."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "sega-xboard",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 4000000
+    },
+    {
+      "system_id": "sega-xboard",
+      "role_id": "glue",
+      "chip_id": "mb3773",
+      "note": "Power-supply monitor used as the board watchdog."
+    },
+    {
+      "system_id": "sega-xboard",
+      "role_id": "io",
+      "chip_id": "cxd1095",
+      "quantity": 2
+    },
+    {
+      "system_id": "sega-xboard",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 12500000
+    },
+    {
+      "system_id": "sega-xboard",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 4000000
+    },
+    {
+      "system_id": "sega-xboard",
+      "role_id": "subcpu",
+      "chip_id": "m68000",
+      "clock_hz": 12500000
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "sega/segaxbd.cpp",
+      "system_id": "sega-xboard"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "sega-xboard",
+      "name": "Sega X-Board",
+      "kind": "alias"
+    }
+  ]
+}

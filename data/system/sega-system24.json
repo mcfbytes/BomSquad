@@ -1,0 +1,56 @@
+{
+  "system": [
+    {
+      "system_id": "sega-system24",
+      "name": "Sega System 24",
+      "kind_id": "arcade",
+      "manufacturer_id": "sega",
+      "year_introduced": 1988,
+      "description": "Dual-68000 board with a bitmap-capable tile engine; early titles boot from a 3.5-inch floppy."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "sega-system24",
+      "role_id": "io",
+      "chip_id": "sega-315-5296"
+    },
+    {
+      "system_id": "sega-system24",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 10000000
+    },
+    {
+      "system_id": "sega-system24",
+      "role_id": "sound",
+      "chip_id": "dac-8bit-r2r"
+    },
+    {
+      "system_id": "sega-system24",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 4000000
+    },
+    {
+      "system_id": "sega-system24",
+      "role_id": "subcpu",
+      "chip_id": "m68000",
+      "clock_hz": 10000000,
+      "note": "Protected sets fit the same 68000 inside an FD1094 encryption module."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "sega/segas24.cpp",
+      "system_id": "sega-system24"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "sega-system24",
+      "name": "System 24",
+      "kind": "alias"
+    }
+  ]
+}

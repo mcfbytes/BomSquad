@@ -1,0 +1,19 @@
+{
+  "chip": [
+    {
+      "chip_id": "sega-315-5744",
+      "display_name": "Sega 315-5744",
+      "function_id": "mcu",
+      "manufacturer_id": "sega",
+      "description": "SMPC (System Manager & Peripheral Control) of the Sega Saturn and ST-V: pad/peripheral interfacing, reset and power management and the real-time clock, implemented as a Hitachi HD404920FS 4-bit MCU carrying a Sega custom part number.",
+      "notes": "Identification from MAME src/mame/sega/smpc.cpp: 'The SMPC is actually a 4-bit Hitachi HD404920FS MCU, labeled with a Sega custom 315-5744'. TB2: mask-programmed on-die ROM, so mcu."
+    }
+  ],
+  "chip_name": [
+    {
+      "chip_id": "sega-315-5744",
+      "name": "SMPC",
+      "kind": "alias"
+    }
+  ]
+}

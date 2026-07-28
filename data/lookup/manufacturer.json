@@ -77,6 +77,11 @@
       "country": "JP"
     },
     {
+      "manufacturer_id": "hudson",
+      "name": "Hudson Soft",
+      "country": "JP"
+    },
+    {
       "manufacturer_id": "igs",
       "name": "IGS",
       "country": "TW",

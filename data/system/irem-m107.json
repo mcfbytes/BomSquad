@@ -1,0 +1,39 @@
+{
+  "system": [
+    {
+      "system_id": "irem-m107",
+      "name": "Irem M107",
+      "kind_id": "arcade",
+      "manufacturer_id": "irem",
+      "year_introduced": 1993,
+      "description": "M92 successor with a faster V33 and a wider tile bus; used by Dream Soccer '94 and Fire Barrel."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "irem-m107",
+      "role_id": "io",
+      "chip_id": "i8259a",
+      "note": "uPD71059C interrupt controller."
+    },
+    {
+      "system_id": "irem-m107",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 3579545
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "irem/m107.cpp",
+      "system_id": "irem-m107"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "irem-m107",
+      "name": "M107",
+      "kind": "alias"
+    }
+  ]
+}

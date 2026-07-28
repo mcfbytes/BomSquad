@@ -1,0 +1,49 @@
+{
+  "system": [
+    {
+      "system_id": "sega-model2",
+      "name": "Sega Model 2",
+      "kind_id": "arcade",
+      "manufacturer_id": "sega",
+      "year_introduced": 1993,
+      "description": "Intel i960-based 3D board family (Model 2, 2A-CRX, 2B-CRX and 2C-CRX); the geometry coprocessor differs by revision."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "sega-model2",
+      "role_id": "audiocpu",
+      "chip_id": "m68000",
+      "clock_hz": 11289600
+    },
+    {
+      "system_id": "sega-model2",
+      "role_id": "io",
+      "chip_id": "sega-315-5649"
+    },
+    {
+      "system_id": "sega-model2",
+      "role_id": "memory",
+      "chip_id": "93c46"
+    },
+    {
+      "system_id": "sega-model2",
+      "role_id": "sound",
+      "chip_id": "ymf292",
+      "clock_hz": 22579200
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "sega/model2.cpp",
+      "system_id": "sega-model2"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "sega-model2",
+      "name": "Model 2",
+      "kind": "alias"
+    }
+  ]
+}

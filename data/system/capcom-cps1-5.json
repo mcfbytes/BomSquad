@@ -1,0 +1,49 @@
+{
+  "system": [
+    {
+      "system_id": "capcom-cps1-5",
+      "name": "Capcom CPS-1.5",
+      "kind_id": "arcade",
+      "manufacturer_id": "capcom",
+      "year_introduced": 1993,
+      "description": "CPS-1 with the QSound sound board in place of the YM2151/MSM6295 section."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "capcom-cps1-5",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 8000000
+    },
+    {
+      "system_id": "capcom-cps1-5",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 12000000
+    },
+    {
+      "system_id": "capcom-cps1-5",
+      "role_id": "memory",
+      "chip_id": "93c46"
+    },
+    {
+      "system_id": "capcom-cps1-5",
+      "role_id": "sound",
+      "chip_id": "qsound",
+      "clock_hz": 60000000
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "capcom-cps1-5",
+      "name": "CPS Dash",
+      "kind": "alias"
+    },
+    {
+      "system_id": "capcom-cps1-5",
+      "name": "CPS-1.5",
+      "kind": "alias"
+    }
+  ]
+}

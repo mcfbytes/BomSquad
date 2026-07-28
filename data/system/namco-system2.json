@@ -1,0 +1,68 @@
+{
+  "system": [
+    {
+      "system_id": "namco-system2",
+      "name": "Namco System 2",
+      "kind_id": "arcade",
+      "manufacturer_id": "namco",
+      "year_introduced": 1987,
+      "description": "Dual-68000 board with the C148 interrupt/interface chips, a 6809E sound CPU, YM2151 and C140 PCM."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "namco-system2",
+      "role_id": "audiocpu",
+      "chip_id": "mc6809e",
+      "clock_hz": 2048000
+    },
+    {
+      "system_id": "namco-system2",
+      "role_id": "io",
+      "chip_id": "namco-c148",
+      "quantity": 2,
+      "note": "One per 68000: interrupt control and inter-CPU interface."
+    },
+    {
+      "system_id": "namco-system2",
+      "role_id": "maincpu",
+      "chip_id": "m68000",
+      "clock_hz": 12288000
+    },
+    {
+      "system_id": "namco-system2",
+      "role_id": "mixer",
+      "chip_id": "namco-c116"
+    },
+    {
+      "system_id": "namco-system2",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 3579545
+    },
+    {
+      "system_id": "namco-system2",
+      "role_id": "subcpu",
+      "chip_id": "m68000",
+      "clock_hz": 12288000
+    },
+    {
+      "system_id": "namco-system2",
+      "role_id": "tilemap",
+      "chip_id": "namco-c123"
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "namco/namcos2.cpp",
+      "system_id": "namco-system2"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "namco-system2",
+      "name": "Namco System II",
+      "kind": "alias"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "system": [
+    {
+      "system_id": "sega-multi32",
+      "name": "Sega Multi 32",
+      "kind_id": "arcade",
+      "manufacturer_id": "sega",
+      "year_introduced": 1992,
+      "description": "System 32 with a NEC V70 main CPU and dual-monitor output; used by OutRunners, Title Fight and Stadium Cross."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "sega-multi32",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 8000000
+    },
+    {
+      "system_id": "sega-multi32",
+      "role_id": "io",
+      "chip_id": "sega-315-5296",
+      "quantity": 2
+    },
+    {
+      "system_id": "sega-multi32",
+      "role_id": "memory",
+      "chip_id": "93c46"
+    },
+    {
+      "system_id": "sega-multi32",
+      "role_id": "sound",
+      "chip_id": "ym3438",
+      "clock_hz": 8000000
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "sega-multi32",
+      "name": "Multi 32",
+      "kind": "alias"
+    }
+  ]
+}

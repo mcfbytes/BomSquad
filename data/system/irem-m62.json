@@ -1,0 +1,47 @@
+{
+  "system": [
+    {
+      "system_id": "irem-m62",
+      "name": "Irem M62",
+      "kind_id": "arcade",
+      "manufacturer_id": "irem",
+      "year_introduced": 1984,
+      "description": "Z80 board with the Irem M52 sound section: a 6803 driving two AY-3-8910s and two MSM5205 ADPCM chips."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "irem-m62",
+      "role_id": "maincpu",
+      "chip_id": "z80",
+      "clock_hz": 4000000
+    },
+    {
+      "system_id": "irem-m62",
+      "role_id": "sound",
+      "chip_id": "ay8910",
+      "quantity": 2,
+      "clock_hz": 894886
+    },
+    {
+      "system_id": "irem-m62",
+      "role_id": "sound",
+      "chip_id": "msm5205",
+      "quantity": 2,
+      "clock_hz": 384000
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "irem/m62.cpp",
+      "system_id": "irem-m62"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "irem-m62",
+      "name": "M62",
+      "kind": "alias"
+    }
+  ]
+}

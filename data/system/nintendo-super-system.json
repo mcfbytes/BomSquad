@@ -1,0 +1,45 @@
+{
+  "system": [
+    {
+      "system_id": "nintendo-super-system",
+      "name": "Nintendo Super System",
+      "kind_id": "arcade",
+      "manufacturer_id": "nintendo",
+      "year_introduced": 1991,
+      "description": "Coin-timed arcade cabinet running SNES game boards under a Z80 BIOS/menu board."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "nintendo-super-system",
+      "role_id": "protection",
+      "chip_id": "rp5h01",
+      "note": "Game-cartridge security PROM."
+    },
+    {
+      "system_id": "nintendo-super-system",
+      "role_id": "subcpu",
+      "chip_id": "z80",
+      "clock_hz": 4000000,
+      "note": "BIOS, menu and coin-timer CPU beside the SNES 5A22."
+    }
+  ],
+  "system_driver": [
+    {
+      "mame_sourcefile": "nintendo/nss.cpp",
+      "system_id": "nintendo-super-system"
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "nintendo-super-system",
+      "name": "NSS",
+      "kind": "alias"
+    },
+    {
+      "system_id": "nintendo-super-system",
+      "name": "Nintendo Super System",
+      "kind": "alias"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "chip": [
+    {
+      "chip_id": "nb1413m3",
+      "display_name": "NB1413M3",
+      "function_id": "custom",
+      "manufacturer_id": "nichibutsu",
+      "description": "Gate-array custom (Fujitsu-fabricated ULA) on Nichibutsu mahjong hardware: input multiplexing, coin handling, sound-ROM banking and NMI clock generation in one part.",
+      "notes": "Identification from MAME src/mame/nichibutsu/nb1413m3.cpp ('the NB1413M3 is a Fujitsu ULA'). TB5: I/O, banking and timing duties with no dominant branch on a board-specific ASIC, so custom."
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "system": [
+    {
+      "system_id": "sega-game-gear",
+      "name": "Sega Game Gear",
+      "kind_id": "handheld",
+      "manufacturer_id": "sega",
+      "year_introduced": 1990,
+      "description": "Handheld built on Master System hardware with a colour LCD and the 315-5377 video display processor."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "sega-game-gear",
+      "role_id": "maincpu",
+      "chip_id": "z80",
+      "clock_hz": 3579545
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "sega-game-gear",
+      "name": "Game Gear",
+      "kind": "alias"
+    }
+  ]
+}

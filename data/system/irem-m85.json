@@ -1,0 +1,50 @@
+{
+  "system": [
+    {
+      "system_id": "irem-m85",
+      "name": "Irem M85",
+      "kind_id": "arcade",
+      "manufacturer_id": "irem",
+      "year_introduced": 1990,
+      "description": "M72-family board made for Pound for Pound, with trackball inputs."
+    }
+  ],
+  "system_chip": [
+    {
+      "system_id": "irem-m85",
+      "role_id": "audiocpu",
+      "chip_id": "z80",
+      "clock_hz": 3579545
+    },
+    {
+      "system_id": "irem-m85",
+      "role_id": "io",
+      "chip_id": "i8259a",
+      "note": "uPD71059C interrupt controller."
+    },
+    {
+      "system_id": "irem-m85",
+      "role_id": "maincpu",
+      "chip_id": "v30",
+      "clock_hz": 8000000
+    },
+    {
+      "system_id": "irem-m85",
+      "role_id": "sound",
+      "chip_id": "dac-8bit-r2r"
+    },
+    {
+      "system_id": "irem-m85",
+      "role_id": "sound",
+      "chip_id": "ym2151",
+      "clock_hz": 3579545
+    }
+  ],
+  "system_name": [
+    {
+      "system_id": "irem-m85",
+      "name": "M85",
+      "kind": "alias"
+    }
+  ]
+}
