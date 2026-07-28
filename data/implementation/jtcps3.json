@@ -1,0 +1,43 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtcps3",
+      "name": "JTCPS3",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtbin",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): closed -- jotego/jtcores has no cores/cps3 directory, so no HDL for this core is published; only the compiled binary is distributed, through jotego/jtbin (mister/jtcps3.rbf). jotego/jtcores/.beta.yaml lists it as a Patreon-early beta for mister, pocket. hdl_language_id and license_id are therefore omitted: with no published source there is no per-file grant to read and no language to record, and that absence is the closed-source signal (there is no open_source column in the delivered schema -- data-model.md §1.9). The core still counts as a core: its MRA files and its .rbf builds are published, so the hardware is covered. Machine mapping: 8 MRA files in jotego/jtbin's mra/ directory name <rbf>jtcps3</rbf>; 0 setnames resolved exactly to a MAME 0.288 machine and 8 through MAME's own cloneof relation to the parent that survives extract/machine.json's parents-only filter, giving 4 distinct machine_id rows. accuracy_id omitted: jotego's README claims faithfulness in prose but states no timing-fidelity level this build could check against data/lookup/accuracy_level.json."
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "jtcps3",
+      "machine_id": "jojo"
+    },
+    {
+      "implementation_id": "jtcps3",
+      "machine_id": "redearth"
+    },
+    {
+      "implementation_id": "jtcps3",
+      "machine_id": "sfiii"
+    },
+    {
+      "implementation_id": "jtcps3",
+      "machine_id": "sfiii2"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtcps3",
+      "platform_id": "mister"
+    }
+  ],
+  "implementation_system": [
+    {
+      "implementation_id": "jtcps3",
+      "system_id": "capcom-cps3"
+    }
+  ]
+}

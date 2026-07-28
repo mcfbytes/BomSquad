@@ -1,0 +1,10 @@
+{
+  "project": [
+    {
+      "project_id": "opengateware",
+      "name": "OpenGateware",
+      "url": "https://github.com/opengateware",
+      "notes": "Organization porting open-source arcade and console cores to the Analogue Pocket openFPGA framework; every core repository carries per-file SPDX-License-Identifier tags."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "pocket-spacemen3-pdp-1",
+      "name": "PDP-1: Spacewar! (Analogue Pocket, spacemen3)",
+      "kind_id": "fpga_hdl",
+      "project_id": "spacemen3",
+      "repo_url": "https://github.com/spacemen3/PDP-1",
+      "hdl_language_id": "verilog",
+      "license_id": "MIT",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 49 HDL source files (49 verilog). There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: hand-mapped, not setname-derived -- this core ships no MRA file. It reimplements the DEC PDP-1 running Spacewar!, giving machine_id pdp1, each checked against extract/machine.json. License: https://github.com/spacemen3/PDP-1/blob/main/LICENSE is the MIT License text, read verbatim -- hence MIT. hdl_language_id: 49 of 49 HDL files are verilog (49 verilog), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify. Core identity read from the openFPGA manifest dist/Cores/Spacemen3.PDP1/core.json in the repository, which declares core identifier Spacemen3.PDP1."
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "pocket-spacemen3-pdp-1",
+      "machine_id": "pdp1"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "pocket-spacemen3-pdp-1",
+      "path": "src"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "pocket-spacemen3-pdp-1",
+      "platform_id": "pocket"
+    }
+  ]
+}

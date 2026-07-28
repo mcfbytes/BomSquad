@@ -1,0 +1,52 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtcontra",
+      "name": "JTCONTRA",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtcores",
+      "hdl_language_id": "verilog",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the HDL lives in the jotego/jtcores monorepo at cores/contra/, 16 source files. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id, license_id and implementation_path rows is how that fact is stated here. license_id omitted: the repository LICENSE is the verbatim GPLv3 text but no any-later-version grant was found in https://github.com/jotego/jtcores/blob/master/cores/contra/doc/K007232_re.v, so the version scope is not something this core's own files state. Machine mapping: 7 MRA files in jotego/jtbin's mra/ directory name <rbf>jtcontra</rbf>; 1 setnames resolved exactly to a MAME 0.288 machine and 6 through MAME's own cloneof relation to the parent that survives extract/machine.json's parents-only filter, giving 1 distinct machine_id rows. hdl_language_id: 16 of 16 HDL files are verilog (16 verilog), excluding the shared framework directory. accuracy_id omitted: jotego's README claims faithfulness in prose but states no timing-fidelity level this build could check against data/lookup/accuracy_level.json."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jtcontra",
+      "provider_id": "jt51",
+      "note": "JT51 YM2151 FM core, declared in cores/contra/cfg/files.yaml"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "jtcontra",
+      "machine_id": "contra"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jtcontra",
+      "path": "cores/contra/hdl"
+    },
+    {
+      "implementation_id": "jtcontra",
+      "path": "cores/contra/hdl/jtcontra_game.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtcontra",
+      "platform_id": "mist"
+    },
+    {
+      "implementation_id": "jtcontra",
+      "platform_id": "mister"
+    },
+    {
+      "implementation_id": "jtcontra",
+      "platform_id": "pocket"
+    }
+  ]
+}

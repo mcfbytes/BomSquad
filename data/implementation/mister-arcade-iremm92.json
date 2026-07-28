@@ -1,0 +1,103 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "name": "Irem M92 (MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/Arcade-IremM92_MiSTer",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-2.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 74 HDL source files (35 systemverilog, 35 verilog, 4 vhdl) alongside 7 prebuilt .rbf binaries. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: 29 MRA files in the repository's releases/ directory carry a <setname>; 12 resolved exactly to a MAME 0.288 machine and 17 through MAME's own cloneof relation to the parent set that survives extract/machine.json's parents-only filter, giving 13 distinct machine_id rows. License: https://github.com/MiSTer-devel/Arcade-IremM92_MiSTer/blob/main/LICENSE is the verbatim GNU GPL version 2 text, and the grant in https://github.com/MiSTer-devel/Arcade-IremM92_MiSTer/blob/main/Arcade-IremM92.sv reads \"either version 2 of the License, or (at your option) any later version\" -- hence GPL-2.0-or-later. hdl_language_id: no single HDL family reaches 90% of the 74 source files (35 systemverilog, 35 verilog, 4 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "mister-arcade-iremm92",
+      "provider_id": "jt51",
+      "note": "JT51 YM2151 core vendored at rtl/jt51/jt51.v"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "machine_id": "bmaster"
+    },
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "machine_id": "dsoccr94"
+    },
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "machine_id": "gunforc2"
+    },
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "machine_id": "gunforce"
+    },
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "machine_id": "hook"
+    },
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "machine_id": "inthunt"
+    },
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "machine_id": "lethalth"
+    },
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "machine_id": "majtitl2"
+    },
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "machine_id": "mysticri"
+    },
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "machine_id": "nbbatman"
+    },
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "machine_id": "rtypeleo"
+    },
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "machine_id": "ssoldier"
+    },
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "machine_id": "uccops"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "path": "Arcade-IremM92.sv",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "platform_id": "mister"
+    }
+  ],
+  "implementation_system": [
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "system_id": "irem-m107"
+    },
+    {
+      "implementation_id": "mister-arcade-iremm92",
+      "system_id": "irem-m92"
+    }
+  ]
+}

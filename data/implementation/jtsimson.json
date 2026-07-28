@@ -1,0 +1,76 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtsimson",
+      "name": "JTSIMSON",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtcores",
+      "hdl_language_id": "mixed",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the HDL lives in the jotego/jtcores monorepo at cores/simson/, 14 source files. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id, license_id and implementation_path rows is how that fact is stated here. license_id omitted: the repository LICENSE is the verbatim GPLv3 text but no any-later-version grant was found in https://github.com/jotego/jtcores/blob/master/cores/simson/doc/053251.v, so the version scope is not something this core's own files state. Machine mapping: 20 MRA files in jotego/jtbin's mra/ directory name <rbf>jtsimson</rbf>; 2 setnames resolved exactly to a MAME 0.288 machine and 18 through MAME's own cloneof relation to the parent that survives extract/machine.json's parents-only filter, giving 2 distinct machine_id rows. hdl_language_id: no single HDL family reaches 90% of the 14 source files (2 systemverilog, 12 verilog), excluding the shared framework directory. accuracy_id omitted: jotego's README claims faithfulness in prose but states no timing-fidelity level this build could check against data/lookup/accuracy_level.json. cores/simson/cfg/files.yaml also pulls in jt053260, which have no implementation record yet, so no dependency row is written for them. Dependency deliberately not recorded: cores/simson/cfg/files.yaml has an aliens: entry, but it pulls only jt052109.v and jt051962.v -- jotego's models of the Konami 052109 and 051962 tilemap custom chips (jt052109.v reads Date: 15-4-2023). No implementation_dependency row is written: these are custom-chip modules parked in cores/aliens/hdl, not the JTALIENS core. Cores that do pull jtaliens_scroll.v or jtaliens_obj.v -- jtajax, jtgrad3, jttmnt -- keep their edge, because those files are the Aliens core's own."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jtsimson",
+      "provider_id": "jt51",
+      "note": "JT51 YM2151 FM core, declared in cores/simson/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtsimson",
+      "provider_id": "jteeprom",
+      "note": "JTEEPROM serial EEPROM core, declared in cores/simson/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtsimson",
+      "provider_id": "jtframe",
+      "note": "JTFRAME framework, declared in cores/simson/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtsimson",
+      "provider_id": "jtkcpu",
+      "note": "JTKCPU Konami custom CPU core, declared in cores/simson/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtsimson",
+      "provider_id": "jtriders",
+      "note": "reuses the JTRIDERS module jtriders_dump.v, declared in cores/simson/cfg/files.yaml"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "jtsimson",
+      "machine_id": "simpsons"
+    },
+    {
+      "implementation_id": "jtsimson",
+      "machine_id": "vendetta"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jtsimson",
+      "path": "cores/simson/hdl"
+    },
+    {
+      "implementation_id": "jtsimson",
+      "path": "cores/simson/hdl/jtsimson_game.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtsimson",
+      "platform_id": "mist"
+    },
+    {
+      "implementation_id": "jtsimson",
+      "platform_id": "mister"
+    },
+    {
+      "implementation_id": "jtsimson",
+      "platform_id": "pocket"
+    }
+  ]
+}

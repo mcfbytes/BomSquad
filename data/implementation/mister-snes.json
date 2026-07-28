@@ -1,0 +1,43 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mister-snes",
+      "name": "SNES (MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/SNES_MiSTer",
+      "hdl_language_id": "mixed",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 82 HDL source files (16 systemverilog, 6 verilog, 60 vhdl) alongside 77 prebuilt .rbf binaries. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: hand-mapped, not MRA-setname-derived -- a console core ships no MRA files. The core reimplements the Super Nintendo / Super Famicom, giving machine_id snes. Every id was checked against extract/machine.json. license_id omitted: the two license statements in the repository disagree. https://github.com/MiSTer-devel/SNES_MiSTer/blob/master/LICENSE is the verbatim GNU GPL version 3 text, but the grant in https://github.com/MiSTer-devel/SNES_MiSTer/blob/master/SNES.sv offers the work under GPL version 2 or later. Either reading is arguable and neither is a fact the repository states, so no SPDX id is asserted. hdl_language_id: no single HDL family reaches 90% of the 82 source files (16 systemverilog, 6 verilog, 60 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify."
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "mister-snes",
+      "machine_id": "snes"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mister-snes",
+      "path": "SNES.sv",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "mister-snes",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mister-snes",
+      "platform_id": "mister"
+    }
+  ],
+  "implementation_system": [
+    {
+      "implementation_id": "mister-snes",
+      "system_id": "nintendo-snes"
+    }
+  ]
+}

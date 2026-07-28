@@ -1,0 +1,25 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "pocket-spiritualized1997-intellivision",
+      "name": "Intellivision (Analogue Pocket, spiritualized1997)",
+      "kind_id": "fpga_hdl",
+      "project_id": "spiritualized1997",
+      "repo_url": "https://github.com/spiritualized1997/openFPGA-Intellivision",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): closed -- the repository holds 1 file(s) and no HDL source at all; the core is published only as a built openFPGA package on the repository's GitHub Releases page. hdl_language_id and license_id are therefore omitted, and that absence is the releases-only signal (there is no open_source column in the delivered schema -- data-model.md §1.9). It is still recorded as a core: a closed core is still a core that exists for the hardware it covers. Machine mapping: hand-mapped, not setname-derived -- this core ships no MRA file. It reimplements the Mattel Intellivision, giving machine_id intv, each checked against extract/machine.json. license_id omitted: with no published source there is no per-file grant to read; the repository carries no LICENSE file either. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify. openFPGA core identifier Spiritualized.Intv; no core.json is committed to the repository (the manifest ships inside the release archive), so the identifier comes from the published core listing rather than from a file in the tree."
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "pocket-spiritualized1997-intellivision",
+      "machine_id": "intv"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "pocket-spiritualized1997-intellivision",
+      "platform_id": "pocket"
+    }
+  ]
+}

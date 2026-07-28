@@ -1,0 +1,10 @@
+{
+  "project": [
+    {
+      "project_id": "spacemen3",
+      "name": "spacemen3",
+      "url": "https://github.com/spacemen3",
+      "notes": "Author of the Analogue Pocket PDP-1 / Spacewar! openFPGA core."
+    }
+  ]
+}

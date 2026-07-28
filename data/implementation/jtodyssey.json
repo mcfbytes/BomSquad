@@ -1,0 +1,13 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtodyssey",
+      "name": "JTODYSSEY",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtbin",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): closed -- jotego/jtcores has no cores/odyssey directory, so no HDL for this core is published; only the compiled binary is distributed, through jotego/jtbin (binary builds).  hdl_language_id and license_id are therefore omitted: with no published source there is no per-file grant to read and no language to record, and that absence is the closed-source signal (there is no open_source column in the delivered schema -- data-model.md §1.9). The core still counts as a core: its MRA files and its .rbf builds are published, so the hardware is covered. Machines unmapped: jotego/jtbin publishes no MRA file naming <rbf>jtodyssey</rbf>, so there is no setname to join on. The core's HDL is public but no released ROM recipe identifies which MAME sets it runs. accuracy_id omitted: jotego's README claims faithfulness in prose but states no timing-fidelity level this build could check against data/lookup/accuracy_level.json."
+    }
+  ]
+}

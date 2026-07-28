@@ -1,0 +1,60 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mister-arcade-gundamsd",
+      "name": "Gundam SD (MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/Arcade-GundamSD_MiSTer",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 77 HDL source files (25 systemverilog, 46 verilog, 6 vhdl) alongside 1 prebuilt .rbf binaries. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: 1 MRA files in the repository's releases/ directory carry a <setname>; 1 resolved exactly to a MAME 0.288 machine and 0 through MAME's own cloneof relation to the parent set that survives extract/machine.json's parents-only filter, giving 1 distinct machine_id rows. License: https://github.com/MiSTer-devel/Arcade-GundamSD_MiSTer/blob/master/GundamSD.sv carries the tag SPDX-License-Identifier: GPL-3.0-or-later, and https://github.com/MiSTer-devel/Arcade-GundamSD_MiSTer/blob/master/LICENSE is the verbatim GNU GPL version 3 text, which agrees -- read from the repository, not inferred. hdl_language_id: no single HDL family reaches 90% of the 77 source files (25 systemverilog, 46 verilog, 6 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "mister-arcade-gundamsd",
+      "provider_id": "fx68k",
+      "note": "FX68K 68000 core vendored at rtl/fx68k/fx68k.sv"
+    },
+    {
+      "consumer_id": "mister-arcade-gundamsd",
+      "provider_id": "jt51",
+      "note": "JT51 YM2151 core vendored at rtl/sound/jt51/jt51.v"
+    },
+    {
+      "consumer_id": "mister-arcade-gundamsd",
+      "provider_id": "jt6295",
+      "note": "JT6295 MSM6295 core vendored at rtl/sound/jt6295/jt6295.v"
+    },
+    {
+      "consumer_id": "mister-arcade-gundamsd",
+      "provider_id": "jtframe",
+      "note": "JTFRAME framework vendored at rtl/jtframe/jtframe_68kdtack_cen.v"
+    },
+    {
+      "consumer_id": "mister-arcade-gundamsd",
+      "provider_id": "t80",
+      "note": "T80 Z80 core vendored at rtl/sound/t80/T80.vhd"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "mister-arcade-gundamsd",
+      "machine_id": "sdgndmps"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mister-arcade-gundamsd",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mister-arcade-gundamsd",
+      "platform_id": "mister"
+    }
+  ]
+}

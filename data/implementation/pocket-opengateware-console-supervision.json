@@ -1,0 +1,33 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "pocket-opengateware-console-supervision",
+      "name": "Supervision (Analogue Pocket, opengateware)",
+      "kind_id": "fpga_hdl",
+      "project_id": "opengateware",
+      "repo_url": "https://github.com/opengateware/console-supervision",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 30 HDL source files (11 systemverilog, 11 verilog, 8 vhdl). There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: hand-mapped, not setname-derived -- this core ships no MRA file. It reimplements the Watara Supervision, giving machine_id svision, each checked against extract/machine.json. License: https://github.com/opengateware/console-supervision/blob/master/rtl/audio.sv carries the tag SPDX-License-Identifier: GPL-3.0-or-later -- read from the repository, not inferred; https://github.com/opengateware/console-supervision/blob/master/LICENSE is the matching licence text. hdl_language_id: no single HDL family reaches 90% of the 30 source files (11 systemverilog, 11 verilog, 8 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify. Core identity read from the openFPGA manifest pkg/pocket/Cores/boogermann.supervision/core.json in the repository, which declares core identifier boogermann.supervision."
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "pocket-opengateware-console-supervision",
+      "machine_id": "svision"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "pocket-opengateware-console-supervision",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "pocket-opengateware-console-supervision",
+      "platform_id": "pocket"
+    }
+  ]
+}

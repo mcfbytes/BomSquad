@@ -1,0 +1,32 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "pocket-agg23-pcengine",
+      "name": "PC Engine (Analogue Pocket, agg23)",
+      "kind_id": "fpga_hdl",
+      "project_id": "agg23",
+      "repo_url": "https://github.com/agg23/openfpga-pcengine",
+      "hdl_language_id": "mixed",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 46 HDL source files (13 systemverilog, 14 verilog, 19 vhdl). There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: hand-mapped, not setname-derived -- this core ships no MRA file. It reimplements the NEC PC Engine / TurboGrafx-16, giving machine_id pce, each checked against extract/machine.json. license_id omitted: https://github.com/agg23/openfpga-pcengine/blob/master/LICENSE is the verbatim GNU GPL version 2 text, but the repository states no version scope, and GPL's only-vs-or-later distinction comes from the grant, not the licence text. hdl_language_id: no single HDL family reaches 90% of the 46 source files (13 systemverilog, 14 verilog, 19 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify. Core identity read from the openFPGA manifest pkg/Cores/agg23.PC Engine/core.json in the repository, which declares core identifier agg23.PC Engine."
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "pocket-agg23-pcengine",
+      "machine_id": "pce"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "pocket-agg23-pcengine",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "pocket-agg23-pcengine",
+      "platform_id": "pocket"
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jttmnt",
+      "name": "JTTMNT",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtcores",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the HDL lives in the jotego/jtcores monorepo at cores/tmnt/, 5 source files. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id, license_id and implementation_path rows is how that fact is stated here. License: https://github.com/jotego/jtcores/blob/master/LICENSE is the verbatim GPLv3 text, and the per-file grant in https://github.com/jotego/jtcores/blob/master/cores/tmnt/hdl/jttmnt_colmix.v reads \"either version 3 of the License, or (at your option) any later version\" -- hence GPL-3.0-or-later. Machine mapping: 21 MRA files in jotego/jtbin's mra/ directory name <rbf>jttmnt</rbf>; 3 setnames resolved exactly to a MAME 0.288 machine and 18 through MAME's own cloneof relation to the parent that survives extract/machine.json's parents-only filter, giving 3 distinct machine_id rows. hdl_language_id: 5 of 5 HDL files are verilog (5 verilog), excluding the shared framework directory. accuracy_id omitted: jotego's README claims faithfulness in prose but states no timing-fidelity level this build could check against data/lookup/accuracy_level.json. cores/tmnt/cfg/files.yaml also pulls in jt007232, jt053260, which have no implementation record yet, so no dependency row is written for them. Dependency deliberately not recorded: cores/tmnt/cfg/files.yaml has a simson: entry, but it pulls only jtcolmix_053251.v and jtk054000.v -- jotego's models of the Konami 053251 priority/mixer and 054000 collision custom chips (Date: 23-7-2023 and 20-10-2023). No implementation_dependency row is written: these are custom-chip modules that happen to live in cores/simson/hdl, not the JTSIMSON core. jtxmen and jtrungun, which also pull jtsimson_obj.v, keep their edge because that file is the Simpsons core's own."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jttmnt",
+      "provider_id": "jt51",
+      "note": "JT51 YM2151 FM core, declared in cores/tmnt/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jttmnt",
+      "provider_id": "jt7759",
+      "note": "JT7759 uPD7759 ADPCM core, declared in cores/tmnt/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jttmnt",
+      "provider_id": "jtaliens",
+      "note": "shares HDL with the jtaliens core, declared in cores/tmnt/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jttmnt",
+      "provider_id": "jteeprom",
+      "note": "JTEEPROM serial EEPROM core, declared in cores/tmnt/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jttmnt",
+      "provider_id": "jtframe",
+      "note": "JTFRAME framework, declared in cores/tmnt/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jttmnt",
+      "provider_id": "jtriders",
+      "note": "shares HDL with the jtriders core, declared in cores/tmnt/cfg/files.yaml"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "jttmnt",
+      "machine_id": "mia"
+    },
+    {
+      "implementation_id": "jttmnt",
+      "machine_id": "punkshot"
+    },
+    {
+      "implementation_id": "jttmnt",
+      "machine_id": "tmnt"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jttmnt",
+      "path": "cores/tmnt/hdl"
+    },
+    {
+      "implementation_id": "jttmnt",
+      "path": "cores/tmnt/hdl/jttmnt_game.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jttmnt",
+      "platform_id": "mist"
+    },
+    {
+      "implementation_id": "jttmnt",
+      "platform_id": "mister"
+    },
+    {
+      "implementation_id": "jttmnt",
+      "platform_id": "pocket"
+    }
+  ]
+}

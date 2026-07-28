@@ -1,0 +1,55 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mister-arcade-tnkiii",
+      "name": "TNKIII (MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/Arcade-TNKIII_MiSTer",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-2.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 118 HDL source files (20 systemverilog, 83 verilog, 15 vhdl) alongside 1 prebuilt .rbf binaries. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: 2 MRA files in the repository's releases/ directory carry a <setname>; 1 resolved exactly to a MAME 0.288 machine and 1 through MAME's own cloneof relation to the parent set that survives extract/machine.json's parents-only filter, giving 1 distinct machine_id rows. License: https://github.com/MiSTer-devel/Arcade-TNKIII_MiSTer/blob/main/LICENSE is the verbatim GNU GPL version 2 text, and the grant in https://github.com/MiSTer-devel/Arcade-TNKIII_MiSTer/blob/main/Arcade-TNKIII.sv reads \"either version 2 of the License, or (at your option) any later version\" -- hence GPL-2.0-or-later. hdl_language_id: no single HDL family reaches 90% of the 118 source files (20 systemverilog, 83 verilog, 15 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "mister-arcade-tnkiii",
+      "provider_id": "jtopl",
+      "note": "JTOPL YM3526/YM3812 core vendored at rtl/ym3526/jtopl.v"
+    },
+    {
+      "consumer_id": "mister-arcade-tnkiii",
+      "provider_id": "t80",
+      "note": "T80 Z80 core vendored at rtl/T80/T80.vhd"
+    },
+    {
+      "consumer_id": "mister-arcade-tnkiii",
+      "provider_id": "tv80",
+      "note": "TV80 Z80 core vendored at rtl/TV80/tv80_core.v"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "mister-arcade-tnkiii",
+      "machine_id": "tnk3"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mister-arcade-tnkiii",
+      "path": "Arcade-TNKIII.sv",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "mister-arcade-tnkiii",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mister-arcade-tnkiii",
+      "platform_id": "mister"
+    }
+  ]
+}

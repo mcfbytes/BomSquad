@@ -1,0 +1,100 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mister-sms",
+      "name": "SMS (MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/SMS_MiSTer",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-2.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 60 HDL source files (9 systemverilog, 11 verilog, 40 vhdl) alongside 35 prebuilt .rbf binaries. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: hand-mapped, not MRA-setname-derived -- a console core ships no MRA files. The core reimplements the Sega Master System and the Game Gear: the distribution's _Console/Game Gear.mgl names <rbf>_Console/SMS</rbf>, and GameGear2P is a second build of this same repository, giving machine_id sms and machine_id gamegear. Every id was checked against extract/machine.json. This console core doubles as an arcade core: Machine mapping: 9 arcade MRA files in Distribution_MiSTer/_Arcade naming <rbf>SMS</rbf> carry a <setname>; 8 resolved exactly to a MAME 0.288 machine and 1 through MAME's own cloneof relation to the parent set that survives extract/machine.json's parents-only filter, giving 8 distinct machine_id rows. Those setnames are MAME shortnames, so this part of the mapping is setname-derived. License: the repository has no LICENSE, COPYING or COPYRIGHT file; the grant lives in the source header at https://github.com/MiSTer-devel/SMS_MiSTer/blob/master/SMS.sv, which offers the work under the GNU General Public License \"either version 2 of the License, or (at your option) any later version\" -- hence GPL-2.0-or-later. hdl_language_id: no single HDL family reaches 90% of the 60 source files (9 systemverilog, 11 verilog, 40 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "mister-sms",
+      "provider_id": "jt89",
+      "note": "JT89 SN76489 core vendored at rtl/jt89/jt89.v"
+    },
+    {
+      "consumer_id": "mister-sms",
+      "provider_id": "t80",
+      "note": "T80 Z80 core vendored at rtl/T80/T80.vhd"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "mister-sms",
+      "machine_id": "fantzn2"
+    },
+    {
+      "implementation_id": "mister-sms",
+      "machine_id": "gamegear"
+    },
+    {
+      "implementation_id": "mister-sms",
+      "machine_id": "hangonjr"
+    },
+    {
+      "implementation_id": "mister-sms",
+      "machine_id": "megrescu"
+    },
+    {
+      "implementation_id": "mister-sms",
+      "machine_id": "opaopa"
+    },
+    {
+      "implementation_id": "mister-sms",
+      "machine_id": "ridleofp"
+    },
+    {
+      "implementation_id": "mister-sms",
+      "machine_id": "slapshtr"
+    },
+    {
+      "implementation_id": "mister-sms",
+      "machine_id": "sms"
+    },
+    {
+      "implementation_id": "mister-sms",
+      "machine_id": "tetrisse"
+    },
+    {
+      "implementation_id": "mister-sms",
+      "machine_id": "transfrm"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mister-sms",
+      "path": "SMS.sv",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "mister-sms",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mister-sms",
+      "platform_id": "mister"
+    }
+  ],
+  "implementation_system": [
+    {
+      "implementation_id": "mister-sms",
+      "system_id": "sega-game-gear"
+    },
+    {
+      "implementation_id": "mister-sms",
+      "system_id": "sega-master-system"
+    },
+    {
+      "implementation_id": "mister-sms",
+      "system_id": "sega-systeme"
+    }
+  ]
+}

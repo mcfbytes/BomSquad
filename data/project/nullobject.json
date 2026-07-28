@@ -1,0 +1,11 @@
+{
+  "project": [
+    {
+      "project_id": "nullobject",
+      "name": "Joshua Bassett (nullobject)",
+      "url": "https://github.com/nullobject",
+      "author": "Joshua Bassett",
+      "notes": "Author of the Tecmo, Rygar and Cave arcade cores; the MiSTer builds live in MiSTer-devel repositories while the Analogue Pocket build is published from this account."
+    }
+  ]
+}

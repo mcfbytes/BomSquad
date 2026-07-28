@@ -1,0 +1,11 @@
+{
+  "project": [
+    {
+      "project_id": "ericlewis",
+      "name": "Eric Lewis (ericlewis)",
+      "url": "https://github.com/ericlewis",
+      "author": "Eric Lewis",
+      "notes": "Publishes Analogue Pocket openFPGA ports of discrete-logic and early raster arcade cores, each shipping the MRA file it was built from."
+    }
+  ]
+}

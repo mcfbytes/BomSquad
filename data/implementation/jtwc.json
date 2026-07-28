@@ -1,0 +1,67 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtwc",
+      "name": "JTWC",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtcores",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the HDL lives in the jotego/jtcores monorepo at cores/wc/, 11 source files. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id, license_id and implementation_path rows is how that fact is stated here. License: https://github.com/jotego/jtcores/blob/master/LICENSE is the verbatim GPLv3 text, and the per-file grant in https://github.com/jotego/jtcores/blob/master/cores/wc/hdl/jtwc_colmix.v reads \"either version 3 of the License, or (at your option) any later version\" -- hence GPL-3.0-or-later. Machine mapping: 6 MRA files in jotego/jtbin's mra/ directory name <rbf>jtwc</rbf>; 2 setnames resolved exactly to a MAME 0.288 machine and 4 through MAME's own cloneof relation to the parent that survives extract/machine.json's parents-only filter, giving 2 distinct machine_id rows. hdl_language_id: 11 of 11 HDL files are verilog (11 verilog), excluding the shared framework directory. accuracy_id omitted: jotego's README claims faithfulness in prose but states no timing-fidelity level this build could check against data/lookup/accuracy_level.json."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jtwc",
+      "provider_id": "jt12",
+      "note": "JT12 YM2612/YM2203 FM core, declared in cores/wc/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtwc",
+      "provider_id": "jt5205",
+      "note": "JT5205 MSM5205 ADPCM core, declared in cores/wc/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtwc",
+      "provider_id": "jtframe",
+      "note": "JTFRAME framework, declared in cores/wc/cfg/files.yaml"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "jtwc",
+      "machine_id": "gridiron"
+    },
+    {
+      "implementation_id": "jtwc",
+      "machine_id": "tehkanwc"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jtwc",
+      "path": "cores/wc/hdl"
+    },
+    {
+      "implementation_id": "jtwc",
+      "path": "cores/wc/hdl/jtwc_game.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtwc",
+      "platform_id": "mist"
+    },
+    {
+      "implementation_id": "jtwc",
+      "platform_id": "mister"
+    },
+    {
+      "implementation_id": "jtwc",
+      "platform_id": "pocket"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtninja",
+      "name": "JTNINJA",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtbin",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): closed -- jotego/jtcores has no cores/ninja directory, so no HDL for this core is published; only the compiled binary is distributed, through jotego/jtbin (mister/jtninja.rbf, mist/jtninja.rbf, sidi/jtninja.rbf, sidi128/jtninja.rbf).  hdl_language_id and license_id are therefore omitted: with no published source there is no per-file grant to read and no language to record, and that absence is the closed-source signal (there is no open_source column in the delivered schema -- data-model.md §1.9). The core still counts as a core: its MRA files and its .rbf builds are published, so the hardware is covered. Machine mapping: 5 MRA files in jotego/jtbin's mra/ directory name <rbf>jtninja</rbf>; 2 setnames resolved exactly to a MAME 0.288 machine and 3 through MAME's own cloneof relation to the parent that survives extract/machine.json's parents-only filter, giving 2 distinct machine_id rows. accuracy_id omitted: jotego's README claims faithfulness in prose but states no timing-fidelity level this build could check against data/lookup/accuracy_level.json. cores/ninja/cfg/files.yaml also pulls in jt680x, which have no implementation record yet, so no dependency row is written for them."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jtninja",
+      "provider_id": "jtcop",
+      "note": "shares HDL with the jtcop core, declared in cores/ninja/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtninja",
+      "provider_id": "jtframe",
+      "note": "JTFRAME framework, declared in cores/ninja/cfg/files.yaml"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "jtninja",
+      "machine_id": "baddudes"
+    },
+    {
+      "implementation_id": "jtninja",
+      "machine_id": "hbarrel"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtninja",
+      "platform_id": "mist"
+    },
+    {
+      "implementation_id": "jtninja",
+      "platform_id": "mister"
+    },
+    {
+      "implementation_id": "jtninja",
+      "platform_id": "pocket"
+    }
+  ]
+}

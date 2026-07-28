@@ -1,0 +1,31 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mister-gameandwatch",
+      "name": "Game And Watch (MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/GameAndWatch_MiSTer",
+      "hdl_language_id": "mixed",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 24 HDL source files (18 systemverilog, 6 verilog) alongside 2 prebuilt .rbf binaries. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machines unmapped: MAME models each Game & Watch title as its own machine in a family of hundreds; the core runs MAME-independent GnW ROM packs, so no single machine_id describes it and none is asserted. license_id omitted: the repository contradicts itself. https://github.com/MiSTer-devel/GameAndWatch_MiSTer/blob/master/GameAndWatch.sv carries the tag SPDX-License-Identifier: GPL-3.0-or-later while https://github.com/MiSTer-devel/GameAndWatch_MiSTer/blob/master/LICENSE is the MIT License text. Neither reading can be asserted as fact. hdl_language_id: no single HDL family reaches 90% of the 24 source files (18 systemverilog, 6 verilog), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify."
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mister-gameandwatch",
+      "path": "GameAndWatch.sv",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "mister-gameandwatch",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mister-gameandwatch",
+      "platform_id": "mister"
+    }
+  ]
+}

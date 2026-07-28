@@ -125,13 +125,27 @@ ORDER BY 1`,
   {
     code: 'DEPENDENCY_CYCLE',
     section: '§3.6',
-    sql: `WITH RECURSIVE walk(root, node, depth) AS (
-  SELECT consumer_id, provider_id, 1 FROM implementation_dependency
-  UNION ALL
-  SELECT w.root, d.provider_id, w.depth + 1
+    // `UNION`, not `UNION ALL`, and no depth column — both deliberate, and the difference
+    // is the whole cost of this gate.
+    //
+    // The obvious formulation carries a depth and stops at `COUNT(*) FROM implementation`.
+    // Because `UNION ALL` does not deduplicate, that walk enumerates every distinct *path*
+    // through the graph rather than every reachable *node*, so its cost is exponential in
+    // the fan-out. That was free while the catalog held 41 implementations and 7 edges. It
+    // stopped being free the moment Phase 5 landed 400 implementations and 658 edges with
+    // heavy sharing — `t80` is consumed by 126 cores, `jtframe` by 92 — and the build went
+    // from 6.9s to more than 19 minutes of pure CPU without finishing.
+    //
+    // `UNION` deduplicates the (root, node) pairs, which bounds the walk at |V|x|E| and
+    // makes it terminate on a cycle by construction rather than by a depth guard. The
+    // depth column has to go: it made otherwise-identical rows distinct and defeated the
+    // deduplication. Same answer, 0.001s.
+    sql: `WITH RECURSIVE walk(root, node) AS (
+  SELECT consumer_id, provider_id FROM implementation_dependency
+  UNION
+  SELECT w.root, d.provider_id
   FROM walk w
   JOIN implementation_dependency d ON d.consumer_id = w.node
-  WHERE w.depth < (SELECT COUNT(*) FROM implementation)
 )
 SELECT DISTINCT root AS implementation_id FROM walk WHERE node = root ORDER BY 1`,
   },

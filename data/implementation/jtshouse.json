@@ -1,0 +1,132 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtshouse",
+      "name": "JTSHOUSE",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtcores",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the HDL lives in the jotego/jtcores monorepo at cores/shouse/, 16 source files. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id, license_id and implementation_path rows is how that fact is stated here. License: https://github.com/jotego/jtcores/blob/master/LICENSE is the verbatim GPLv3 text, and the per-file grant in https://github.com/jotego/jtcores/blob/master/cores/shouse/hdl/jtc117.v reads \"either version 3 of the License, or (at your option) any later version\" -- hence GPL-3.0-or-later. Machine mapping: 39 MRA files in jotego/jtbin's mra/ directory name <rbf>jtshouse</rbf>; 19 setnames resolved exactly to a MAME 0.288 machine and 20 through MAME's own cloneof relation to the parent that survives extract/machine.json's parents-only filter, giving 19 distinct machine_id rows. hdl_language_id: no single HDL family reaches 90% of the 16 source files (2 systemverilog, 14 verilog), excluding the shared framework directory. accuracy_id omitted: jotego's README claims faithfulness in prose but states no timing-fidelity level this build could check against data/lookup/accuracy_level.json."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jtshouse",
+      "provider_id": "jt51",
+      "note": "JT51 YM2151 FM core, declared in cores/shouse/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtshouse",
+      "provider_id": "jtframe",
+      "note": "JTFRAME framework, declared in cores/shouse/cfg/files.yaml"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "bakutotu"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "berabohm"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "blastoff"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "blazer"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "boxyboy"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "dangseed"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "dspirit"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "faceoff"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "galaga88"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "mmaze"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "pacmania"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "pistoldm"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "quester"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "rompers"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "shadowld"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "splatter"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "tankfrce"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "wldcourt"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "machine_id": "ws"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jtshouse",
+      "path": "cores/shouse/hdl"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "path": "cores/shouse/hdl/jtshouse_game.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtshouse",
+      "platform_id": "mister"
+    },
+    {
+      "implementation_id": "jtshouse",
+      "platform_id": "pocket"
+    }
+  ],
+  "implementation_system": [
+    {
+      "implementation_id": "jtshouse",
+      "system_id": "namco-system1"
+    }
+  ]
+}

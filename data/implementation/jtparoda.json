@@ -1,0 +1,49 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtparoda",
+      "name": "JTPARODA",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtbin",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): closed -- jotego/jtcores has no cores/paroda directory, so no HDL for this core is published; only the compiled binary is distributed, through jotego/jtbin (mister/jtparoda.rbf, mist/jtparoda.rbf, sidi/jtparoda.rbf, sidi128/jtparoda.rbf).  hdl_language_id and license_id are therefore omitted: with no published source there is no per-file grant to read and no language to record, and that absence is the closed-source signal (there is no open_source column in the delivered schema -- data-model.md §1.9). The core still counts as a core: its MRA files and its .rbf builds are published, so the hardware is covered. Machine mapping: 7 MRA files in jotego/jtbin's mra/ directory name <rbf>jtparoda</rbf>; 2 setnames resolved exactly to a MAME 0.288 machine and 5 through MAME's own cloneof relation to the parent that survives extract/machine.json's parents-only filter, giving 2 distinct machine_id rows. accuracy_id omitted: jotego's README claims faithfulness in prose but states no timing-fidelity level this build could check against data/lookup/accuracy_level.json."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jtparoda",
+      "provider_id": "jtriders",
+      "note": "shares HDL with the jtriders core, declared in cores/paroda/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtparoda",
+      "provider_id": "jtsimson",
+      "note": "shares HDL with the jtsimson core, declared in cores/paroda/cfg/files.yaml"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "jtparoda",
+      "machine_id": "parodius"
+    },
+    {
+      "implementation_id": "jtparoda",
+      "machine_id": "suratk"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtparoda",
+      "platform_id": "mist"
+    },
+    {
+      "implementation_id": "jtparoda",
+      "platform_id": "mister"
+    },
+    {
+      "implementation_id": "jtparoda",
+      "platform_id": "pocket"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "project": [
+    {
+      "project_id": "fpgaarcade",
+      "name": "FPGAArcade",
+      "url": "https://github.com/FPGAArcade",
+      "author": "Mike Johnson",
+      "notes": "Home of the Replay board (Xilinx Spartan-6), an FPGA reimplementation platform that predates MiSTer. Core bitstreams are published in r1_replay_release and at build.fpgaarcade.com; the core HDL is not on GitHub."
+    }
+  ]
+}

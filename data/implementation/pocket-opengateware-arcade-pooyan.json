@@ -1,0 +1,39 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "pocket-opengateware-arcade-pooyan",
+      "name": "Pooyan (Analogue Pocket, opengateware)",
+      "kind_id": "fpga_hdl",
+      "project_id": "opengateware",
+      "repo_url": "https://github.com/opengateware/arcade-pooyan",
+      "hdl_language_id": "mixed",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 40 HDL source files (4 systemverilog, 13 verilog, 23 vhdl). There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: this openFPGA core ships 4 MRA files of its own; 1 setnames resolved exactly to a MAME 0.288 machine and 2 through MAME's own cloneof relation, giving 1 distinct machine_id rows. 1 did not resolve (absent-from-mame-0288: 1). license_id omitted: https://github.com/opengateware/arcade-pooyan/blob/master/LICENSE is the verbatim GNU GPL version 3 text, but the repository states no version scope, and GPL's only-vs-or-later distinction comes from the grant, not the licence text. hdl_language_id: no single HDL family reaches 90% of the 40 source files (4 systemverilog, 13 verilog, 23 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify. Core identity read from the openFPGA manifest pkg/pocket/Cores/boogermann.pooyan/core.json in the repository, which declares core identifier boogermann.pooyan."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "pocket-opengateware-arcade-pooyan",
+      "provider_id": "t80",
+      "note": "T80 Z80 core vendored at modules/cpu-t80/T80.vhd"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "pocket-opengateware-arcade-pooyan",
+      "machine_id": "pooyan"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "pocket-opengateware-arcade-pooyan",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "pocket-opengateware-arcade-pooyan",
+      "platform_id": "pocket"
+    }
+  ]
+}

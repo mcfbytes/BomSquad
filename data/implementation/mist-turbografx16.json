@@ -1,0 +1,33 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mist-turbografx16",
+      "name": "TurboGrafx-16 (MiST)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mist-devel",
+      "repo_url": "https://github.com/mist-devel/TurboGrafx16_FPGA",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-2.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 46 HDL source files (9 systemverilog, 8 verilog, 29 vhdl). There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: hand-mapped, not MRA-setname-derived -- a MiST console core ships no MRA file. The core reimplements the NEC PC Engine / TurboGrafx-16, giving machine_id pce, each checked against extract/machine.json. License: the grant in https://github.com/mist-devel/TurboGrafx16_FPGA/blob/master/mister/TurboGrafx16.sv offers the work under the GNU General Public License \"either version 2 of the License, or (at your option) any later version\" (the repository has no LICENSE file) -- hence GPL-2.0-or-later. hdl_language_id: no single HDL family reaches 90% of the 46 source files (9 systemverilog, 8 verilog, 29 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify. Platform: the compiled core is distributed through mist-devel/mist-binaries, whose cores/ directory is the MiST core set."
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "mist-turbografx16",
+      "machine_id": "pce"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mist-turbografx16",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mist-turbografx16",
+      "platform_id": "mist"
+    }
+  ]
+}

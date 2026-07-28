@@ -1,0 +1,38 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mister-arcade-deco156simple",
+      "name": "Deco156 Simple (MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/Arcade-Deco156Simple_Mister",
+      "hdl_language_id": "verilog",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 40 HDL source files (3 systemverilog, 37 verilog). There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machines unmapped: the repository ships HDL and a LICENSE but no MRA file, no ROM build recipe and no released binary, and Distribution_MiSTer carries no MRA naming its .rbf; nothing published identifies which Data East 156 titles it runs. license_id omitted: https://github.com/MiSTer-devel/Arcade-Deco156Simple_Mister/blob/main/LICENSE is the verbatim GNU GPL version 3 text, but neither only-this-version nor any-later-version is stated there or in the HDL headers read (none present), and GPL's version scope comes from the grant, not the licence text. GPL-3.0-only and GPL-3.0-or-later are both consistent with what the repository actually says. hdl_language_id: 37 of 40 HDL files are verilog (3 systemverilog, 37 verilog), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "mister-arcade-deco156simple",
+      "provider_id": "jt6295",
+      "note": "JT6295 MSM6295 core vendored at rtl/jt6295/jt6295.v"
+    },
+    {
+      "consumer_id": "mister-arcade-deco156simple",
+      "provider_id": "jtframe",
+      "note": "JTFRAME framework vendored at rtl/jtframe/clocking/jtframe_frac_cen.v"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mister-arcade-deco156simple",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mister-arcade-deco156simple",
+      "platform_id": "mister"
+    }
+  ]
+}

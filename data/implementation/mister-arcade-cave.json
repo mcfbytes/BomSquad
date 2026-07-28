@@ -1,0 +1,107 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mister-arcade-cave",
+      "name": "Cave (MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/Arcade-Cave_MiSTer",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 120 HDL source files (52 systemverilog, 57 verilog, 11 vhdl) alongside 14 prebuilt .rbf binaries. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: 27 MRA files in the repository's releases/ directory carry a <setname>; 20 resolved exactly to a MAME 0.288 machine and 7 through MAME's own cloneof relation to the parent set that survives extract/machine.json's parents-only filter, giving 10 distinct machine_id rows. License: https://github.com/MiSTer-devel/Arcade-Cave_MiSTer/blob/main/LICENSE is the verbatim GNU GPL version 3 text, and the grant in https://github.com/MiSTer-devel/Arcade-Cave_MiSTer/blob/main/Arcade-Cave.sv reads \"either version 3 of the License, or (at your option) any later version\" -- hence GPL-3.0-or-later. hdl_language_id: no single HDL family reaches 90% of the 120 source files (52 systemverilog, 57 verilog, 11 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "mister-arcade-cave",
+      "provider_id": "fx68k",
+      "note": "FX68K 68000 core vendored at rtl/fx68k/fx68k.sv"
+    },
+    {
+      "consumer_id": "mister-arcade-cave",
+      "provider_id": "jt12",
+      "note": "JT12 YM2612/YM2203 core vendored at rtl/jt03/jt12_top.v"
+    },
+    {
+      "consumer_id": "mister-arcade-cave",
+      "provider_id": "jt49",
+      "note": "JT49 AY-3-8910 core vendored at rtl/jt03/jt49.v"
+    },
+    {
+      "consumer_id": "mister-arcade-cave",
+      "provider_id": "jt6295",
+      "note": "JT6295 MSM6295 core vendored at rtl/jt6295/jt6295.v"
+    },
+    {
+      "consumer_id": "mister-arcade-cave",
+      "provider_id": "t80",
+      "note": "T80 Z80 core vendored at rtl/t80/T80.vhd"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "mister-arcade-cave",
+      "machine_id": "ddonpach"
+    },
+    {
+      "implementation_id": "mister-arcade-cave",
+      "machine_id": "donpachi"
+    },
+    {
+      "implementation_id": "mister-arcade-cave",
+      "machine_id": "esprade"
+    },
+    {
+      "implementation_id": "mister-arcade-cave",
+      "machine_id": "feversos"
+    },
+    {
+      "implementation_id": "mister-arcade-cave",
+      "machine_id": "gaia"
+    },
+    {
+      "implementation_id": "mister-arcade-cave",
+      "machine_id": "guwange"
+    },
+    {
+      "implementation_id": "mister-arcade-cave",
+      "machine_id": "plegends"
+    },
+    {
+      "implementation_id": "mister-arcade-cave",
+      "machine_id": "pwrinst2"
+    },
+    {
+      "implementation_id": "mister-arcade-cave",
+      "machine_id": "theroes"
+    },
+    {
+      "implementation_id": "mister-arcade-cave",
+      "machine_id": "uopoko"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mister-arcade-cave",
+      "path": "Arcade-Cave.sv",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "mister-arcade-cave",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mister-arcade-cave",
+      "platform_id": "mister"
+    }
+  ],
+  "implementation_system": [
+    {
+      "implementation_id": "mister-arcade-cave",
+      "system_id": "cave-68000"
+    }
+  ]
+}

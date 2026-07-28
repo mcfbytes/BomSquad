@@ -1,0 +1,189 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtcps1",
+      "name": "JTCPS1",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtcores",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the HDL lives in the jotego/jtcores monorepo at cores/cps1/, 26 source files. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id, license_id and implementation_path rows is how that fact is stated here. License: https://github.com/jotego/jtcores/blob/master/LICENSE is the verbatim GPLv3 text, and the per-file grant in https://github.com/jotego/jtcores/blob/master/cores/cps1/hdl/jtcps1_colmix.v reads \"either version 3 of the License, or (at your option) any later version\" -- hence GPL-3.0-or-later. Machine mapping: 157 MRA files in jotego/jtbin's mra/ directory name <rbf>jtcps1</rbf>; 31 setnames resolved exactly to a MAME 0.288 machine and 126 through MAME's own cloneof relation to the parent that survives extract/machine.json's parents-only filter, giving 31 distinct machine_id rows. hdl_language_id: 26 of 26 HDL files are verilog (26 verilog), excluding the shared framework directory. accuracy_id omitted: jotego's README claims faithfulness in prose but states no timing-fidelity level this build could check against data/lookup/accuracy_level.json."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jtcps1",
+      "provider_id": "jt51",
+      "note": "JT51 YM2151 FM core, declared in cores/cps1/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtcps1",
+      "provider_id": "jt6295",
+      "note": "JT6295 MSM6295 ADPCM core, declared in cores/cps1/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtcps1",
+      "provider_id": "jtframe",
+      "note": "JTFRAME framework, declared in cores/cps1/cfg/files.yaml"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "1941"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "3wonders"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "captcomm"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "cawing"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "cworld2j"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "dynwar"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "ffight"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "forgottn"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "ghouls"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "gulunpa"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "knights"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "kod"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "megaman"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "mercs"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "mpumpkin"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "msword"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "mtwins"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "nemo"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "pang3"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "pnickj"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "pokonyan"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "qad"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "qtono2j"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "sf2"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "sf2ce"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "sf2hf"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "sfzch"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "strider"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "unsquad"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "varth"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "machine_id": "willow"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jtcps1",
+      "path": "cores/cps1/hdl"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "path": "cores/cps1/hdl/jtcps1_game.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtcps1",
+      "platform_id": "mist"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "platform_id": "mister"
+    },
+    {
+      "implementation_id": "jtcps1",
+      "platform_id": "pocket"
+    }
+  ],
+  "implementation_system": [
+    {
+      "implementation_id": "jtcps1",
+      "system_id": "capcom-cps1"
+    }
+  ]
+}

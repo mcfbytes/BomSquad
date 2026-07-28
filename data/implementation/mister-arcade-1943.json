@@ -1,0 +1,44 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mister-arcade-1943",
+      "name": "1943 (MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/Arcade-1943_MiSTer",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 109 HDL source files (1 systemverilog, 100 verilog, 8 vhdl) alongside 1 prebuilt .rbf binaries. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: this core predates the MRA format and ships no .mra file, but its ROM recipe names the MAME set outright -- https://github.com/MiSTer-devel/Arcade-1943_MiSTer/blob/master/_releases/build_rom.ini reads zip=1943u.zip (the 1943 world-set line above it is commented out). That is the same fact an MRA <setname> carries, read from a different file, and MAME's own cloneof relation resolves it to parent machine_id 1943. License: https://github.com/MiSTer-devel/Arcade-1943_MiSTer/blob/master/LICENSE is the verbatim GNU GPL version 3 text, and the grant in https://github.com/MiSTer-devel/Arcade-1943_MiSTer/blob/master/jt_gng/1943/hdl/jt1943_char.v reads \"either version 3 of the License, or (at your option) any later version\" -- hence GPL-3.0-or-later. hdl_language_id: 100 of 109 HDL files are verilog (1 systemverilog, 100 verilog, 8 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "mister-arcade-1943",
+      "provider_id": "jt12",
+      "note": "JT12 YM2612/YM2203 core vendored at jt_gng/modules/jt12/hdl/jt12_top.v"
+    },
+    {
+      "consumer_id": "mister-arcade-1943",
+      "provider_id": "jt49",
+      "note": "JT49 AY-3-8910 core vendored at jt_gng/modules/jt12/jt49/hdl/jt49.v"
+    },
+    {
+      "consumer_id": "mister-arcade-1943",
+      "provider_id": "t80",
+      "note": "T80 Z80 core vendored at jt_gng/modules/t80/T80.vhd"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "mister-arcade-1943",
+      "machine_id": "1943"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mister-arcade-1943",
+      "platform_id": "mister"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "project": [
+    {
+      "project_id": "spiritualized1997",
+      "name": "spiritualized",
+      "url": "https://github.com/spiritualized1997",
+      "notes": "Publishes a large family of Analogue Pocket openFPGA console and handheld cores. The GitHub repositories contain a README only: every core is distributed as a built openFPGA package through GitHub Releases, with no HDL published."
+    }
+  ]
+}

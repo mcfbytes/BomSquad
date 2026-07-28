@@ -1,0 +1,58 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtrungun",
+      "name": "JTRUNGUN",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtcores",
+      "hdl_language_id": "verilog",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the HDL lives in the jotego/jtcores monorepo at cores/rungun/, 16 source files. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id, license_id and implementation_path rows is how that fact is stated here. license_id omitted: the repository LICENSE is the verbatim GPLv3 text but no any-later-version grant was found in https://github.com/jotego/jtcores/blob/master/cores/rungun/doc/053252.v, so the version scope is not something this core's own files state. Machine mapping: 7 MRA files in jotego/jtbin's mra/ directory name <rbf>jtrungun</rbf>; 1 setnames resolved exactly to a MAME 0.288 machine and 6 through MAME's own cloneof relation to the parent that survives extract/machine.json's parents-only filter, giving 1 distinct machine_id rows. hdl_language_id: 16 of 16 HDL files are verilog (16 verilog), excluding the shared framework directory. accuracy_id omitted: jotego's README claims faithfulness in prose but states no timing-fidelity level this build could check against data/lookup/accuracy_level.json. cores/rungun/cfg/files.yaml also pulls in jt539, which have no implementation record yet, so no dependency row is written for them. Dependency deliberately not recorded: cores/rungun/cfg/files.yaml has a riders: entry, but the only file it pulls is jt054321.v -- jotego's model of the Konami 054321 sound-latch custom chip (header Date: 4-8-2024), which lives in cores/riders/hdl only because Sunset Riders is the core it was first written for. No implementation_dependency row is written: the shared thing is a custom-chip module with no implementation record of its own, not the JTRIDERS core, and the mirror-image riders: -> rungun: entry means writing both would close a dependency cycle. cores/rungun/cfg/files.yaml also lists simson:, and that edge is kept: alongside the jt053246* custom-chip files it pulls jtsimson_obj.v, which is the Simpsons core's own module, so the dependency is a genuine core-level one."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jtrungun",
+      "provider_id": "jteeprom",
+      "note": "JTEEPROM serial EEPROM core, declared in cores/rungun/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtrungun",
+      "provider_id": "jtframe",
+      "note": "JTFRAME framework, declared in cores/rungun/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtrungun",
+      "provider_id": "jtsimson",
+      "note": "reuses the JTSIMSON object module jtsimson_obj.v (alongside the jt053246* custom-chip files), declared in cores/rungun/cfg/files.yaml"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "jtrungun",
+      "machine_id": "rungun"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jtrungun",
+      "path": "cores/rungun/hdl"
+    },
+    {
+      "implementation_id": "jtrungun",
+      "path": "cores/rungun/hdl/jtrungun_game.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtrungun",
+      "platform_id": "mister"
+    },
+    {
+      "implementation_id": "jtrungun",
+      "platform_id": "pocket"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtoutrun",
+      "name": "JTOUTRUN",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtcores",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the HDL lives in the jotego/jtcores monorepo at cores/outrun/, 17 source files. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id, license_id and implementation_path rows is how that fact is stated here. License: https://github.com/jotego/jtcores/blob/master/LICENSE is the verbatim GPLv3 text, and the per-file grant in https://github.com/jotego/jtcores/blob/master/cores/outrun/hdl/jtoutrun_colmix.v reads \"either version 3 of the License, or (at your option) any later version\" -- hence GPL-3.0-or-later. Machine mapping: 15 MRA files in jotego/jtbin's mra/ directory name <rbf>jtoutrun</rbf>; 2 setnames resolved exactly to a MAME 0.288 machine and 13 through MAME's own cloneof relation to the parent that survives extract/machine.json's parents-only filter, giving 2 distinct machine_id rows. hdl_language_id: 17 of 17 HDL files are verilog (17 verilog), excluding the shared framework directory. accuracy_id omitted: jotego's README claims faithfulness in prose but states no timing-fidelity level this build could check against data/lookup/accuracy_level.json."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jtoutrun",
+      "provider_id": "jtframe",
+      "note": "JTFRAME framework, declared in cores/outrun/cfg/files.yaml"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "jtoutrun",
+      "machine_id": "outrun"
+    },
+    {
+      "implementation_id": "jtoutrun",
+      "machine_id": "toutrun"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jtoutrun",
+      "path": "cores/outrun/hdl"
+    },
+    {
+      "implementation_id": "jtoutrun",
+      "path": "cores/outrun/hdl/jtoutrun_game.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtoutrun",
+      "platform_id": "mister"
+    },
+    {
+      "implementation_id": "jtoutrun",
+      "platform_id": "pocket"
+    }
+  ],
+  "implementation_system": [
+    {
+      "implementation_id": "jtoutrun",
+      "system_id": "sega-outrun"
+    }
+  ]
+}

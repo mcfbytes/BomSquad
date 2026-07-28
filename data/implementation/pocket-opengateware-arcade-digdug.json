@@ -1,0 +1,40 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "pocket-opengateware-arcade-digdug",
+      "name": "Dig Dug (Analogue Pocket, opengateware)",
+      "kind_id": "fpga_hdl",
+      "project_id": "opengateware",
+      "repo_url": "https://github.com/opengateware/arcade-digdug",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 33 HDL source files (1 systemverilog, 32 verilog). There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: this openFPGA core ships 5 MRA files of its own; 1 setnames resolved exactly to a MAME 0.288 machine and 4 through MAME's own cloneof relation, giving 1 distinct machine_id rows. License: https://github.com/opengateware/arcade-digdug/blob/master/rtl/DIGDUG_CORES.v carries the tag SPDX-License-Identifier: GPL-3.0-or-later -- read from the repository, not inferred; https://github.com/opengateware/arcade-digdug/blob/master/LICENSE is the matching licence text. hdl_language_id: 32 of 33 HDL files are verilog (1 systemverilog, 32 verilog), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify. Core identity read from the openFPGA manifest pkg/pocket/Cores/boogermann.digdug/core.json in the repository, which declares core identifier boogermann.digdug."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "pocket-opengateware-arcade-digdug",
+      "provider_id": "tv80",
+      "note": "TV80 Z80 core vendored at modules/TV80/tv80_core.v"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "pocket-opengateware-arcade-digdug",
+      "machine_id": "digdug"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "pocket-opengateware-arcade-digdug",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "pocket-opengateware-arcade-digdug",
+      "platform_id": "pocket"
+    }
+  ]
+}

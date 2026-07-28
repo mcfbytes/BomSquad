@@ -1,0 +1,33 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mist-gameboy",
+      "name": "Game Boy (MiST)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mist-devel",
+      "repo_url": "https://github.com/mist-devel/gameboy",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 18 HDL source files (2 systemverilog, 10 verilog, 6 vhdl). There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: hand-mapped, not MRA-setname-derived -- a MiST console core ships no MRA file. The core reimplements the Nintendo Game Boy, giving machine_id gameboy, each checked against extract/machine.json. License: the grant in https://github.com/mist-devel/gameboy/blob/master/gb.v offers the work under the GNU General Public License \"either version 3 of the License, or (at your option) any later version\" (the repository has no LICENSE file) -- hence GPL-3.0-or-later. hdl_language_id: no single HDL family reaches 90% of the 18 source files (2 systemverilog, 10 verilog, 6 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify. Platform: the compiled core is distributed through mist-devel/mist-binaries, whose cores/ directory is the MiST core set."
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "mist-gameboy",
+      "machine_id": "gameboy"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mist-gameboy",
+      "platform_id": "mist"
+    }
+  ],
+  "implementation_system": [
+    {
+      "implementation_id": "mist-gameboy",
+      "system_id": "nintendo-game-boy"
+    }
+  ]
+}

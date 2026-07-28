@@ -1,0 +1,44 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "pocket-opengateware-arcade-gberet",
+      "name": "Green Beret (Analogue Pocket, opengateware)",
+      "kind_id": "fpga_hdl",
+      "project_id": "opengateware",
+      "repo_url": "https://github.com/opengateware/arcade-gberet",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 41 HDL source files (6 systemverilog, 20 verilog, 15 vhdl). There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: this openFPGA core ships 3 MRA files of its own; 2 setnames resolved exactly to a MAME 0.288 machine and 1 through MAME's own cloneof relation, giving 2 distinct machine_id rows. License: https://github.com/opengateware/arcade-gberet/blob/master/rtl/DPRAMs.v carries the tag SPDX-License-Identifier: GPL-3.0-or-later -- read from the repository, not inferred; https://github.com/opengateware/arcade-gberet/blob/master/LICENSE is the matching licence text. hdl_language_id: no single HDL family reaches 90% of the 41 source files (6 systemverilog, 20 verilog, 15 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify. Core identity read from the openFPGA manifest pkg/pocket/Cores/boogermann.gberet/core.json in the repository, which declares core identifier boogermann.gberet."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "pocket-opengateware-arcade-gberet",
+      "provider_id": "t80",
+      "note": "T80 Z80 core vendored at modules/cpu-t80/T80.vhd"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "pocket-opengateware-arcade-gberet",
+      "machine_id": "gberet"
+    },
+    {
+      "implementation_id": "pocket-opengateware-arcade-gberet",
+      "machine_id": "mrgoemon"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "pocket-opengateware-arcade-gberet",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "pocket-opengateware-arcade-gberet",
+      "platform_id": "pocket"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "pocket-nullobject-tecmo",
+      "name": "Tecmo (Analogue Pocket, nullobject)",
+      "kind_id": "fpga_hdl",
+      "project_id": "nullobject",
+      "repo_url": "https://github.com/nullobject/openfpga-tecmo",
+      "hdl_language_id": "mixed",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 58 HDL source files (47 verilog, 11 vhdl). There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: this openFPGA core ships 7 MRA files of its own; 3 setnames resolved exactly to a MAME 0.288 machine and 4 through MAME's own cloneof relation, giving 3 distinct machine_id rows. license_id omitted: the repository has no LICENSE, LICENCE or COPYING file at its root and no licence grant was found in the HDL headers read (quartus/apf/apf_top.v, quartus/apf/common.v, quartus/apf/io_bridge_peripheral.v). hdl_language_id: no single HDL family reaches 90% of the 58 source files (47 verilog, 11 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify. Core identity read from the openFPGA manifest dist/Cores/nullobject.tecmo/core.json in the repository, which declares core identifier nullobject.tecmo."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "pocket-nullobject-tecmo",
+      "provider_id": "jt5205",
+      "note": "JT5205 MSM5205 core vendored at quartus/jt5205/jt5205.v"
+    },
+    {
+      "consumer_id": "pocket-nullobject-tecmo",
+      "provider_id": "jtopl",
+      "note": "JTOPL YM3526/YM3812 core vendored at quartus/jtopl/jtopl.v"
+    },
+    {
+      "consumer_id": "pocket-nullobject-tecmo",
+      "provider_id": "t80",
+      "note": "T80 Z80 core vendored at quartus/t80/T80.vhd"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "pocket-nullobject-tecmo",
+      "machine_id": "gemini"
+    },
+    {
+      "implementation_id": "pocket-nullobject-tecmo",
+      "machine_id": "rygar"
+    },
+    {
+      "implementation_id": "pocket-nullobject-tecmo",
+      "machine_id": "silkworm"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "pocket-nullobject-tecmo",
+      "platform_id": "pocket"
+    }
+  ]
+}

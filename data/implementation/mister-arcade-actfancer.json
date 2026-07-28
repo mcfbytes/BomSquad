@@ -1,0 +1,85 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mister-arcade-actfancer",
+      "name": "Act Fancer (MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/Arcade-ActFancer_MiSTer",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 455 HDL source files (22 systemverilog, 279 verilog, 154 vhdl) alongside 1 prebuilt .rbf binaries. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: 4 MRA files in the repository's releases/ directory carry a <setname>; 1 resolved exactly to a MAME 0.288 machine and 3 through MAME's own cloneof relation to the parent set that survives extract/machine.json's parents-only filter, giving 1 distinct machine_id rows. License: https://github.com/MiSTer-devel/Arcade-ActFancer_MiSTer/blob/master/ActFancer.sv carries the tag SPDX-License-Identifier: GPL-3.0-or-later, and https://github.com/MiSTer-devel/Arcade-ActFancer_MiSTer/blob/master/LICENSE is the verbatim GNU GPL version 3 text, which agrees -- read from the repository, not inferred. hdl_language_id: no single HDL family reaches 90% of the 455 source files (22 systemverilog, 279 verilog, 154 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "mister-arcade-actfancer",
+      "provider_id": "jt12",
+      "note": "JT12 YM2612/YM2203 core vendored at rtl/sound/jt03/jt12_top.v"
+    },
+    {
+      "consumer_id": "mister-arcade-actfancer",
+      "provider_id": "jt49",
+      "note": "JT49 AY-3-8910 core vendored at rtl/sound/jt03/jt49.v"
+    },
+    {
+      "consumer_id": "mister-arcade-actfancer",
+      "provider_id": "jt6295",
+      "note": "JT6295 MSM6295 core vendored at rtl/sound/jt6295/jt6295.v"
+    },
+    {
+      "consumer_id": "mister-arcade-actfancer",
+      "provider_id": "jt65c02",
+      "note": "JT65C02 core vendored at rtl/sound/jt65c02/jt65c02.v"
+    },
+    {
+      "consumer_id": "mister-arcade-actfancer",
+      "provider_id": "jtframe",
+      "note": "JTFRAME framework vendored at jtframe/LICENSE"
+    },
+    {
+      "consumer_id": "mister-arcade-actfancer",
+      "provider_id": "jtopl",
+      "note": "JTOPL YM3526/YM3812 core vendored at rtl/sound/jtopl/jtopl.v"
+    },
+    {
+      "consumer_id": "mister-arcade-actfancer",
+      "provider_id": "t48",
+      "note": "T48 MCS-48 core vendored at jtframe/hdl/cpu/t48/t48_core.vhd"
+    },
+    {
+      "consumer_id": "mister-arcade-actfancer",
+      "provider_id": "t65",
+      "note": "T65 6502 core vendored at jtframe/hdl/cpu/t65/T65.vhd"
+    },
+    {
+      "consumer_id": "mister-arcade-actfancer",
+      "provider_id": "t80",
+      "note": "T80 Z80 core vendored at jtframe/hdl/cpu/t80/T80.vhd"
+    },
+    {
+      "consumer_id": "mister-arcade-actfancer",
+      "provider_id": "tv80",
+      "note": "TV80 Z80 core vendored at jtframe/hdl/cpu/tv80/tv80_core.v"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "mister-arcade-actfancer",
+      "machine_id": "actfancr"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mister-arcade-actfancer",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mister-arcade-actfancer",
+      "platform_id": "mister"
+    }
+  ]
+}

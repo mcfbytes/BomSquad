@@ -1,0 +1,85 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mister-arcade-chinagate",
+      "name": "China Gate (MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/Arcade-ChinaGate_MiSTer",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 497 HDL source files (21 systemverilog, 322 verilog, 154 vhdl) alongside 1 prebuilt .rbf binaries. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: 2 MRA files in the repository's releases/ directory carry a <setname>; 1 resolved exactly to a MAME 0.288 machine and 1 through MAME's own cloneof relation to the parent set that survives extract/machine.json's parents-only filter, giving 1 distinct machine_id rows. License: https://github.com/MiSTer-devel/Arcade-ChinaGate_MiSTer/blob/main/ChinaGate.sv carries the tag SPDX-License-Identifier: GPL-3.0-or-later (the repository has no LICENSE file, so the tag is the whole statement) -- read from the repository, not inferred. hdl_language_id: no single HDL family reaches 90% of the 497 source files (21 systemverilog, 322 verilog, 154 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "mister-arcade-chinagate",
+      "provider_id": "jt12",
+      "note": "JT12 YM2612/YM2203 core vendored at rtl/sound/jt12/jt12_top.v"
+    },
+    {
+      "consumer_id": "mister-arcade-chinagate",
+      "provider_id": "jt49",
+      "note": "JT49 AY-3-8910 core vendored at rtl/sound/jt12/jt49/hdl/jt49.v"
+    },
+    {
+      "consumer_id": "mister-arcade-chinagate",
+      "provider_id": "jt51",
+      "note": "JT51 YM2151 core vendored at rtl/sound/jt51/jt51.v"
+    },
+    {
+      "consumer_id": "mister-arcade-chinagate",
+      "provider_id": "jt5205",
+      "note": "JT5205 MSM5205 core vendored at rtl/sound/jt5205/jt5205.v"
+    },
+    {
+      "consumer_id": "mister-arcade-chinagate",
+      "provider_id": "jt6295",
+      "note": "JT6295 MSM6295 core vendored at rtl/sound/jt6295/jt6295.v"
+    },
+    {
+      "consumer_id": "mister-arcade-chinagate",
+      "provider_id": "jtframe",
+      "note": "JTFRAME framework vendored at jtframe/LICENSE"
+    },
+    {
+      "consumer_id": "mister-arcade-chinagate",
+      "provider_id": "t48",
+      "note": "T48 MCS-48 core vendored at jtframe/hdl/cpu/t48/t48_core.vhd"
+    },
+    {
+      "consumer_id": "mister-arcade-chinagate",
+      "provider_id": "t65",
+      "note": "T65 6502 core vendored at jtframe/hdl/cpu/t65/T65.vhd"
+    },
+    {
+      "consumer_id": "mister-arcade-chinagate",
+      "provider_id": "t80",
+      "note": "T80 Z80 core vendored at jtframe/hdl/cpu/t80/T80.vhd"
+    },
+    {
+      "consumer_id": "mister-arcade-chinagate",
+      "provider_id": "tv80",
+      "note": "TV80 Z80 core vendored at jtframe/hdl/cpu/tv80/tv80_core.v"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "mister-arcade-chinagate",
+      "machine_id": "chinagat"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mister-arcade-chinagate",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mister-arcade-chinagate",
+      "platform_id": "mister"
+    }
+  ]
+}

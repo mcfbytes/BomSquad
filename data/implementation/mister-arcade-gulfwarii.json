@@ -1,0 +1,49 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mister-arcade-gulfwarii",
+      "name": "Gulf War II (MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/Arcade-GulfWarII_MiSTer",
+      "hdl_language_id": "mixed",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 80 HDL source files (50 systemverilog, 9 verilog, 21 vhdl) alongside 1 prebuilt .rbf binaries. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: 2 MRA files in the repository's releases/ directory carry a <setname>; 1 resolved exactly to a MAME 0.288 machine and 1 through MAME's own cloneof relation to the parent set that survives extract/machine.json's parents-only filter, giving 1 distinct machine_id rows. license_id omitted: the two license statements in the repository disagree. https://github.com/MiSTer-devel/Arcade-GulfWarII_MiSTer/blob/main/LICENSE is the verbatim GNU GPL version 3 text, but the grant in https://github.com/MiSTer-devel/Arcade-GulfWarII_MiSTer/blob/main/Arcade-GulfWarII.sv offers the work under GPL version 2 or later. Either reading is arguable and neither is a fact the repository states, so no SPDX id is asserted. hdl_language_id: no single HDL family reaches 90% of the 80 source files (50 systemverilog, 9 verilog, 21 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "mister-arcade-gulfwarii",
+      "provider_id": "fx68k",
+      "note": "FX68K 68000 core vendored at rtl/modules/fx68k/hdl/fx68k.sv"
+    },
+    {
+      "consumer_id": "mister-arcade-gulfwarii",
+      "provider_id": "t80",
+      "note": "T80 Z80 core vendored at rtl/modules/T80/T80.vhd"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "mister-arcade-gulfwarii",
+      "machine_id": "gulfwar2"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mister-arcade-gulfwarii",
+      "path": "Arcade-GulfWarII.sv",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "mister-arcade-gulfwarii",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mister-arcade-gulfwarii",
+      "platform_id": "mister"
+    }
+  ]
+}

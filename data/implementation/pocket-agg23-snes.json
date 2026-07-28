@@ -1,0 +1,38 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "pocket-agg23-snes",
+      "name": "SNES (Analogue Pocket, agg23)",
+      "kind_id": "fpga_hdl",
+      "project_id": "agg23",
+      "repo_url": "https://github.com/agg23/openfpga-SNES",
+      "hdl_language_id": "mixed",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 103 HDL source files (26 systemverilog, 21 verilog, 56 vhdl). There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: hand-mapped, not setname-derived -- this core ships no MRA file. It reimplements the Super Nintendo, giving machine_id snes, each checked against extract/machine.json. license_id omitted: https://github.com/agg23/openfpga-SNES/blob/master/LICENSE is the verbatim GNU GPL version 3 text, but the repository states no version scope, and GPL's only-vs-or-later distinction comes from the grant, not the licence text. hdl_language_id: no single HDL family reaches 90% of the 103 source files (26 systemverilog, 21 verilog, 56 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify. Core identity read from the openFPGA manifest pkg/pocket/Cores/agg23.SNES/core.json in the repository, which declares core identifier agg23.SNES."
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "pocket-agg23-snes",
+      "machine_id": "snes"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "pocket-agg23-snes",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "pocket-agg23-snes",
+      "platform_id": "pocket"
+    }
+  ],
+  "implementation_system": [
+    {
+      "implementation_id": "pocket-agg23-snes",
+      "system_id": "nintendo-snes"
+    }
+  ]
+}

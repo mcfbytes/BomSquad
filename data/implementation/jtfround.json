@@ -1,0 +1,68 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtfround",
+      "name": "JTFROUND",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtcores",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the HDL lives in the jotego/jtcores monorepo at cores/fround/, 14 source files. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id, license_id and implementation_path rows is how that fact is stated here. License: https://github.com/jotego/jtcores/blob/master/LICENSE is the verbatim GPLv3 text, and the per-file grant in https://github.com/jotego/jtcores/blob/master/cores/fround/hdl/jt00778x.v reads \"either version 3 of the License, or (at your option) any later version\" -- hence GPL-3.0-or-later. Machine mapping: 2 MRA files in jotego/jtbin's mra/ directory name <rbf>jtfround</rbf>; 1 setnames resolved exactly to a MAME 0.288 machine and 1 through MAME's own cloneof relation to the parent that survives extract/machine.json's parents-only filter, giving 1 distinct machine_id rows. hdl_language_id: 14 of 14 HDL files are verilog (14 verilog), excluding the shared framework directory. accuracy_id omitted: jotego's README claims faithfulness in prose but states no timing-fidelity level this build could check against data/lookup/accuracy_level.json. cores/fround/cfg/files.yaml also pulls in jt007232, jt053260, which have no implementation record yet, so no dependency row is written for them."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jtfround",
+      "provider_id": "jt51",
+      "note": "JT51 YM2151 FM core, declared in cores/fround/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtfround",
+      "provider_id": "jt7759",
+      "note": "JT7759 uPD7759 ADPCM core, declared in cores/fround/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtfround",
+      "provider_id": "jtframe",
+      "note": "JTFRAME framework, declared in cores/fround/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtfround",
+      "provider_id": "jttmnt",
+      "note": "shares HDL with the jttmnt core, declared in cores/fround/cfg/files.yaml"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "jtfround",
+      "machine_id": "fround"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jtfround",
+      "path": "cores/fround/hdl"
+    },
+    {
+      "implementation_id": "jtfround",
+      "path": "cores/fround/hdl/jtfround_game.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtfround",
+      "platform_id": "mist"
+    },
+    {
+      "implementation_id": "jtfround",
+      "platform_id": "mister"
+    },
+    {
+      "implementation_id": "jtfround",
+      "platform_id": "pocket"
+    }
+  ]
+}

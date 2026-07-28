@@ -1,0 +1,63 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jttrack",
+      "name": "JTTRACK",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtcores",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the HDL lives in the jotego/jtcores monorepo at cores/track/, 6 source files. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id, license_id and implementation_path rows is how that fact is stated here. License: https://github.com/jotego/jtcores/blob/master/LICENSE is the verbatim GPLv3 text, and the per-file grant in https://github.com/jotego/jtcores/blob/master/cores/track/hdl/jttrack_game.v reads \"either version 3 of the License, or (at your option) any later version\" -- hence GPL-3.0-or-later. Machine mapping: 4 MRA files in jotego/jtbin's mra/ directory name <rbf>jttrack</rbf>; 1 setnames resolved exactly to a MAME 0.288 machine and 3 through MAME's own cloneof relation to the parent that survives extract/machine.json's parents-only filter, giving 1 distinct machine_id rows. hdl_language_id: 6 of 6 HDL files are verilog (6 verilog), excluding the shared framework directory. accuracy_id omitted: jotego's README claims faithfulness in prose but states no timing-fidelity level this build could check against data/lookup/accuracy_level.json."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jttrack",
+      "provider_id": "jtkicker",
+      "note": "shares HDL with the jtkicker core, declared in cores/track/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jttrack",
+      "provider_id": "jtsbaskt",
+      "note": "shares HDL with the jtsbaskt core, declared in cores/track/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jttrack",
+      "provider_id": "jtyiear",
+      "note": "shares HDL with the jtyiear core, declared in cores/track/cfg/files.yaml"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "jttrack",
+      "machine_id": "trackfld"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jttrack",
+      "path": "cores/track/hdl"
+    },
+    {
+      "implementation_id": "jttrack",
+      "path": "cores/track/hdl/jttrack_game.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jttrack",
+      "platform_id": "mist"
+    },
+    {
+      "implementation_id": "jttrack",
+      "platform_id": "mister"
+    },
+    {
+      "implementation_id": "jttrack",
+      "platform_id": "pocket"
+    }
+  ]
+}

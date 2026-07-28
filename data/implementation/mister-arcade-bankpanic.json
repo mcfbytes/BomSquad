@@ -1,0 +1,49 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mister-arcade-bankpanic",
+      "name": "Bank Panic (MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/Arcade-BankPanic_MiSTer",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-2.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 16 HDL source files (1 systemverilog, 14 verilog, 1 vhdl) alongside 3 prebuilt .rbf binaries. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: 2 MRA files in the repository's releases/ directory carry a <setname>; 2 resolved exactly to a MAME 0.288 machine and 0 through MAME's own cloneof relation to the parent set that survives extract/machine.json's parents-only filter, giving 2 distinct machine_id rows. License: https://github.com/MiSTer-devel/Arcade-BankPanic_MiSTer/blob/master/LICENSE is the verbatim GNU GPL version 2 text, and the grant in https://github.com/MiSTer-devel/Arcade-BankPanic_MiSTer/blob/master/Arcade-BankPanic.sv reads \"either version 2 of the License, or (at your option) any later version\" -- hence GPL-2.0-or-later. hdl_language_id: no single HDL family reaches 90% of the 16 source files (1 systemverilog, 14 verilog, 1 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "mister-arcade-bankpanic",
+      "provider_id": "tv80",
+      "note": "TV80 Z80 core vendored at rtl/tv80/tv80_core.v"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "mister-arcade-bankpanic",
+      "machine_id": "bankp"
+    },
+    {
+      "implementation_id": "mister-arcade-bankpanic",
+      "machine_id": "combh"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mister-arcade-bankpanic",
+      "path": "Arcade-BankPanic.sv",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "mister-arcade-bankpanic",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mister-arcade-bankpanic",
+      "platform_id": "mister"
+    }
+  ]
+}

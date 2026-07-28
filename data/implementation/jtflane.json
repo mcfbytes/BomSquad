@@ -1,0 +1,58 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "jtflane",
+      "name": "JTFLANE",
+      "kind_id": "fpga_hdl",
+      "project_id": "jotego",
+      "repo_url": "https://github.com/jotego/jtcores",
+      "hdl_language_id": "verilog",
+      "license_id": "GPL-3.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the HDL lives in the jotego/jtcores monorepo at cores/flane/, 2 source files. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id, license_id and implementation_path rows is how that fact is stated here. License: https://github.com/jotego/jtcores/blob/master/LICENSE is the verbatim GPLv3 text, and the per-file grant in https://github.com/jotego/jtcores/blob/master/cores/flane/hdl/jtflane_game.v reads \"either version 3 of the License, or (at your option) any later version\" -- hence GPL-3.0-or-later. Machine mapping: 1 MRA files in jotego/jtbin's mra/ directory name <rbf>jtflane</rbf>; 1 setnames resolved exactly to a MAME 0.288 machine and 0 through MAME's own cloneof relation to the parent that survives extract/machine.json's parents-only filter, giving 1 distinct machine_id rows. hdl_language_id: 2 of 2 HDL files are verilog (2 verilog), excluding the shared framework directory. accuracy_id omitted: jotego's README claims faithfulness in prose but states no timing-fidelity level this build could check against data/lookup/accuracy_level.json. cores/flane/cfg/files.yaml also pulls in jt007232, which have no implementation record yet, so no dependency row is written for them. Dependency deliberately not recorded: cores/flane/cfg/files.yaml has a contra: entry, but it pulls only jt051733.v -- jotego's model of the Konami 051733 protection/arithmetic custom chip (header Date: 4-10-2020) -- and the generic helper divfunc.v. Neither is a Contra core module, so no implementation_dependency row is written; the shared thing is a custom-chip model that has no implementation record of its own."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "jtflane",
+      "provider_id": "jtframe",
+      "note": "JTFRAME framework, declared in cores/flane/cfg/files.yaml"
+    },
+    {
+      "consumer_id": "jtflane",
+      "provider_id": "jtlabrun",
+      "note": "shares HDL with the jtlabrun core, declared in cores/flane/cfg/files.yaml"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "jtflane",
+      "machine_id": "fastlane"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "jtflane",
+      "path": "cores/flane/hdl"
+    },
+    {
+      "implementation_id": "jtflane",
+      "path": "cores/flane/hdl/jtflane_game.v",
+      "is_top": 1
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "jtflane",
+      "platform_id": "mist"
+    },
+    {
+      "implementation_id": "jtflane",
+      "platform_id": "mister"
+    },
+    {
+      "implementation_id": "jtflane",
+      "platform_id": "pocket"
+    }
+  ]
+}

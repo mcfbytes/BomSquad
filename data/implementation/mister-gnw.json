@@ -1,0 +1,32 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mister-gnw",
+      "name": "Gn W (MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/GnW_MiSTer",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-2.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 9 HDL source files (3 systemverilog, 6 verilog) alongside 3 prebuilt .rbf binaries. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machines unmapped: as with GameAndWatch_MiSTer, MAME models Game & Watch titles individually and no single machine_id describes the core. License: https://github.com/MiSTer-devel/GnW_MiSTer/blob/master/LICENSE is the verbatim GNU GPL version 2 text, and the grant in https://github.com/MiSTer-devel/GnW_MiSTer/blob/master/GnW.sv reads \"either version 2 of the License, or (at your option) any later version\" -- hence GPL-2.0-or-later. hdl_language_id: no single HDL family reaches 90% of the 9 source files (3 systemverilog, 6 verilog), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify."
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mister-gnw",
+      "path": "GnW.sv",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "mister-gnw",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mister-gnw",
+      "platform_id": "mister"
+    }
+  ]
+}

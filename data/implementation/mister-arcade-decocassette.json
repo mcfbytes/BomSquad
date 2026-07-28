@@ -1,0 +1,191 @@
+{
+  "implementation": [
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "name": "DECO Cassette (MiSTer)",
+      "kind_id": "fpga_hdl",
+      "project_id": "mister-devel",
+      "repo_url": "https://github.com/MiSTer-devel/Arcade-DECOCassette_MiSTer",
+      "hdl_language_id": "mixed",
+      "license_id": "GPL-2.0-or-later",
+      "last_reviewed": "2026-07-28",
+      "notes": "Source availability (T5.4): open -- the repository carries 120 HDL source files (3 systemverilog, 59 verilog, 58 vhdl) alongside 2 prebuilt .rbf binaries. There is no open_source column in the delivered schema (data-model.md §1.9 deleted the proposed core table together with its flags); the presence of hdl_language_id and of implementation_path rows is how that fact is stated here. Machine mapping: 55 MRA files in the repository's releases/ directory carry a <setname>; 37 resolved exactly to a MAME 0.288 machine and 18 through MAME's own cloneof relation to the parent set that survives extract/machine.json's parents-only filter, giving 35 distinct machine_id rows. License: the repository has no LICENSE, COPYING or COPYRIGHT file; the grant lives in the source header at https://github.com/MiSTer-devel/Arcade-DECOCassette_MiSTer/blob/main/Arcade-DECOCassette.sv, which offers the work under the GNU General Public License \"either version 2 of the License, or (at your option) any later version\" -- hence GPL-2.0-or-later. hdl_language_id: no single HDL family reaches 90% of the 120 source files (3 systemverilog, 59 verilog, 58 vhdl), excluding the shared framework directory. accuracy_id omitted: the repository makes no timing-fidelity claim this build could verify."
+    }
+  ],
+  "implementation_dependency": [
+    {
+      "consumer_id": "mister-arcade-decocassette",
+      "provider_id": "jt49",
+      "note": "JT49 AY-3-8910 core vendored at rtl/sound/jt49/hdl/jt49.v"
+    },
+    {
+      "consumer_id": "mister-arcade-decocassette",
+      "provider_id": "t48",
+      "note": "T48 MCS-48 core vendored at rtl/cpu/T48/t48_core.vhd"
+    },
+    {
+      "consumer_id": "mister-arcade-decocassette",
+      "provider_id": "t65",
+      "note": "T65 6502 core vendored at rtl/cpu/T65/T65.vhd"
+    }
+  ],
+  "implementation_machine": [
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cadanglr"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "castfant"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cbdash"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cbtime"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cburnrub"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cdiscon1"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cdsteljn"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cfboy0a1"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cfghtice"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cflyball"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cgraplop"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "chwy"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "clapapa"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "clocknch"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cluckypo"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cmanhat"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cmissnx"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cnebula"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cnightst"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cocean1a"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "coozumou"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cppicf"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cprobowl"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cprogolf"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cpsoccer"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cptennis"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cscrtry"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "csdtenis"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cskater"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "csuperas"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "cterrani"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "ctornado"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "ctower"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "ctsttape"
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "machine_id": "decodark"
+    }
+  ],
+  "implementation_path": [
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "path": "Arcade-DECOCassette.sv",
+      "is_top": 1
+    },
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "path": "rtl"
+    }
+  ],
+  "implementation_platform": [
+    {
+      "implementation_id": "mister-arcade-decocassette",
+      "platform_id": "mister"
+    }
+  ]
+}
