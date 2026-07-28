@@ -83,6 +83,31 @@ jobs:
       - run: npm run lint
       - run: npm run format
 
+  # TASKS T3.8. system16.com is reference-only by its owner's decision, not ours: its
+  # robots.txt disallows this user agent outright and its origin refuses non-browser
+  # clients. A curator may read a page and cite it as a `source_url` on a row they author by
+  # hand; no code here may fetch it. This job is what makes that a property of the
+  # repository rather than an intention, and it runs on every change — not behind a
+  # paths-filter — because the rule is about the whole tree and a scraper can be added
+  # anywhere in it. It reads only the working copy and takes a couple of seconds.
+  #
+  # The other half of the rule is `reconcile/http.ts`, which refuses the same host at run
+  # time from the same `config/reconcile.json` declaration. Neither is sufficient alone: a
+  # static scan cannot see a hostname assembled at run time, and a run-time check cannot see
+  # a curl in a shell script.
+  source-guard:
+    name: Source guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: No fetch of a reference-only host
+        run: npm run reconcile:guard --workspace @bomsquad/pipeline
+
   pipeline:
     name: Pipeline
     needs: changes
@@ -212,7 +237,7 @@ jobs:
   ci:
     name: CI
     if: always()
-    needs: [changes, lint, pipeline, extract, build, site]
+    needs: [changes, lint, source-guard, pipeline, extract, build, site]
     runs-on: ubuntu-latest
     steps:
       - name: Verify required jobs succeeded
@@ -220,6 +245,7 @@ jobs:
           declare -A results=(
             [changes]="${{ needs.changes.result }}"
             [lint]="${{ needs.lint.result }}"
+            [source-guard]="${{ needs.source-guard.result }}"
             [pipeline]="${{ needs.pipeline.result }}"
             [extract]="${{ needs.extract.result }}"
             [build]="${{ needs.build.result }}"

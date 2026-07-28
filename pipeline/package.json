@@ -20,7 +20,9 @@
     "mame:bump-pin": "tsx src/cli.ts mame:bump-pin",
     "mame:refresh-summary": "tsx src/cli.ts mame:refresh-summary",
     "build:db": "tsx src/cli.ts build",
-    "prospector": "tsx src/cli.ts prospector"
+    "prospector": "tsx src/cli.ts prospector",
+    "reconcile": "tsx src/cli.ts reconcile",
+    "reconcile:guard": "tsx src/cli.ts reconcile:guard"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",

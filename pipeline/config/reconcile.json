@@ -1,0 +1,217 @@
+{
+  "version": "1",
+  "user_agent": "BomSquadReconcile/1.0 (+https://github.com/mcfbytes/BomSquad)",
+  "rate_limit_ms": 300,
+  "max_response_bytes": 33554432,
+  "forbidden_hosts": {
+    "system16.com": "robots.txt sets 'User-agent: ClaudeBot -> Disallow: /' and Content-Signal 'ai-train=no, use=reference'; the origin also 403s non-browser clients behind a Cloudflare challenge. Reference-only, human-directed: a curator may read a page and cite it as a source_url on a row they author by hand. PLAN.md section 4, TASKS.md T3.8."
+  },
+  "witnesses": {
+    "mame_source": {
+      "enabled": true,
+      "raw_base_url": "https://raw.githubusercontent.com/mamedev/mame",
+      "blob_base_url": "https://github.com/mamedev/mame/blob",
+      "source_root": "src/mame"
+    },
+    "wikidata": {
+      "enabled": true,
+      "endpoint": "https://query.wikidata.org/sparql",
+      "entity_base_url": "https://www.wikidata.org/wiki",
+      "properties": {
+        "P880": "CPU",
+        "P2560": "GPU"
+      }
+    },
+    "wikipedia": {
+      "enabled": true,
+      "api_url": "https://en.wikipedia.org/w/api.php",
+      "permalink_base_url": "https://en.wikipedia.org/w/index.php?oldid=",
+      "titles_per_request": 20,
+      "infobox_fields": [
+        "cpu",
+        "sound",
+        "sound_chip",
+        "soundchip",
+        "graphics",
+        "gpu",
+        "coprocessor"
+      ],
+      "section_headings": [
+        "technical specifications",
+        "specifications",
+        "hardware",
+        "technical information",
+        "system specifications"
+      ]
+    },
+    "jtcores": {
+      "enabled": true,
+      "repo": "jotego/jtcores",
+      "commit": "f8baf8a2995973a3796d7151565242b27ecc7212",
+      "tree_api_url": "https://api.github.com/repos/jotego/jtcores/git/trees",
+      "raw_base_url": "https://raw.githubusercontent.com/jotego/jtcores",
+      "blob_base_url": "https://github.com/jotego/jtcores/blob",
+      "hdl_suffixes": ["_game.v", "_main.v", "_snd.v", "_sound.v"],
+      "config_files": ["cfg/files.yaml", "cfg/common.yaml"]
+    }
+  },
+  "recognition": {
+    "context_pattern": "\\b(custom|asic|gate ?array|[0-9a-z]ic\\b|ic[0-9]|QFP|PGA|PLCC|SDIP|DIP-?[0-9]|SOP|chip|processor|CPU|sound)\\b",
+    "vendor_prefixes": [
+      "AMD",
+      "ATMEL",
+      "CAPCOM",
+      "EPSON",
+      "FUJITSU",
+      "GENERALINSTRUMENT",
+      "HITACHI",
+      "INTEL",
+      "IREM",
+      "KONAMI",
+      "MITSUBISHI",
+      "MOTOROLA",
+      "NAMCO",
+      "NATIONALSEMICONDUCTOR",
+      "NEC",
+      "NINTENDO",
+      "OKI",
+      "OKIELECTRIC",
+      "RICOH",
+      "ROCKWELL",
+      "SANYO",
+      "SEGA",
+      "SEIKO",
+      "SHARP",
+      "SIGNETICS",
+      "SNK",
+      "SONY",
+      "SYNERTEK",
+      "TAITO",
+      "TEXASINSTRUMENTS",
+      "TOSHIBA",
+      "YAMAHA",
+      "ZILOG"
+    ],
+    "patterns": {
+      "capcom-cps": {
+        "pattern": "CPS-[AB](?:-[0-9]{2})?",
+        "requires_context": true,
+        "note": "Capcom's CPS-A and CPS-B gate arrays. MAME models both inside capcom/cps1.cpp driver code rather than as devices, so -listxml never mentions them."
+      },
+      "capcom-dl": {
+        "pattern": "DL-[0-9]{4}",
+        "requires_context": true,
+        "note": "Capcom custom part numbering (DL-0921, DL-1425, ...)."
+      },
+      "irem-ga": {
+        "pattern": "GA[0-9]{2}",
+        "requires_context": true,
+        "note": "Irem custom gate arrays (GA20, GA23, GA30, ...)."
+      },
+      "konami-k": {
+        "pattern": "K0[0-9]{5}",
+        "requires_context": true,
+        "note": "Konami custom ICs (K052109, K053260, ...)."
+      },
+      "namco-cus": {
+        "pattern": "CUS[0-9]{2,3}",
+        "requires_context": true,
+        "note": "Namco custom ICs in their CUSnn form."
+      },
+      "nec-upd": {
+        "pattern": "[uµ]PD[0-9]{3,5}[A-Z]{0,2}",
+        "requires_context": true,
+        "note": "NEC uPD parts, which the ASCII PCB diagrams write with a plain 'u'."
+      },
+      "seta-x1": {
+        "pattern": "X1-[0-9]{3}[A-Z]?",
+        "requires_context": true,
+        "note": "Seta custom ICs."
+      },
+      "sega-custom": {
+        "pattern": "315-[0-9]{4}[A-Z]?",
+        "requires_context": true,
+        "note": "Sega's 315-xxxx custom part numbering, the single richest thing in the Guru PCB notes."
+      },
+      "snk-neo": {
+        "pattern": "(?:NEO-[A-Z0-9]{2,6}|LSPC[0-9]?-[A-Z][0-9]|PRO-[A-Z0-9]{2,4})",
+        "requires_context": true,
+        "note": "SNK Neo Geo custom ICs."
+      },
+      "taito-tc": {
+        "pattern": "TC[0-9]{4}[A-Z]{2,4}",
+        "requires_context": true,
+        "note": "Taito custom ICs (TC0100SCN, TC0140SYT, ...)."
+      }
+    },
+    "part_aliases": {
+      "6295": "msm6295",
+      "68000": "m68000",
+      "68010": "m68010",
+      "68020": "m68020",
+      "6809": "m6809",
+      "M6295": "msm6295",
+      "M68K": "m68000",
+      "MC68K": "m68000",
+      "MSM5205": "msm5205",
+      "OKI6295": "msm6295",
+      "OKIM6295": "msm6295",
+      "OKIMSM6295": "msm6295",
+      "T80": "z80",
+      "YM2151OPM": "ym2151",
+      "Z80A": "z80",
+      "Z80B": "z80",
+      "Z84C00": "z80"
+    },
+    "ignored_parts": [
+      "CPU",
+      "DIP",
+      "GAL16V8",
+      "PAL16L8",
+      "PAL16R4",
+      "PAL16R6",
+      "PAL16R8",
+      "PGA",
+      "PLCC",
+      "QFP",
+      "RAM",
+      "ROM",
+      "SOP",
+      "SRAM",
+      "VRAM"
+    ],
+    "min_catalog_literal_length": 3
+  },
+  "guard": {
+    "skip_directories": [".angular", ".cache", ".git", "coverage", "dist", "node_modules"],
+    "skip_files": ["package-lock.json"],
+    "max_file_bytes": 16777216,
+    "row_file_roots": ["data"],
+    "allowed_row_keys": ["source_url", "url", "notes", "reason", "description", "note"],
+    "prose_extensions": [".md"],
+    "fetch_verbs": [
+      "axios",
+      "curl",
+      "fetch",
+      "got",
+      "http.get",
+      "http.request",
+      "httpclient",
+      "https.get",
+      "https.request",
+      "invoke-webrequest",
+      "node-fetch",
+      "page.goto",
+      "playwright",
+      "puppeteer",
+      "requests.get",
+      "scrapy",
+      "undici",
+      "urllib",
+      "webclient",
+      "wget",
+      "xmlhttprequest"
+    ],
+    "fetch_context_lines": 3
+  }
+}

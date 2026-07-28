@@ -1,0 +1,108 @@
+{
+  "version": "1",
+  "systems": {
+    "capcom-cps1": { "wikidata": "Q1034233", "wikipedia": "CP System", "jtcores": ["cps1"] },
+    "capcom-cps1-5": { "jtcores": ["cps15"] },
+    "capcom-cps2": { "wikidata": "Q2981666", "wikipedia": "CP System II", "jtcores": ["cps2"] },
+    "capcom-cps3": { "wikidata": "Q2634041", "wikipedia": "CP System III" },
+    "cave-68000": { "wikidata": "Q17462512" },
+    "konami-gx": { "wikidata": "Q3198602", "wikipedia": "Konami GX" },
+    "konami-system-573": { "wikidata": "Q11245377", "wikipedia": "System 573" },
+    "namco-system1": { "wikidata": "Q3509076" },
+    "namco-system11": { "wikidata": "Q442891", "wikipedia": "Namco System 11 and System 12" },
+    "namco-system12": { "wikidata": "Q442891", "wikipedia": "Namco System 11 and System 12" },
+    "nintendo-game-boy": { "wikidata": "Q186437", "wikipedia": "Game Boy" },
+    "nintendo-game-boy-advance": { "wikidata": "Q188642", "wikipedia": "Game Boy Advance" },
+    "nintendo-game-boy-color": { "wikidata": "Q203992", "wikipedia": "Game Boy Color" },
+    "nintendo-n64": { "wikidata": "Q184839", "wikipedia": "Nintendo 64" },
+    "nintendo-nes": { "wikidata": "Q172742", "wikipedia": "Nintendo Entertainment System" },
+    "nintendo-snes": { "wikidata": "Q183259", "wikipedia": "Super Nintendo Entertainment System" },
+    "nintendo-vs-dualsystem": { "wikidata": "Q1323782", "wikipedia": "Nintendo VS. System" },
+    "nintendo-vs-unisystem": { "wikidata": "Q1323782", "wikipedia": "Nintendo VS. System" },
+    "sega-dreamcast": { "wikidata": "Q184198", "wikipedia": "Dreamcast" },
+    "sega-game-gear": { "wikidata": "Q751719", "wikipedia": "Game Gear" },
+    "sega-hangon": { "jtcores": ["shanon"] },
+    "sega-master-system": { "wikidata": "Q209868", "wikipedia": "Master System" },
+    "sega-mega-drive": { "wikidata": "Q10676", "wikipedia": "Sega Genesis" },
+    "sega-naomi": { "wikidata": "Q1369174" },
+    "sega-outrun": { "jtcores": ["outrun"] },
+    "sega-saturn": { "wikidata": "Q200912", "wikipedia": "Sega Saturn" },
+    "sega-system16a": { "jtcores": ["s16"] },
+    "sega-system16b": { "jtcores": ["s16b"] },
+    "sega-system18": { "jtcores": ["s18"] },
+    "sega-system24": { "wikidata": "Q6147678" },
+    "snk-neogeo-aes": { "wikidata": "Q1054350", "wikipedia": "Neo Geo" },
+    "snk-neogeo-mvs": { "wikidata": "Q3338058", "wikipedia": "Neo Geo" },
+    "snk-neogeo-pocket": {
+      "wikidata": "Q1977455",
+      "wikipedia": "Neo Geo Pocket",
+      "jtcores": ["ngp", "ngpc"]
+    },
+    "taito-f3": { "wikidata": "Q909002", "wikipedia": "Taito F3 System" }
+  },
+  "jt_modules": {
+    "fx68k": {
+      "part": "MC68000",
+      "note": "Ijor's cycle-accurate 68000, the CPU jtcores instantiates where the board has a 68000."
+    },
+    "jt4701": {
+      "part": "uPD4701A",
+      "note": "NEC uPD4701A incremental encoder counter; the module name carries the part number."
+    },
+    "jt4701_axis": {
+      "part": "uPD4701A",
+      "note": "One axis of the uPD4701A above."
+    },
+    "jt51": {
+      "part": "YM2151",
+      "note": "jotego's OPM: the jt51 repository is titled 'YM2151 clone'."
+    },
+    "jt6295": {
+      "part": "MSM6295",
+      "note": "OKI MSM6295 ADPCM; the module name carries the part number."
+    },
+    "jt7759": {
+      "part": "uPD7759",
+      "note": "NEC uPD7759 ADPCM; the module name carries the part number."
+    },
+    "jt8255": {
+      "part": "i8255",
+      "note": "Intel 8255 PPI; the module name carries the part number."
+    },
+    "jt900h": {
+      "part": "TLCS-900H",
+      "note": "Toshiba TLCS-900/H core, the Neo Geo Pocket main CPU."
+    },
+    "jt95c061": {
+      "part": "TMP95C061",
+      "note": "Toshiba TMP95C061 (TLCS-900/H MCU); the module name carries the part number."
+    },
+    "jtdsp16": {
+      "part": "DSP16A",
+      "note": "AT&T DSP16A, the processor inside Capcom's QSound module on CPS-1.5/CPS-2 D-boards."
+    },
+    "jtframe_68kdma": { "part": "MC68000", "note": "JTFRAME's 68000 bus DMA helper." },
+    "jtframe_68kdtack": { "part": "MC68000", "note": "JTFRAME's 68000 /DTACK generator." },
+    "jtframe_68kdtack_cen": { "part": "MC68000", "note": "JTFRAME's 68000 /DTACK generator." },
+    "jtframe_m68k": { "part": "MC68000", "note": "JTFRAME's 68000 wrapper." },
+    "jtframe_sysz80": { "part": "Z80", "note": "JTFRAME's Z80 subsystem wrapper." },
+    "jtframe_z80": { "part": "Z80", "note": "JTFRAME's Z80 wrapper." },
+    "jtframe_z80_romwait": { "part": "Z80", "note": "JTFRAME's Z80 wrapper with ROM wait states." },
+    "jtmc8123": {
+      "part": "MC-8123",
+      "note": "Sega MC-8123 encrypted Z80 module; the module name carries the part number."
+    },
+    "jtpcm568": {
+      "part": "RF5C68",
+      "note": "Ricoh RF5C68 PCM, the System 18 / Mega-CD sample chip; '568' is '5C68'."
+    },
+    "jts16_fd1089": {
+      "part": "FD1089",
+      "note": "Sega FD1089 encrypted 68000; the module name carries the part number."
+    },
+    "jts16_fd1094": {
+      "part": "FD1094",
+      "note": "Sega FD1094 encrypted 68000; the module name carries the part number."
+    }
+  }
+}

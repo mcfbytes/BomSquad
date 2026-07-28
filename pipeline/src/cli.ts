@@ -11,6 +11,8 @@
  *   pipeline mame:refresh-summary <old-extract-dir> <new-extract-dir>
  *   pipeline build [--build-date <YYYY-MM-DD>] [--dataset-version <v>] [--out <dir>]
  *   pipeline prospector [--platform <id>] [--top <n>] [--db <path>] [--json]
+ *   pipeline reconcile
+ *   pipeline reconcile:guard [<root>]
  *
  * Exit codes: 0 clean (or warnings only), 1 at least one ERROR (or any WARN under
  * `--strict`), 2 bad usage.
@@ -44,6 +46,10 @@ import {
   type BuildOptions,
 } from './build/index.js';
 import { formatProspectorReport, loadProspectorConfig, rankProspects } from './prospector/rank.js';
+import { runReconcile } from './reconcile/index.js';
+import { formatReportLog } from './reconcile/report.js';
+import { formatGuardReport, runGuard } from './reconcile/guard.js';
+import { loadReconcileConfig } from './reconcile/config.js';
 import type { RawMachine } from './mame/parse.js';
 import type { WorklistEntry } from './mame/worklist.js';
 
@@ -56,6 +62,8 @@ const COMMANDS = [
   'mame:refresh-summary',
   'build',
   'prospector',
+  'reconcile',
+  'reconcile:guard',
 ] as const;
 type Command = (typeof COMMANDS)[number];
 
@@ -312,6 +320,43 @@ function runMameRefreshSummary(argv: readonly string[]): number {
   return 0;
 }
 
+/**
+ * TASKS T3.8 — reconciles MAME against four independent board↔chipset witnesses.
+ *
+ * **Always exits 0 on a completed run, whatever it finds.** The report is advisory by
+ * design (see `reconcile/report.ts`): two of the four witnesses are wikis, and a red build
+ * caused by someone else's edit is an outage, not a quality gate. A malformed config or an
+ * unreachable network is a different thing entirely and propagates as a stack trace.
+ */
+async function runReconcileCommand(): Promise<number> {
+  const result = await runReconcile({ log: write });
+  process.stdout.write(formatReportLog(result.report));
+  write(`reconcile: wrote ${result.rawPath} (${result.rawBytes} bytes) and ${result.reportPath}`);
+  write(
+    `reconcile: ${result.networkRequests} network request(s), ${result.cacheHits} cache hit(s)`,
+  );
+  return 0;
+}
+
+/**
+ * TASKS T3.8 — fails when anything in the tree fetches a host `forbidden_hosts` names,
+ * while allowing the same host as a citation in a curated row file and as prose.
+ *
+ * This one *does* exit non-zero, and it is the only part of T3.8 that gates CI: the rule it
+ * enforces is a constraint the source's owner set, not a quality opinion of ours.
+ */
+function runReconcileGuard(argv: readonly string[]): number {
+  const [root] = argv;
+  const config = loadReconcileConfig();
+  const result = runGuard(
+    config.forbiddenHosts,
+    config.guard,
+    ...(root === undefined ? [] : ([root] as const)),
+  );
+  process.stdout.write(formatGuardReport(result, config.forbiddenHosts));
+  return result.violations.length > 0 ? 1 : 0;
+}
+
 async function main(argv: readonly string[]): Promise<number> {
   const [command, ...rest] = argv;
   if (!isCommand(command)) {
@@ -335,6 +380,10 @@ async function main(argv: readonly string[]): Promise<number> {
       return runBuild(rest);
     case 'prospector':
       return runProspector(rest);
+    case 'reconcile':
+      return runReconcileCommand();
+    case 'reconcile:guard':
+      return runReconcileGuard(rest);
     default:
       return 2;
   }
