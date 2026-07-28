@@ -6,6 +6,10 @@ node_modules/
 # dist/ only; each workspace's own outDir needs its own line.
 dist/*
 !dist/.gitkeep
+# README.md is documentation, not a build output. Without this negation `dist/*`
+# swallows it and a fresh clone has no record of the directory's edit policy at all,
+# which is the one thing T0.1 requires every directory to carry.
+!dist/README.md
 pipeline/dist/
 
 # Download / extraction cache (large MAME artifacts). `pipeline mame:fetch` writes the

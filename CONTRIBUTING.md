@@ -49,12 +49,16 @@ npm install
 npm run validate
 ```
 
-A clean checkout validates with zero errors and zero warnings. **What doesn't exist yet, so you don't need it
-for a data PR:** there is no `pipeline build` command, no MAME extract loaded into `extract/machine.json` (the
-MAME parser's raw intermediate output may exist under `extract/*.raw.json`, but the normalized `machine` /
-`machine_chip` tables it feeds are not built yet), and no `dist/bomsquad.sqlite`. `npm run validate` works
-entirely from the row files under `data/` (and `extract/`, once it has row files rather than raw intermediates)
-— you do not need a working pipeline build to add or fix curated data.
+A clean checkout validates with zero errors. **You do not need to build the database to contribute data.**
+`npm run validate` reads the row files under `data/` and `extract/` directly, so a data PR is complete the
+moment it validates.
+
+If you do want the whole artifact — to query the dataset, or to check that your rows land the way you expect —
+`npm run build:db --workspace @bomsquad/pipeline` writes `dist/bomsquad.sqlite` and `dist/quality-report.json`
+in a few seconds from what is already committed. (Note that the root `npm run build` is not this: it runs
+`tsc` in each workspace. The database has its own command.) Rebuilding the MAME extract from scratch is a
+separate, slower path — `npm run mame:fetch` then `mame:extract` then `mame:rows` — and is only needed when
+the pinned MAME release changes, which the monthly refresh workflow handles.
 
 ## 2. The file format, exactly
 

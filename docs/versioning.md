@@ -101,15 +101,18 @@ two independent sources of truth make possible in the first place. Read the majo
 `PRAGMA user_version` and the full string from `dataset_meta.schema_version`; there is no fourth place to
 check.
 
-### 1.4 Not yet wired up
+### 1.4 Where these values are written
 
-There is no `pipeline build` command yet (`pipeline/src/cli.ts` recognizes only `validate` and `mame:fetch`),
-so nothing in this checkout currently _writes_ `dataset_meta` in a real build.
-`pipeline/src/spike/build-fixture-db.ts` is a prototype that inserts a `dataset_meta` row for local
-experimentation; it is not the production loader. Populating `dataset_meta` (all four of `mame_version`,
-`dataset_version`, `schema_version`, and `threshold_version`, plus `build_date`) from a real build is T6.1's
-job. This document specifies the policy
-those values must follow once that loader exists; it does not claim the loader exists today.
+`pipeline build` (wired as `npm run build:db --workspace @bomsquad/pipeline`) writes every one of them. A
+built `dist/bomsquad.sqlite` carries all five `dataset_meta` rows — `mame_version`, `dataset_version`,
+`schema_version`, `threshold_version` and `build_date` — plus the schema's major component in
+`PRAGMA user_version`.
+
+`build_date` is the only value that could let a clock leak into an otherwise deterministic artifact, so it
+does not read the clock by default: it resolves `--build-date`, then `SOURCE_DATE_EPOCH`, then today (UTC).
+CI pins `SOURCE_DATE_EPOCH` to the commit timestamp, which is what makes `docs/data-quality.md` §4's promise —
+that rebuilding an old commit reproduces its warnings exactly — literally true rather than aspirational.
+`dataset_version` defaults to the build date, which is exactly the date-tag format §2 specifies.
 
 ---
 
