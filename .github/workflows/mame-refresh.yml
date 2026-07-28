@@ -1,0 +1,154 @@
+name: MAME monthly refresh
+
+# TASKS T2.6. Detects a new MAME release, bumps the pin (pipeline/config/mame.json),
+# regenerates extract/, and opens a PR summarising the change so a curator can see what
+# the new release costs them before reviewing a single row file.
+#
+# All of the logic that decides *what the summary says* is
+# pipeline/src/mame/refresh-summary.ts, unit-tested in
+# pipeline/test/mame-refresh-summary.test.ts against fixtures — this workflow is a thin
+# caller around it (and around mame:bump-pin, mame:fetch, mame:extract, all likewise
+# tested pipeline commands). Nothing below re-derives what changed; it only shells out to
+# the CLI and moves files and PRs around.
+#
+# The PR this opens is a normal PR: pushing it triggers the regular CI workflow (ci.yml),
+# whose `extract` job re-runs the extraction twice and diffs against what is committed —
+# so determinism is re-verified there rather than duplicated here.
+
+on:
+  schedule:
+    # An arbitrary off-peak minute on the 1st of the month, not on the hour, so this run
+    # doesn't compete with every other repository's cron jobs for runner capacity.
+    - cron: '17 6 1 * *'
+  workflow_dispatch:
+    inputs:
+      mame_release:
+        description: >-
+          Force a target release tag (e.g. mame0289) instead of querying the GitHub
+          releases API for mamedev/mame's latest release. Leave empty to run the normal
+          check. A manual dispatch with this set is the "dry run" TASKS T2.6 asks for:
+          it exercises the whole flow, including opening the PR, against a release you
+          choose.
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+  pull-requests: write
+
+# One outstanding refresh at a time, repo-wide — a second dispatch mid-run would race the
+# first over the same branch and pin file.
+concurrency:
+  group: mame-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    name: Check for a new MAME release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Read the current pin
+        id: pin
+        run: echo "release=$(jq -r .release pipeline/config/mame.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Determine the target release
+        id: target
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORCED_RELEASE: ${{ inputs.mame_release }}
+        run: |
+          if [[ -n "$FORCED_RELEASE" ]]; then
+            echo "release=$FORCED_RELEASE" >> "$GITHUB_OUTPUT"
+          else
+            tag=$(gh api repos/mamedev/mame/releases/latest --jq .tag_name)
+            echo "release=$tag" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Stop here when already current
+        id: gate
+        run: |
+          if [[ "${{ steps.pin.outputs.release }}" == "${{ steps.target.outputs.release }}" ]]; then
+            echo "::notice::Already on ${{ steps.pin.outputs.release }}; nothing to do."
+            echo "continue=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "continue=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Snapshot the extract this repository ships today
+        if: steps.gate.outputs.continue == 'true'
+        run: cp -r extract "${RUNNER_TEMP}/extract-old"
+
+      - name: Bump the pin
+        if: steps.gate.outputs.continue == 'true'
+        run: >-
+          npm run mame:bump-pin --workspace @bomsquad/pipeline --
+          "${{ steps.target.outputs.release }}"
+
+      - name: Fetch the new release's listxml
+        if: steps.gate.outputs.continue == 'true'
+        run: npm run mame:fetch --workspace @bomsquad/pipeline
+
+      - name: Regenerate extract/
+        if: steps.gate.outputs.continue == 'true'
+        run: npm run mame:extract --workspace @bomsquad/pipeline
+
+      - name: Build the refresh summary
+        if: steps.gate.outputs.continue == 'true'
+        run: |
+          npx tsx pipeline/src/cli.ts mame:refresh-summary \
+            "${RUNNER_TEMP}/extract-old" extract > "${RUNNER_TEMP}/summary.md"
+          cat "${RUNNER_TEMP}/summary.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Configure the commit identity
+        if: steps.gate.outputs.continue == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+      # The branch is named for the target release, so re-dispatching against the same
+      # release (e.g. re-running a dry run) updates the one branch/PR instead of piling up
+      # duplicates — the force-push is safe because this branch is entirely owned by this
+      # workflow; nothing else ever commits to it.
+      - name: Commit the bumped pin and regenerated extract
+        if: steps.gate.outputs.continue == 'true'
+        id: commit
+        run: |
+          branch="mame-refresh/${{ steps.target.outputs.release }}"
+          git switch --create "$branch"
+          git add pipeline/config/mame.json extract/
+          if git diff --cached --quiet; then
+            echo "::notice::No file changes against ${{ steps.target.outputs.release }}; nothing to commit."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "MAME refresh: ${{ steps.pin.outputs.release }} -> ${{ steps.target.outputs.release }}"
+            git push --force --set-upstream origin "$branch"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+
+      - name: Open (or update) the pull request
+        if: steps.gate.outputs.continue == 'true' && steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="MAME refresh: ${{ steps.pin.outputs.release }} -> ${{ steps.target.outputs.release }}"
+          branch="${{ steps.commit.outputs.branch }}"
+          if gh pr view "$branch" >/dev/null 2>&1; then
+            gh pr edit "$branch" --title "$title" --body-file "${RUNNER_TEMP}/summary.md"
+          else
+            gh pr create --title "$title" --body-file "${RUNNER_TEMP}/summary.md" \
+              --head "$branch" --base master
+          fi

@@ -162,7 +162,7 @@ function readRules(
 }
 
 /** `mame0288` → `0.288`: the digits of the tag, the first one being the major component. */
-function versionFromRelease(release: string): string | undefined {
+export function versionFromRelease(release: string): string | undefined {
   const digits = /^mame(\d)(\d+)$/.exec(release);
   return digits === null ? undefined : `${digits[1] ?? ''}.${digits[2] ?? ''}`;
 }
@@ -203,6 +203,50 @@ export function loadMameConfig(path: string = MAME_CONFIG_PATH): MameConfig {
     throw new Error(`${path}: 'release_base_url' must be https`);
   }
   return config;
+}
+
+/**
+ * Bumps the pin to a new release tag (TASKS T2.6's monthly refresh). Pure: it derives the
+ * next `MameConfig` from the current one and a tag such as `mame0289`, following exactly
+ * the conventions `loadMameConfig` already enforces above — the version is derived from
+ * the tag rather than typed a second time, and the listxml asset name is `<release>lx.zip`,
+ * MAME's own naming convention for every release this project has pinned to so far.
+ * `releaseBaseUrl` and `checksumsAsset` carry over unchanged: neither varies by release.
+ *
+ * Throws on a tag `loadMameConfig` would refuse, so a malformed release tag from the
+ * GitHub releases API fails the refresh workflow immediately instead of writing a pin
+ * `mame:fetch` cannot load.
+ */
+export function bumpMameConfig(current: MameConfig, newRelease: string): MameConfig {
+  const version = versionFromRelease(newRelease);
+  if (version === undefined) {
+    throw new Error(`bumpMameConfig: 'release' must look like 'mame0288', got '${newRelease}'`);
+  }
+  return {
+    release: newRelease,
+    version,
+    releaseBaseUrl: current.releaseBaseUrl,
+    listxmlAsset: `${newRelease}lx.zip`,
+    checksumsAsset: current.checksumsAsset,
+  };
+}
+
+/**
+ * Renders a `MameConfig` back to `pipeline/config/mame.json`'s exact shape: the same five
+ * snake_case keys in the same order, two-space indented, one trailing newline. Round-
+ * tripping the shipped file through `loadMameConfig` and this function reproduces it byte
+ * for byte (proved in `test/mame-config.test.ts`), which is what makes this a formatter
+ * rather than a second, driftable description of the file.
+ */
+export function formatMameConfigJson(config: MameConfig): string {
+  const ordered = {
+    release: config.release,
+    version: config.version,
+    release_base_url: config.releaseBaseUrl,
+    listxml_asset: config.listxmlAsset,
+    checksums_asset: config.checksumsAsset,
+  };
+  return `${JSON.stringify(ordered, null, 2)}\n`;
 }
 
 /** Reads the extraction policy. */

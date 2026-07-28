@@ -186,7 +186,7 @@ count), per-machine coverage confidence, and top unmapped devices by impact.
 - Coverage badges (e.g., `9/11 chips · 82%`) rendered consistently everywhere.
 - Dark mode default (know the audience 🙂).
 - **8-bit arcade-cabinet visual theme** (TASKS T7.12): pixel display face for chrome, CRT-phosphor palette,
-  scanline texture on the masthead only. Applied as a token layer over the existing CSS custom properties —
+  scanline texture on the masthead and the home hero. Applied as a token layer over the existing CSS custom properties —
   decoration on chrome, never on data. WCAG AA in both themes, and `prefers-reduced-motion` /
   `prefers-contrast: more` strip the effects entirely.
 

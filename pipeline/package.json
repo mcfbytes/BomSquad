@@ -15,7 +15,9 @@
     "test:watch": "vitest",
     "validate": "tsx src/cli.ts validate",
     "mame:fetch": "tsx src/cli.ts mame:fetch",
-    "mame:extract": "tsx src/cli.ts mame:extract"
+    "mame:extract": "tsx src/cli.ts mame:extract",
+    "mame:bump-pin": "tsx src/cli.ts mame:bump-pin",
+    "mame:refresh-summary": "tsx src/cli.ts mame:refresh-summary"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",

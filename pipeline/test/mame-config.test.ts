@@ -12,7 +12,9 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import {
+  bumpMameConfig,
   EXTRACT_CONFIG_PATH,
+  formatMameConfigJson,
   loadExtractConfig,
   loadMameConfig,
   MAME_CONFIG_PATH,
@@ -79,6 +81,58 @@ describe('rejecting a half-edited pin', () => {
     expect(() =>
       loadMameConfig(pin('http', { release_base_url: 'http://example.invalid' })),
     ).toThrow(/must be https/);
+  });
+});
+
+describe('bumping the pin (TASKS T2.6)', () => {
+  const current = loadMameConfig(MAME_CONFIG_PATH);
+
+  it('derives the version and asset name from the new release tag alone', () => {
+    expect(bumpMameConfig(current, 'mame0289')).toEqual({
+      release: 'mame0289',
+      version: '0.289',
+      releaseBaseUrl: current.releaseBaseUrl,
+      listxmlAsset: 'mame0289lx.zip',
+      checksumsAsset: current.checksumsAsset,
+    });
+  });
+
+  it('carries release_base_url and checksums_asset over unchanged', () => {
+    const custom = { ...current, checksumsAsset: 'CHECKSUMS.txt' };
+    expect(bumpMameConfig(custom, 'mame0290').checksumsAsset).toBe('CHECKSUMS.txt');
+  });
+
+  it('rejects a tag loadMameConfig would also refuse, before anything is written', () => {
+    expect(() => bumpMameConfig(current, 'latest')).toThrow(/must look like 'mame0288'/);
+    expect(() => bumpMameConfig(current, 'mame')).toThrow(/must look like 'mame0288'/);
+  });
+
+  it('the bumped config loads cleanly through loadMameConfig’s own cross-checks', () => {
+    const bumped = bumpMameConfig(current, 'mame0300');
+    const path = join(dir, 'bumped.json');
+    writeFileSync(path, formatMameConfigJson(bumped));
+    expect(loadMameConfig(path)).toEqual(bumped);
+  });
+});
+
+describe('formatting the pin back to JSON', () => {
+  it('round-trips the shipped pin byte for byte', () => {
+    const config = loadMameConfig(MAME_CONFIG_PATH);
+    expect(formatMameConfigJson(config)).toBe(readFileSync(MAME_CONFIG_PATH, 'utf8'));
+  });
+
+  it('is a formatter, not a rename: bumping and formatting again changes only what bumped', () => {
+    const config = loadMameConfig(MAME_CONFIG_PATH);
+    const bumped = bumpMameConfig(config, 'mame0289');
+    const before = formatMameConfigJson(config).split('\n');
+    const after = formatMameConfigJson(bumped).split('\n');
+    expect(before.length).toBe(after.length);
+    const changedLines = before.filter((line, index) => line !== after[index]);
+    expect(changedLines).toEqual([
+      `  "release": "${config.release}",`,
+      `  "version": "${config.version}",`,
+      `  "listxml_asset": "${config.listxmlAsset}",`,
+    ]);
   });
 });
 
