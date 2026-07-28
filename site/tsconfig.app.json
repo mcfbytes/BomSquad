@@ -6,5 +6,7 @@
     "types": []
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.spec.ts"]
+  /* `src/testing/` is spec-only scaffolding: it imports node:sqlite and node:fs,
+     which have no business anywhere near the browser bundle. */
+  "exclude": ["src/**/*.spec.ts", "src/testing/**/*.ts"]
 }

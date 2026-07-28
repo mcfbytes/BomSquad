@@ -18,6 +18,7 @@
       </svg>
       <span class="brand__name">BOM Squad</span>
     </a>
+    <app-global-search />
     <app-theme-toggle (themeChange)="announceTheme($event)" />
   </div>
 
@@ -40,6 +41,22 @@
     </ul>
   </nav>
 </header>
+
+<!-- The whole dataset is one download (ADR 0001), so exactly one request can fail
+     for every data view in the app. It gets one honest, actionable strip here
+     rather than nine blank pages. Renders nothing once the database is open. -->
+@if (database.isLoading() || database.error() !== null) {
+<div class="data-strip">
+  <app-data-status
+    [loading]="database.isLoading()"
+    [error]="database.error()"
+    [fraction]="database.progressFraction()"
+    [receivedBytes]="database.progress()?.receivedBytes ?? null"
+    [totalBytes]="database.progress()?.totalBytes ?? null"
+    (retry)="database.retry()"
+  />
+</div>
+}
 
 <main id="main" tabindex="-1">
   <router-outlet />

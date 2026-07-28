@@ -116,6 +116,12 @@
   }
 }
 
+/* The one shared database load/error strip. Sits between the masthead and the
+   view so it is impossible to miss and impossible to mistake for page content. */
+.data-strip {
+  padding: 0.75rem 1.5rem 0;
+}
+
 main {
   padding: 1.5rem;
 }
@@ -140,6 +146,10 @@ main {
   main,
   .site-footer {
     padding: 1rem;
+  }
+
+  .data-strip {
+    padding: 0.75rem 1rem 0;
   }
 
   .nav__list {

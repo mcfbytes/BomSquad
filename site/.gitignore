@@ -1,0 +1,7 @@
+# Staged by tools/stage-data-assets.mjs from dist/bomsquad.sqlite and from the
+# installed @sqlite.org/sqlite-wasm package. Both are build outputs of something
+# else, both are large, and neither is source. See site/README.md, "The database
+# asset". The generated row types under src/app/data/*.generated.ts are NOT here:
+# they are committed on purpose, so `npx ng build` works in a fresh clone, and
+# `schema-types.spec.ts` fails if they ever drift from schemas/.
+/public/site-data/

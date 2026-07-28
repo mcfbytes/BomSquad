@@ -1,4 +1,4 @@
-import { DOCUMENT, Component, inject, signal } from '@angular/core';
+import { DOCUMENT, Component, DestroyRef, afterNextRender, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   type ActivatedRouteSnapshot,
@@ -10,6 +10,9 @@ import {
 } from '@angular/router';
 import { filter } from 'rxjs';
 
+import { DataStatus } from './data/data-status';
+import { DatabaseService } from './data/database';
+import { GlobalSearch } from './search/global-search';
 import type { ResolvedTheme } from './theme/theme-service';
 import { ThemeToggle } from './theme/theme-toggle';
 
@@ -23,6 +26,9 @@ interface NavLink {
 /** The element the skip link and every route change hand focus to. */
 const MAIN_ID = 'main';
 
+/** Stand-in for `requestIdleCallback` where it does not exist. */
+const IDLE_FALLBACK_MS = 1500;
+
 /**
  * The application shell: masthead, primary navigation, theme switch, footer.
  *
@@ -32,13 +38,16 @@ const MAIN_ID = 'main';
  */
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, ThemeToggle],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, ThemeToggle, GlobalSearch, DataStatus],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
   private readonly document = inject(DOCUMENT);
   private readonly router = inject(Router);
+
+  /** Read by the template for the one load-state strip the whole app shares. */
+  protected readonly database = inject(DatabaseService);
 
   protected readonly navLinks: readonly NavLink[] = [
     { path: '/', label: 'Dashboard', exact: true },
@@ -68,7 +77,63 @@ export class App {
       .subscribe(() => {
         this.onNavigationEnd();
       });
+
+    this.schedulePreload();
   }
+
+  /**
+   * Starts the 5.7 MB download once the shell has painted and the browser is idle.
+   *
+   * Deliberately not part of bootstrap: routes that need no data — `/contribute`,
+   * `/`, a 404 — render completely without it, and the app shell never waits on a
+   * network request it does not need. Search lives in the masthead and is therefore
+   * reachable from every route, so starting the fetch speculatively is the right
+   * trade; `DatabaseService.preload()` still declines on a save-data connection,
+   * and `ensureLoaded()` shares one promise, so this can never become a second
+   * fetch.
+   */
+  private schedulePreload(): void {
+    const view = this.document.defaultView;
+    if (view === null) {
+      return;
+    }
+    const destroyRef = inject(DestroyRef);
+
+    // lib.dom declares requestIdleCallback unconditionally; Safari only shipped it
+    // in 18 and jsdom does not have it at all, so it is read off an optional shape.
+    // The setTimeout branch is also what makes this inert under test: no unit test
+    // runs for a second and a half.
+    const idleView = view as unknown as {
+      requestIdleCallback?: (callback: () => void) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    };
+
+    afterNextRender(() => {
+      const start = (): void => {
+        this.database.preload();
+      };
+
+      if (typeof idleView.requestIdleCallback === 'function') {
+        const handle = idleView.requestIdleCallback(start);
+        this.cancelPreload = () => {
+          idleView.cancelIdleCallback?.(handle);
+        };
+        return;
+      }
+
+      const handle = view.setTimeout(start, IDLE_FALLBACK_MS);
+      this.cancelPreload = () => {
+        view.clearTimeout(handle);
+      };
+    });
+
+    destroyRef.onDestroy(() => {
+      this.cancelPreload?.();
+      this.cancelPreload = null;
+    });
+  }
+
+  private cancelPreload: (() => void) | null = null;
 
   /**
    * The skip link cannot be a plain `href="#main"`.
