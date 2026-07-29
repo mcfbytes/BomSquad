@@ -15,20 +15,20 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "^22.0.0",
+    "@angular/common": "^22.0.8",
     "@angular/compiler": "^22.0.0",
     "@angular/core": "^22.0.0",
-    "@angular/forms": "^22.0.0",
+    "@angular/forms": "^22.0.8",
     "@angular/platform-browser": "^22.0.0",
-    "@angular/router": "^22.0.0",
+    "@angular/router": "^22.0.8",
     "@sqlite.org/sqlite-wasm": "^3.53.0-build1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@angular/build": "^22.0.7",
-    "@angular/cli": "^22.0.7",
-    "@angular/compiler-cli": "^22.0.0",
+    "@angular/build": "^22.0.9",
+    "@angular/cli": "^22.0.9",
+    "@angular/compiler-cli": "^22.0.8",
     "jsdom": "^29.1.1",
     "typescript": "6.0.3",
     "vitest": "^4.0.8"
