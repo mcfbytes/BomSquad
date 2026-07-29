@@ -150,7 +150,7 @@ jobs:
       - run: npm ci
       # Keyed on the pin: a new MAME release is a new key and a new download, and the old
       # entry expires on its own.
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: .cache/mame
           key: mame-listxml-${{ hashFiles('pipeline/config/mame.json') }}
