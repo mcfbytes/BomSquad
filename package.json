@@ -33,12 +33,12 @@
     "@sqlite.org/sqlite-wasm": "^3.53.0-build1",
     "@types/node": "^24.13.3",
     "angular-eslint": "^22.1.0",
-    "eslint": "10.7.0",
+    "eslint": "10.8.1",
     "eslint-config-prettier": "10.1.8",
-    "globals": "17.7.0",
+    "globals": "17.11.0",
     "prettier": "3.9.6",
-    "sql.js": "^1.14.1",
+    "sql.js": "^1.14.2",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.65.0"
+    "typescript-eslint": "8.67.0"
   }
 }
