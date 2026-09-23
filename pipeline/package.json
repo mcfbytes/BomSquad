@@ -25,8 +25,8 @@
     "reconcile:guard": "tsx src/cli.ts reconcile:guard"
   },
   "devDependencies": {
-    "@types/node": "^24.13.3",
-    "tsx": "4.23.1",
+    "@types/node": "^24.13.6",
+    "tsx": "4.23.15",
     "typescript": "6.0.3",
     "vitest": "4.1.10"
   },
